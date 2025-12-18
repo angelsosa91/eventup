@@ -27,7 +27,9 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Confiar en proxies (NGINX)
-        $this->app['request']->server->set('HTTPS', 'on');
+        if ($this->app->environment('production')) {
+            $this->app['request']->server->set('HTTPS', 'on');
+        }
 
         // Directivas Blade para permisos
         $this->registerBladeDirectives();

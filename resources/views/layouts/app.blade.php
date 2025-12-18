@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,7 @@
     <!-- jEasyUI CSS (local) -->
     <link rel="stylesheet" type="text/css" href="{{ asset('vendor/easyui/themes/default/easyui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('vendor/easyui/themes/icon.css') }}">
-    
+
     <style>
         :root {
             --sidebar-width: 260px;
@@ -46,7 +47,7 @@
             z-index: 1000;
             overflow-x: hidden;
             overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar::-webkit-scrollbar {
@@ -54,11 +55,11 @@
         }
 
         .sidebar::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 3px;
         }
 
@@ -76,14 +77,14 @@
             display: none !important;
         }
 
-        .sidebar.collapsed .nav-menu .has-submenu > a i.chevron {
+        .sidebar.collapsed .nav-menu .has-submenu>a i.chevron {
             display: none;
         }
 
         .sidebar .brand {
             padding: 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
         }
 
@@ -133,7 +134,7 @@
         }
 
         .menu-section-title {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -155,7 +156,7 @@
             display: flex;
             align-items: center;
             padding: 12px 20px;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: all 0.3s;
             position: relative;
@@ -212,7 +213,7 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .submenu.show {
@@ -228,19 +229,19 @@
             font-size: 1rem;
         }
 
-        .has-submenu > a {
+        .has-submenu>a {
             position: relative;
         }
 
-        .has-submenu > a i.chevron {
+        .has-submenu>a i.chevron {
             margin-left: auto;
             margin-right: 0;
             font-size: 0.9rem;
             transition: transform 0.3s;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
         }
 
-        .has-submenu.open > a i.chevron {
+        .has-submenu.open>a i.chevron {
             transform: rotate(90deg);
         }
 
@@ -258,7 +259,7 @@
         .top-navbar {
             background: #fff;
             padding: 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -270,7 +271,7 @@
 
         .card {
             border: none;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         }
 
         /* jEasyUI customizations */
@@ -298,9 +299,10 @@
             }
         }
     </style>
-    
+
     @stack('styles')
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
@@ -326,33 +328,40 @@
             <div class="menu-section-title">Operaciones</div>
 
             <!-- Ventas -->
-            <li class="has-submenu {{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'active' : '' }}">
+            <li
+                class="has-submenu {{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)"
+                    class="{{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'active' : '' }}">
                     <i class="bi bi-cart-check"></i>
                     <span class="menu-text">Ventas</span>
                     <i class="bi bi-chevron-right chevron"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'show' : '' }}">
+                <ul
+                    class="submenu {{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('sales.create') }}" class="{{ request()->routeIs('sales.create') ? 'active' : '' }}">
+                        <a href="{{ route('sales.create') }}"
+                            class="{{ request()->routeIs('sales.create') ? 'active' : '' }}">
                             <i class="bi bi-plus-circle"></i>
                             <span class="menu-text">Nueva Venta</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.index') ? 'active' : '' }}">
+                        <a href="{{ route('sales.index') }}"
+                            class="{{ request()->routeIs('sales.index') ? 'active' : '' }}">
                             <i class="bi bi-list-ul"></i>
                             <span class="menu-text">Listado</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('credit-notes.index') }}" class="{{ request()->routeIs('credit-notes.*') ? 'active' : '' }}">
+                        <a href="{{ route('credit-notes.index') }}"
+                            class="{{ request()->routeIs('credit-notes.*') ? 'active' : '' }}">
                             <i class="bi bi-file-earmark-minus"></i>
                             <span class="menu-text">Notas de Crédito</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('remissions.index') }}" class="{{ request()->routeIs('remissions.*') ? 'active' : '' }}">
+                        <a href="{{ route('remissions.index') }}"
+                            class="{{ request()->routeIs('remissions.*') ? 'active' : '' }}">
                             <i class="bi bi-truck"></i>
                             <span class="menu-text">Remisiones</span>
                         </a>
@@ -369,13 +378,15 @@
                 </a>
                 <ul class="submenu {{ request()->routeIs('purchases.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('purchases.create') }}" class="{{ request()->routeIs('purchases.create') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.create') }}"
+                            class="{{ request()->routeIs('purchases.create') ? 'active' : '' }}">
                             <i class="bi bi-plus-circle"></i>
                             <span class="menu-text">Nueva Compra</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('purchases.index') }}" class="{{ request()->routeIs('purchases.index') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.index') }}"
+                            class="{{ request()->routeIs('purchases.index') ? 'active' : '' }}">
                             <i class="bi bi-list-ul"></i>
                             <span class="menu-text">Listado</span>
                         </a>
@@ -385,26 +396,30 @@
 
             <!-- Gastos -->
             <li class="has-submenu {{ request()->routeIs('expenses.*', 'expense-categories.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('expenses.*', 'expense-categories.*') ? 'active' : '' }}">
+                <a href="javascript:void(0)"
+                    class="{{ request()->routeIs('expenses.*', 'expense-categories.*') ? 'active' : '' }}">
                     <i class="bi bi-cash-stack"></i>
                     <span class="menu-text">Gastos</span>
                     <i class="bi bi-chevron-right chevron"></i>
                 </a>
                 <ul class="submenu {{ request()->routeIs('expenses.*', 'expense-categories.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('expenses.create') }}" class="{{ request()->routeIs('expenses.create') ? 'active' : '' }}">
+                        <a href="{{ route('expenses.create') }}"
+                            class="{{ request()->routeIs('expenses.create') ? 'active' : '' }}">
                             <i class="bi bi-plus-circle"></i>
                             <span class="menu-text">Nuevo Gasto</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('expenses.index') }}" class="{{ request()->routeIs('expenses.index') ? 'active' : '' }}">
+                        <a href="{{ route('expenses.index') }}"
+                            class="{{ request()->routeIs('expenses.index') ? 'active' : '' }}">
                             <i class="bi bi-list-ul"></i>
                             <span class="menu-text">Listado</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('expense-categories.index') }}" class="{{ request()->routeIs('expense-categories.*') ? 'active' : '' }}">
+                        <a href="{{ route('expense-categories.index') }}"
+                            class="{{ request()->routeIs('expense-categories.*') ? 'active' : '' }}">
                             <i class="bi bi-tags"></i>
                             <span class="menu-text">Categorías</span>
                         </a>
@@ -415,27 +430,40 @@
             <!-- INVENTARIO & PRODUCTOS -->
             <div class="menu-section-title">Inventario</div>
 
-            <li class="has-submenu {{ request()->routeIs('products.*', 'categories.*', 'inventory-adjustments.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('products.*', 'categories.*', 'inventory-adjustments.*') ? 'active' : '' }}">
+            <li
+                class="has-submenu {{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)"
+                    class="{{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'active' : '' }}">
                     <i class="bi bi-box"></i>
-                    <span class="menu-text">Productos</span>
+                    <span class="menu-text">Productos / Serv.</span>
                     <i class="bi bi-chevron-right chevron"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('products.*', 'categories.*', 'inventory-adjustments.*') ? 'show' : '' }}">
+                <ul
+                    class="submenu {{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}">
+                        <a href="{{ route('products.index') }}"
+                            class="{{ request()->routeIs('products.*') ? 'active' : '' }}">
                             <i class="bi bi-box-seam"></i>
                             <span class="menu-text">Productos</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                        <a href="{{ route('services.index') }}"
+                            class="{{ request()->routeIs('services.*') ? 'active' : '' }}">
+                            <i class="bi bi-tools"></i>
+                            <span class="menu-text">Servicios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('categories.index') }}"
+                            class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
                             <i class="bi bi-tags"></i>
                             <span class="menu-text">Categorías</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('inventory-adjustments.index') }}" class="{{ request()->routeIs('inventory-adjustments.*') ? 'active' : '' }}">
+                        <a href="{{ route('inventory-adjustments.index') }}"
+                            class="{{ request()->routeIs('inventory-adjustments.*') ? 'active' : '' }}">
                             <i class="bi bi-sliders"></i>
                             <span class="menu-text">Ajustes</span>
                         </a>
@@ -447,13 +475,15 @@
             <div class="menu-section-title">Contactos</div>
 
             <li>
-                <a href="{{ route('customers.index') }}" class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
+                <a href="{{ route('customers.index') }}"
+                    class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
                     <i class="bi bi-people"></i>
                     <span class="menu-text">Clientes</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('suppliers.index') }}" class="{{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+                <a href="{{ route('suppliers.index') }}"
+                    class="{{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
                     <i class="bi bi-truck"></i>
                     <span class="menu-text">Proveedores</span>
                 </a>
@@ -463,55 +493,66 @@
             <div class="menu-section-title">Finanzas</div>
 
             <li>
-                <a href="{{ route('account-receivables.index') }}" class="{{ request()->routeIs('account-receivables.*') ? 'active' : '' }}">
+                <a href="{{ route('account-receivables.index') }}"
+                    class="{{ request()->routeIs('account-receivables.*') ? 'active' : '' }}">
                     <i class="bi bi-wallet2"></i>
                     <span class="menu-text">Cuentas por Cobrar</span>
                 </a>
             </li>
 
             <li>
-                <a href="{{ route('account-payables.index') }}" class="{{ request()->routeIs('account-payables.*') ? 'active' : '' }}">
+                <a href="{{ route('account-payables.index') }}"
+                    class="{{ request()->routeIs('account-payables.*') ? 'active' : '' }}">
                     <i class="bi bi-credit-card"></i>
                     <span class="menu-text">Cuentas por Pagar</span>
                 </a>
             </li>
 
             <li>
-                <a href="{{ route('cash-registers.current') }}" class="{{ request()->routeIs('cash-registers.*') ? 'active' : '' }}">
+                <a href="{{ route('cash-registers.current') }}"
+                    class="{{ request()->routeIs('cash-registers.*') ? 'active' : '' }}">
                     <i class="bi bi-cash-coin"></i>
                     <span class="menu-text">Caja</span>
                 </a>
             </li>
 
-            <li class="has-submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'active' : '' }}">
+            <li
+                class="has-submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)"
+                    class="{{ request()->routeIs('bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'active' : '' }}">
                     <i class="bi bi-bank"></i>
                     <span class="menu-text">Bancos</span>
                     <i class="bi bi-chevron-right chevron"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'show' : '' }}">
+                <ul
+                    class="submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('banks.index') }}" class="{{ request()->routeIs('banks.*') ? 'active' : '' }}">
+                        <a href="{{ route('banks.index') }}"
+                            class="{{ request()->routeIs('banks.*') ? 'active' : '' }}">
                             <i class="bi bi-bank"></i> Bancos
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('bank-accounts.index') }}" class="{{ request()->routeIs('bank-accounts.*') ? 'active' : '' }}">
+                        <a href="{{ route('bank-accounts.index') }}"
+                            class="{{ request()->routeIs('bank-accounts.*') ? 'active' : '' }}">
                             <i class="bi bi-credit-card-2-front"></i> Cuentas Bancarias
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('bank-transactions.index') }}" class="{{ request()->routeIs('bank-transactions.*') ? 'active' : '' }}">
+                        <a href="{{ route('bank-transactions.index') }}"
+                            class="{{ request()->routeIs('bank-transactions.*') ? 'active' : '' }}">
                             <i class="bi bi-arrow-left-right"></i> Movimientos
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('checks.index') }}" class="{{ request()->routeIs('checks.*') ? 'active' : '' }}">
+                        <a href="{{ route('checks.index') }}"
+                            class="{{ request()->routeIs('checks.*') ? 'active' : '' }}">
                             <i class="bi bi-receipt"></i> Cheques
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('bank-reconciliations.index') }}" class="{{ request()->routeIs('bank-reconciliations.*') ? 'active' : '' }}">
+                        <a href="{{ route('bank-reconciliations.index') }}"
+                            class="{{ request()->routeIs('bank-reconciliations.*') ? 'active' : '' }}">
                             <i class="bi bi-check2-square"></i> Conciliación Bancaria
                         </a>
                     </li>
@@ -521,45 +562,55 @@
             <!-- CONTABILIDAD Section -->
             <div class="menu-section-title">Contabilidad</div>
 
-            <li class="has-submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'active' : '' }}">
+            <li
+                class="has-submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)"
+                    class="{{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'active' : '' }}">
                     <i class="bi bi-journal-text"></i>
                     <span class="menu-text">Contabilidad</span>
                     <i class="bi bi-chevron-right chevron"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'show' : '' }}">
+                <ul
+                    class="submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('account-chart.index') }}" class="{{ request()->routeIs('account-chart.*') ? 'active' : '' }}">
+                        <a href="{{ route('account-chart.index') }}"
+                            class="{{ request()->routeIs('account-chart.*') ? 'active' : '' }}">
                             <i class="bi bi-diagram-3"></i> Plan de Cuentas
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('journal-entries.index') }}" class="{{ request()->routeIs('journal-entries.*') ? 'active' : '' }}">
+                        <a href="{{ route('journal-entries.index') }}"
+                            class="{{ request()->routeIs('journal-entries.*') ? 'active' : '' }}">
                             <i class="bi bi-journal-bookmark"></i> Asientos Contables
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('general-ledger.index') }}" class="{{ request()->routeIs('general-ledger.*') ? 'active' : '' }}">
+                        <a href="{{ route('general-ledger.index') }}"
+                            class="{{ request()->routeIs('general-ledger.*') ? 'active' : '' }}">
                             <i class="bi bi-book"></i> Libro Mayor
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('trial-balance.index') }}" class="{{ request()->routeIs('trial-balance.*') ? 'active' : '' }}">
+                        <a href="{{ route('trial-balance.index') }}"
+                            class="{{ request()->routeIs('trial-balance.*') ? 'active' : '' }}">
                             <i class="bi bi-calculator"></i> Balance de Comprobación
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('accounting.balance-sheet') }}" class="{{ request()->routeIs('accounting.balance-sheet') ? 'active' : '' }}">
+                        <a href="{{ route('accounting.balance-sheet') }}"
+                            class="{{ request()->routeIs('accounting.balance-sheet') ? 'active' : '' }}">
                             <i class="bi bi-file-earmark-bar-graph"></i> Balance General
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('accounting.income-statement') }}" class="{{ request()->routeIs('accounting.income-statement') ? 'active' : '' }}">
+                        <a href="{{ route('accounting.income-statement') }}"
+                            class="{{ request()->routeIs('accounting.income-statement') ? 'active' : '' }}">
                             <i class="bi bi-graph-up"></i> Estado de Resultados
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('accounting-settings.index') }}" class="{{ request()->routeIs('accounting-settings.*') ? 'active' : '' }}">
+                        <a href="{{ route('accounting-settings.index') }}"
+                            class="{{ request()->routeIs('accounting-settings.*') ? 'active' : '' }}">
                             <i class="bi bi-gear"></i> Configuración Contable
                         </a>
                     </li>
@@ -577,53 +628,118 @@
                 </a>
                 <ul class="submenu {{ request()->routeIs('reports.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('reports.index') }}" class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                        <a href="{{ route('reports.index') }}"
+                            class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">
                             <i class="bi bi-grid"></i> Centro de Reportes
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.sales') }}" class="{{ request()->routeIs('reports.sales') ? 'active' : '' }}">
+                        <a href="{{ route('reports.sales') }}"
+                            class="{{ request()->routeIs('reports.sales') ? 'active' : '' }}">
                             <i class="bi bi-cart-check"></i> Ventas
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.purchases') }}" class="{{ request()->routeIs('reports.purchases') ? 'active' : '' }}">
+                        <a href="{{ route('reports.purchases') }}"
+                            class="{{ request()->routeIs('reports.purchases') ? 'active' : '' }}">
                             <i class="bi bi-bag"></i> Compras
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.expenses') }}" class="{{ request()->routeIs('reports.expenses') ? 'active' : '' }}">
+                        <a href="{{ route('reports.expenses') }}"
+                            class="{{ request()->routeIs('reports.expenses') ? 'active' : '' }}">
                             <i class="bi bi-cash-stack"></i> Gastos
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.inventory') }}" class="{{ request()->routeIs('reports.inventory') ? 'active' : '' }}">
+                        <a href="{{ route('reports.inventory') }}"
+                            class="{{ request()->routeIs('reports.inventory') ? 'active' : '' }}">
                             <i class="bi bi-box-seam"></i> Inventario
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.cash-flow') }}" class="{{ request()->routeIs('reports.cash-flow') ? 'active' : '' }}">
+                        <a href="{{ route('reports.cash-flow') }}"
+                            class="{{ request()->routeIs('reports.cash-flow') ? 'active' : '' }}">
                             <i class="bi bi-arrow-left-right"></i> Flujo de Caja
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.aging-report') }}" class="{{ request()->routeIs('reports.aging-report') ? 'active' : '' }}">
+                        <a href="{{ route('reports.aging-report') }}"
+                            class="{{ request()->routeIs('reports.aging-report') ? 'active' : '' }}">
                             <i class="bi bi-clock-history"></i> Antigüedad de Saldos
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.top-products') }}" class="{{ request()->routeIs('reports.top-products') ? 'active' : '' }}">
+                        <a href="{{ route('reports.top-products') }}"
+                            class="{{ request()->routeIs('reports.top-products') ? 'active' : '' }}">
                             <i class="bi bi-trophy"></i> Productos Más Vendidos
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.profitability') }}" class="{{ request()->routeIs('reports.profitability') ? 'active' : '' }}">
+                        <a href="{{ route('reports.profitability') }}"
+                            class="{{ request()->routeIs('reports.profitability') ? 'active' : '' }}">
                             <i class="bi bi-graph-up-arrow"></i> Rentabilidad
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.inventory-movements') }}" class="{{ request()->routeIs('reports.inventory-movements') ? 'active' : '' }}">
+                        <a href="{{ route('reports.inventory-movements') }}"
+                            class="{{ request()->routeIs('reports.inventory-movements') ? 'active' : '' }}">
                             <i class="bi bi-arrow-down-up"></i> Movimientos de Inventario
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- ACADEMIC Section -->
+            <div class="menu-section-title">Gestión Escolar</div>
+
+            <li class="has-submenu {{ request()->routeIs('academic.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)" class="{{ request()->routeIs('academic.*') ? 'active' : '' }}">
+                    <i class="bi bi-mortarboard"></i>
+                    <span class="menu-text">Académica</span>
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu {{ request()->routeIs('academic.*') ? 'show' : '' }}">
+                    <li>
+                        <a href="{{ route('academic.grades.index') }}"
+                            class="{{ request()->routeIs('academic.grades.*') ? 'active' : '' }}">
+                            <i class="bi bi-journal-text"></i> Cursos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.sections.index') }}"
+                            class="{{ request()->routeIs('academic.sections.*') ? 'active' : '' }}">
+                            <i class="bi bi-grid-3x3"></i> Secciones
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.shifts.index') }}"
+                            class="{{ request()->routeIs('academic.shifts.*') ? 'active' : '' }}">
+                            <i class="bi bi-clock"></i> Turnos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.bachilleratos.index') }}"
+                            class="{{ request()->routeIs('academic.bachilleratos.*') ? 'active' : '' }}">
+                            <i class="bi bi-mortarboard-fill"></i> Bachilleratos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.delegates.index') }}"
+                            class="{{ request()->routeIs('academic.delegates.*') ? 'active' : '' }}">
+                            <i class="bi bi-person-badge-fill"></i> Delegados
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('families.index') }}"
+                            class="{{ request()->routeIs('families.*') ? 'active' : '' }}">
+                            <i class="bi bi-people-fill"></i> Familias
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('parents.index') }}"
+                            class="{{ request()->routeIs('parents.*') ? 'active' : '' }}">
+                            <i class="bi bi-person-heart"></i> Padres / Tutores
                         </a>
                     </li>
                 </ul>
@@ -657,17 +773,20 @@
                 </a>
                 <ul class="submenu {{ request()->routeIs('settings.*') ? 'show' : '' }}">
                     <li>
-                        <a href="{{ route('settings.company') }}" class="{{ request()->routeIs('settings.company*') ? 'active' : '' }}">
-                            <i class="bi bi-building"></i> Datos de la Empresa
+                        <a href="{{ route('settings.company') }}"
+                            class="{{ request()->routeIs('settings.company*') ? 'active' : '' }}">
+                            <i class="bi bi-building"></i> Datos de la Entidad
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('settings.documents') }}" class="{{ request()->routeIs('settings.documents*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.documents') }}"
+                            class="{{ request()->routeIs('settings.documents*') ? 'active' : '' }}">
                             <i class="bi bi-file-earmark-text"></i> Numeración de Documentos
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('settings.taxes') }}" class="{{ request()->routeIs('settings.taxes*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.taxes') }}"
+                            class="{{ request()->routeIs('settings.taxes*') ? 'active' : '' }}">
                             <i class="bi bi-percent"></i> Impuestos (IVA)
                         </a>
                     </li>
@@ -675,7 +794,7 @@
             </li>
         </ul>
     </div>
-    
+
     <!-- Main Content -->
     <div class="main-content">
         <!-- Top Navbar -->
@@ -695,9 +814,13 @@
                         <i class="bi bi-person-circle"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('profile.login-history') }}"><i class="bi bi-clock-history me-2"></i>Historial de Sesiones</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i
+                                    class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('profile.login-history') }}"><i
+                                    class="bi bi-clock-history me-2"></i>Historial de Sesiones</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -710,7 +833,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Content -->
         <div class="content-wrapper">
             @if(session('success'))
@@ -719,18 +842,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
-            
+
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
-            
+
             @yield('content')
         </div>
     </div>
-    
+
     <!-- jQuery (required by jEasyUI) - local -->
     <script src="{{ asset('vendor/jquery/jquery-3.7.1.min.js') }}"></script>
 
@@ -740,7 +863,7 @@
     <!-- jEasyUI JS (local) -->
     <script type="text/javascript" src="{{ asset('vendor/easyui/jquery.easyui.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vendor/easyui/locale/easyui-lang-es.js') }}"></script>
-    
+
     <script>
         $.ajaxSetup({
             headers: {
@@ -749,8 +872,8 @@
         });
 
         // Toggle submenu
-        $(document).ready(function() {
-            $('.has-submenu > a').click(function(e) {
+        $(document).ready(function () {
+            $('.has-submenu > a').click(function (e) {
                 e.preventDefault();
                 var $parent = $(this).parent();
                 $parent.toggleClass('open');
@@ -781,7 +904,7 @@
         }
 
         // Restore sidebar state on page load
-        $(document).ready(function() {
+        $(document).ready(function () {
             const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
             if (isCollapsed) {
                 const sidebar = document.getElementById('sidebar');
@@ -800,4 +923,5 @@
     <!-- Widget de Ayuda Flotante -->
     <x-help-widget :module="request()->segment(1)" />
 </body>
+
 </html>

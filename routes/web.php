@@ -28,9 +28,17 @@ use App\Http\Controllers\GeneralLedgerController;
 use App\Http\Controllers\AccountingSettingController;
 use App\Http\Controllers\FinancialStatementController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CreditNoteController;
-use App\Http\Controllers\RemissionController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\AcademicGradeController;
+use App\Http\Controllers\AcademicSectionController;
+use App\Http\Controllers\AcademicShiftController;
+use App\Http\Controllers\AcademicBachilleratoController;
+use App\Http\Controllers\DelegateController;
+use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\ParentController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\RemissionController;
+use App\Http\Controllers\CreditNoteController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas publicas
@@ -78,7 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:roles.create')->name('roles.store');
     Route::put('/roles/{role}', [RoleController::class, 'update'])->middleware('permission:roles.edit')->name('roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->middleware('permission:roles.delete')->name('roles.destroy');
-    
+
     // Clientes
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/data', [CustomerController::class, 'data'])->name('customers.data');
@@ -87,14 +95,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
-    
+
     // Proveedores
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/data', [SupplierController::class, 'data'])->name('suppliers.data');
     Route::get('/suppliers/list', [SupplierController::class, 'list'])->name('suppliers.list');
     Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
     Route::get('/suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show');
-    
+
     // Categorías
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/data', [CategoryController::class, 'data'])->name('categories.data');
@@ -103,7 +111,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-    
+
     // Productos
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/data', [ProductController::class, 'data'])->name('products.data');
@@ -369,6 +377,78 @@ Route::middleware('auth')->group(function () {
     // Estados Financieros
     Route::get('/accounting/balance-sheet', [FinancialStatementController::class, 'balanceSheet'])->name('accounting.balance-sheet');
     Route::get('/accounting/income-statement', [FinancialStatementController::class, 'incomeStatement'])->name('accounting.income-statement');
+
+    // Configuración Académica
+    Route::prefix('academic')->group(function () {
+        // Cursos
+        Route::get('/grades', [AcademicGradeController::class, 'index'])->name('academic.grades.index');
+        Route::get('/grades/data', [AcademicGradeController::class, 'data'])->name('academic.grades.data');
+        Route::get('/grades/list', [AcademicGradeController::class, 'list'])->name('academic.grades.list');
+        Route::post('/grades', [AcademicGradeController::class, 'store'])->name('academic.grades.store');
+        Route::get('/grades/{academicGrade}', [AcademicGradeController::class, 'show'])->name('academic.grades.show');
+        Route::put('/grades/{academicGrade}', [AcademicGradeController::class, 'update'])->name('academic.grades.update');
+        Route::delete('/grades/{academicGrade}', [AcademicGradeController::class, 'destroy'])->name('academic.grades.destroy');
+
+        // Secciones
+        Route::get('/sections', [AcademicSectionController::class, 'index'])->name('academic.sections.index');
+        Route::get('/sections/data', [AcademicSectionController::class, 'data'])->name('academic.sections.data');
+        Route::get('/sections/list', [AcademicSectionController::class, 'list'])->name('academic.sections.list');
+        Route::post('/sections', [AcademicSectionController::class, 'store'])->name('academic.sections.store');
+        Route::get('/sections/{academicSection}', [AcademicSectionController::class, 'show'])->name('academic.sections.show');
+        Route::put('/sections/{academicSection}', [AcademicSectionController::class, 'update'])->name('academic.sections.update');
+        Route::delete('/sections/{academicSection}', [AcademicSectionController::class, 'destroy'])->name('academic.sections.destroy');
+
+        // Turnos
+        Route::get('/shifts', [AcademicShiftController::class, 'index'])->name('academic.shifts.index');
+        Route::get('/shifts/data', [AcademicShiftController::class, 'data'])->name('academic.shifts.data');
+        Route::get('/shifts/list', [AcademicShiftController::class, 'list'])->name('academic.shifts.list');
+        Route::post('/shifts', [AcademicShiftController::class, 'store'])->name('academic.shifts.store');
+        Route::get('/shifts/{academicShift}', [AcademicShiftController::class, 'show'])->name('academic.shifts.show');
+        Route::put('/shifts/{academicShift}', [AcademicShiftController::class, 'update'])->name('academic.shifts.update');
+        Route::delete('/shifts/{academicShift}', [AcademicShiftController::class, 'destroy'])->name('academic.shifts.destroy');
+
+        // Bachilleratos
+        Route::get('/bachilleratos', [AcademicBachilleratoController::class, 'index'])->name('academic.bachilleratos.index');
+        Route::get('/bachilleratos/data', [AcademicBachilleratoController::class, 'data'])->name('academic.bachilleratos.data');
+        Route::get('/bachilleratos/list', [AcademicBachilleratoController::class, 'list'])->name('academic.bachilleratos.list');
+        Route::post('/bachilleratos', [AcademicBachilleratoController::class, 'store'])->name('academic.bachilleratos.store');
+        Route::get('/bachilleratos/{academicBachillerato}', [AcademicBachilleratoController::class, 'show'])->name('academic.bachilleratos.show');
+        Route::put('/bachilleratos/{academicBachillerato}', [AcademicBachilleratoController::class, 'update'])->name('academic.bachilleratos.update');
+        Route::delete('/bachilleratos/{academicBachillerato}', [AcademicBachilleratoController::class, 'destroy'])->name('academic.bachilleratos.destroy');
+
+        // Delegados
+        Route::get('/delegates', [DelegateController::class, 'index'])->name('academic.delegates.index');
+        Route::get('/delegates/data', [DelegateController::class, 'data'])->name('academic.delegates.data');
+        Route::post('/delegates', [DelegateController::class, 'store'])->name('academic.delegates.store');
+        Route::get('/delegates/{delegate}', [DelegateController::class, 'show'])->name('academic.delegates.show');
+        Route::put('/delegates/{delegate}', [DelegateController::class, 'update'])->name('academic.delegates.update');
+        Route::delete('/delegates/{delegate}', [DelegateController::class, 'destroy'])->name('academic.delegates.destroy');
+    });
+
+    // Familias
+    Route::get('/families', [FamilyController::class, 'index'])->name('families.index');
+    Route::get('/families/data', [FamilyController::class, 'data'])->name('families.data');
+    Route::get('/families/list', [FamilyController::class, 'list'])->name('families.list');
+    Route::post('/families', [FamilyController::class, 'store'])->name('families.store');
+    Route::get('/families/{family}', [FamilyController::class, 'show'])->name('families.show');
+    Route::put('/families/{family}', [FamilyController::class, 'update'])->name('families.update');
+    Route::delete('/families/{family}', [FamilyController::class, 'destroy'])->name('families.destroy');
+
+    // Padres / Tutores
+    Route::get('/parents', [ParentController::class, 'index'])->name('parents.index');
+    Route::get('/parents/data', [ParentController::class, 'data'])->name('parents.data');
+    Route::post('/parents', [ParentController::class, 'store'])->name('parents.store');
+    Route::get('/parents/{parent}', [ParentController::class, 'show'])->name('parents.show');
+    Route::put('/parents/{parent}', [ParentController::class, 'update'])->name('parents.update');
+    Route::delete('/parents/{parent}', [ParentController::class, 'destroy'])->name('parents.destroy');
+
+    // Servicios
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/services/data', [ServiceController::class, 'data'])->name('services.data');
+    Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+    Route::put('/services/{service}', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 
     // Centro de Ayuda
     Route::get('/help', [HelpController::class, 'index'])->name('help.index');

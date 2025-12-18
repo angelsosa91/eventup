@@ -21,7 +21,8 @@ class ProductController extends Controller
         $order = $request->get('order', 'desc');
         $search = $request->get('search', '');
 
-        $query = Product::with('category')
+        $query = Product::where('type', 'product')
+            ->with('category')
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
@@ -60,6 +61,7 @@ class ProductController extends Controller
         $search = $request->get('q', '');
 
         $products = Product::where('is_active', true)
+            ->where('type', 'product')
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
@@ -104,7 +106,9 @@ class ProductController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $product = Product::create($request->all());
+        $data = $request->all();
+        $data['type'] = 'product';
+        $product = Product::create($data);
 
         return response()->json([
             'success' => true,
@@ -141,6 +145,10 @@ class ProductController extends Controller
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        if ($product->type !== 'product') {
+            return response()->json(['message' => 'Not a product'], 404);
         }
 
         $product->update($request->all());
