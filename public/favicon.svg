@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <circle cx="32" cy="32" r="30" fill="url(#grad)"/>
+
+  <!-- Letter N (stylized for Neo) -->
+  <path d="M 18 20 L 24 20 L 24 32 L 36 20 L 42 20 L 42 44 L 36 44 L 36 32 L 24 44 L 18 44 Z" fill="#ffffff" stroke="#ffffff" stroke-width="1" stroke-linejoin="round"/>
+
+  <!-- Box/Package icon (representing ERP/business) -->
+  <path d="M 44 38 L 52 34 L 52 26 L 44 30 Z" fill="#ecf0f1" opacity="0.9"/>
+  <path d="M 44 30 L 52 26 L 44 22 L 36 26 Z" fill="#ffffff"/>
+  <path d="M 36 26 L 36 34 L 44 38 L 44 30 Z" fill="#bdc3c7" opacity="0.9"/>
+</svg>

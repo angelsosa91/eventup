@@ -1,0 +1,178 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neo-erp-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount application code from host (for fast deployments)
+      - .:/var/www/html
+      # Named volumes for persistent data (override specific directories)
+      - storage-data:/var/www/html/storage/app/public
+      - logs-data:/var/www/html/storage/logs
+      # Cache directories
+      - /var/www/html/vendor  # Don't override vendor from image
+      - /var/www/html/node_modules  # Don't override node_modules from image
+    environment:
+      - APP_NAME=${APP_NAME:-Neo ERP}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL:-http://localhost}
+      - LOG_CHANNEL=${LOG_CHANNEL:-stack}
+      - LOG_LEVEL=${LOG_LEVEL:-error}
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE:-neo_erp}
+      - DB_USERNAME=${DB_USERNAME:-neo_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - BROADCAST_CONNECTION=${BROADCAST_CONNECTION:-log}
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - FILESYSTEM_DISK=${FILESYSTEM_DISK:-local}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - SESSION_LIFETIME=${SESSION_LIFETIME:-120}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - neo-erp-network
+    ports:
+      - "${APP_PORT:-8080}:80"
+
+  # db:
+  #   image: mysql:8.0
+  #   container_name: neo-erp-db
+  #   restart: unless-stopped
+  #   environment:
+  #     - MYSQL_DATABASE=${DB_DATABASE:-neo_erp}
+  #     - MYSQL_USER=${DB_USERNAME:-neo_user}
+  #     - MYSQL_PASSWORD=${DB_PASSWORD}
+  #     - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+  #   volumes:
+  #     - db-data:/var/lib/mysql
+  #     - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+  #   networks:
+  #     - neo-erp-network
+  #   ports:
+  #     - "${DB_PORT:-3306}:3306"
+  # NOTA: Servicio deshabilitado - Se usa base de datos externa en DigitalOcean
+
+  redis:
+    image: redis:7-alpine
+    container_name: neo-erp-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - neo-erp-network
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neo-erp-worker
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: php artisan queue:work --tries=3 --max-time=3600
+    volumes:
+      # Mount application code from host
+      - .:/var/www/html
+      - storage-data:/var/www/html/storage/app/public
+      - logs-data:/var/www/html/storage/logs
+      # Cache directories
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    environment:
+      - APP_NAME=${APP_NAME:-Neo ERP}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL:-http://localhost}
+      - LOG_CHANNEL=${LOG_CHANNEL:-stack}
+      - LOG_LEVEL=${LOG_LEVEL:-error}
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE:-neo_erp}
+      - DB_USERNAME=${DB_USERNAME:-neo_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - BROADCAST_CONNECTION=${BROADCAST_CONNECTION:-log}
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - FILESYSTEM_DISK=${FILESYSTEM_DISK:-local}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - SESSION_LIFETIME=${SESSION_LIFETIME:-120}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - neo-erp-network
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neo-erp-scheduler
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
+    volumes:
+      # Mount application code from host
+      - .:/var/www/html
+      - storage-data:/var/www/html/storage/app/public
+      - logs-data:/var/www/html/storage/logs
+      # Cache directories
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    environment:
+      - APP_NAME=${APP_NAME:-Neo ERP}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL:-http://localhost}
+      - LOG_CHANNEL=${LOG_CHANNEL:-stack}
+      - LOG_LEVEL=${LOG_LEVEL:-error}
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE:-neo_erp}
+      - DB_USERNAME=${DB_USERNAME:-neo_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - BROADCAST_CONNECTION=${BROADCAST_CONNECTION:-log}
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - FILESYSTEM_DISK=${FILESYSTEM_DISK:-local}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - SESSION_LIFETIME=${SESSION_LIFETIME:-120}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - neo-erp-network
+
+networks:
+  neo-erp-network:
+    driver: bridge
+
+volumes:
+  # db-data:  # No se necesita - usando base de datos externa
+  #   driver: local
+  redis-data:
+    driver: local
+  storage-data:
+    driver: local
+  logs-data:
+    driver: local
