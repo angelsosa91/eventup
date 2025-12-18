@@ -34,8 +34,6 @@ use App\Http\Controllers\AcademicSectionController;
 use App\Http\Controllers\AcademicShiftController;
 use App\Http\Controllers\AcademicBachilleratoController;
 use App\Http\Controllers\DelegateController;
-use App\Http\Controllers\FamilyController;
-use App\Http\Controllers\ParentController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\RemissionController;
 use App\Http\Controllers\CreditNoteController;
@@ -419,28 +417,13 @@ Route::middleware('auth')->group(function () {
         // Delegados
         Route::get('/delegates', [DelegateController::class, 'index'])->name('academic.delegates.index');
         Route::get('/delegates/data', [DelegateController::class, 'data'])->name('academic.delegates.data');
+        Route::get('/delegates/list', [DelegateController::class, 'list'])->name('academic.delegates.list');
         Route::post('/delegates', [DelegateController::class, 'store'])->name('academic.delegates.store');
         Route::get('/delegates/{delegate}', [DelegateController::class, 'show'])->name('academic.delegates.show');
         Route::put('/delegates/{delegate}', [DelegateController::class, 'update'])->name('academic.delegates.update');
         Route::delete('/delegates/{delegate}', [DelegateController::class, 'destroy'])->name('academic.delegates.destroy');
     });
 
-    // Familias
-    Route::get('/families', [FamilyController::class, 'index'])->name('families.index');
-    Route::get('/families/data', [FamilyController::class, 'data'])->name('families.data');
-    Route::get('/families/list', [FamilyController::class, 'list'])->name('families.list');
-    Route::post('/families', [FamilyController::class, 'store'])->name('families.store');
-    Route::get('/families/{family}', [FamilyController::class, 'show'])->name('families.show');
-    Route::put('/families/{family}', [FamilyController::class, 'update'])->name('families.update');
-    Route::delete('/families/{family}', [FamilyController::class, 'destroy'])->name('families.destroy');
-
-    // Padres / Tutores
-    Route::get('/parents', [ParentController::class, 'index'])->name('parents.index');
-    Route::get('/parents/data', [ParentController::class, 'data'])->name('parents.data');
-    Route::post('/parents', [ParentController::class, 'store'])->name('parents.store');
-    Route::get('/parents/{parent}', [ParentController::class, 'show'])->name('parents.show');
-    Route::put('/parents/{parent}', [ParentController::class, 'update'])->name('parents.update');
-    Route::delete('/parents/{parent}', [ParentController::class, 'destroy'])->name('parents.destroy');
 
     // Servicios
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');

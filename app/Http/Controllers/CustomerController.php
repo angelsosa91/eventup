@@ -21,7 +21,7 @@ class CustomerController extends Controller
         $order = $request->get('order', 'desc');
         $search = $request->get('search', '');
 
-        $query = Customer::with(['grade', 'section', 'family'])
+        $query = Customer::with(['grade', 'section', 'delegate'])
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
@@ -41,15 +41,15 @@ class CustomerController extends Controller
                 'name' => $customer->name,
                 'first_name' => $customer->first_name,
                 'last_name' => $customer->last_name,
+                'family_name' => $customer->family_name,
                 'ruc' => $customer->ruc,
                 'email' => $customer->email,
                 'phone' => $customer->phone,
                 'mobile' => $customer->mobile,
-                'city' => $customer->city,
+                'address' => $customer->address,
                 'grade_name' => $customer->grade?->name,
                 'section_name' => $customer->section?->name,
-                'family_name' => $customer->family?->name,
-                'credit_limit' => number_format($customer->credit_limit, 0, ',', '.'),
+                'delegate_name' => $customer->delegate?->name,
                 'is_active' => $customer->is_active,
             ];
         });
@@ -66,21 +66,22 @@ class CustomerController extends Controller
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'name' => 'required|string|max:255',
+            'family_name' => 'nullable|string|max:255',
             'ruc' => 'nullable|string|max:20',
             'birth_date' => 'nullable|date',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:50',
             'mobile' => 'nullable|string|max:50',
             'address' => 'nullable|string',
-            'city' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'family_id' => 'nullable|exists:families,id',
             'grade_id' => 'nullable|exists:academic_grades,id',
             'section_id' => 'nullable|exists:academic_sections,id',
             'shift_id' => 'nullable|exists:academic_shifts,id',
             'bachillerato_id' => 'nullable|exists:academic_bachilleratos,id',
-            'credit_limit' => 'nullable|numeric|min:0',
-            'credit_days' => 'nullable|integer|min:0',
+            'delegate_id' => 'nullable|exists:delegates,id',
+            'billing_name' => 'nullable|string|max:255',
+            'billing_ruc' => 'nullable|string|max:50',
+            'billing_email' => 'nullable|email|max:255',
+            'budget_type' => 'nullable|string|in:unique,parents',
             'notes' => 'nullable|string',
             'is_active' => 'boolean',
         ]);
@@ -107,21 +108,22 @@ class CustomerController extends Controller
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'name' => 'required|string|max:255',
+            'family_name' => 'nullable|string|max:255',
             'ruc' => 'nullable|string|max:20',
             'birth_date' => 'nullable|date',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:50',
             'mobile' => 'nullable|string|max:50',
             'address' => 'nullable|string',
-            'city' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'family_id' => 'nullable|exists:families,id',
             'grade_id' => 'nullable|exists:academic_grades,id',
             'section_id' => 'nullable|exists:academic_sections,id',
             'shift_id' => 'nullable|exists:academic_shifts,id',
             'bachillerato_id' => 'nullable|exists:academic_bachilleratos,id',
-            'credit_limit' => 'nullable|numeric|min:0',
-            'credit_days' => 'nullable|integer|min:0',
+            'delegate_id' => 'nullable|exists:delegates,id',
+            'billing_name' => 'nullable|string|max:255',
+            'billing_ruc' => 'nullable|string|max:50',
+            'billing_email' => 'nullable|email|max:255',
+            'budget_type' => 'nullable|string|in:unique,parents',
             'notes' => 'nullable|string',
             'is_active' => 'boolean',
         ]);

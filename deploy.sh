@@ -3,7 +3,7 @@
 set -e
 
 echo "======================================"
-echo "Neo ERP - Script de Deployment"
+echo "EventUP - Script de Deployment"
 echo "======================================"
 echo ""
 

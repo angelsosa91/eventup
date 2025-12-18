@@ -2,7 +2,7 @@
 
 # Default target
 help:
-	@echo "Neo ERP - Comandos disponibles:"
+	@echo "EventUP - Comandos disponibles:"
 	@echo ""
 	@echo "  Producción:"
 	@echo "    make build      - Construir imágenes Docker"
@@ -47,7 +47,7 @@ deploy: build up
 	@echo "Deployment completado!"
 
 install:
-	@echo "Instalación inicial de Neo ERP..."
+	@echo "Instalación inicial de EventUP..."
 	@cp .env.docker .env
 	@echo "Por favor, edita el archivo .env y configura APP_KEY y las credenciales de BD"
 	@read -p "Presiona Enter cuando hayas configurado .env..."

@@ -1,4 +1,4 @@
-# 📜 Scripts de Deploy - NEO ERP
+# 📜 Scripts de Deploy - EventUP
 
 Scripts para desplegar la aplicación en producción de forma segura.
 

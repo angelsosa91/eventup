@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Servicios - Neo ERP')
+@section('title', 'Servicios - EventUP')
 @section('page-title', 'Gestión de Servicios')
 
 @section('content')
@@ -22,19 +22,19 @@
 
             <!-- DataGrid -->
             <table id="dg-services" class="easyui-datagrid" style="width:100%;height:700px" data-options="
-                    url:'{{ route('services.data') }}',
-                    method:'get',
-                    toolbar:'#toolbar',
-                    pagination:true,
-                    pageSize:20,
-                    pageList:[10,20,50,100],
-                    rownumbers:true,
-                    singleSelect:true,
-                    fitColumns:true,
-                    sortName:'id',
-                    sortOrder:'desc',
-                    remoteSort:true
-                ">
+                        url:'{{ route('services.data') }}',
+                        method:'get',
+                        toolbar:'#toolbar',
+                        pagination:true,
+                        pageSize:20,
+                        pageList:[10,20,50,100],
+                        rownumbers:true,
+                        singleSelect:true,
+                        fitColumns:true,
+                        sortName:'id',
+                        sortOrder:'desc',
+                        remoteSort:true
+                    ">
                 <thead>
                     <tr>
                         <th data-options="field:'id',width:50,sortable:true">ID</th>
@@ -74,12 +74,12 @@
                     <label class="form-label">Categoría</label>
                     <select class="easyui-combobox" name="category_id" id="service-category" style="width:100%"
                         data-options="
-                            url:'{{ route('categories.list') }}',
-                            method:'get',
-                            valueField:'id',
-                            textField:'name',
-                            panelHeight:'auto'
-                        ">
+                                url:'{{ route('categories.list') }}',
+                                method:'get',
+                                valueField:'id',
+                                textField:'name',
+                                panelHeight:'auto'
+                            ">
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">

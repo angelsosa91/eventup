@@ -1,4 +1,4 @@
-# Neo ERP Favicon
+# EventUP Favicon
 
 ## Archivos incluidos
 
@@ -8,7 +8,7 @@
 
 ## Diseño
 
-El favicon de Neo ERP combina dos elementos:
+El favicon de EventUP combina dos elementos:
 
 1. **Letra "N"** estilizada en blanco - Representa "Neo"
 2. **Icono de caja/paquete** en la esquina - Representa el aspecto de gestión empresarial (ERP)

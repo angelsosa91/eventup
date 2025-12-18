@@ -98,4 +98,10 @@ class DelegateController extends Controller
             'message' => 'Delegado eliminado exitosamente',
         ]);
     }
+
+    public function list()
+    {
+        $items = Delegate::orderBy('name')->get();
+        return response()->json($items);
+    }
 }

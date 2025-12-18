@@ -1,4 +1,4 @@
-# NEO ERP - Contexto del Proyecto
+# EventUP - Contexto del Proyecto
 
 > Este archivo contiene toda la información necesaria para continuar el desarrollo en futuras sesiones sin necesidad de re-explicar el contexto.
 
@@ -6,7 +6,7 @@
 
 ## Resumen Ejecutivo
 
-**Neo ERP** es un sistema de planificación de recursos empresariales (ERP) desarrollado en Laravel 12 con arquitectura multi-tenant. El sistema está diseñado para gestionar usuarios, roles, clientes, proveedores, categorías y productos con aislamiento de datos por empresa.
+**EventUP** es un sistema de planificación de recursos empresariales (ERP) desarrollado en Laravel 12 con arquitectura multi-tenant. El sistema está diseñado para gestionar usuarios, roles, clientes, proveedores, categorías y productos con aislamiento de datos por empresa.
 
 ---
 

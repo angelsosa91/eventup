@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Neo ERP</title>
+    <title>Iniciar Sesión - EventUP</title>
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -58,9 +59,19 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
         }
 
         .login-container {
@@ -85,6 +96,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -110,8 +122,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .logo-icon i {
@@ -172,7 +191,7 @@
             background: #fff;
         }
 
-        .form-control:focus + .input-group-text,
+        .form-control:focus+.input-group-text,
         .input-group:focus-within .input-group-text {
             border-color: #3498db;
             background: #e3f2fd;
@@ -245,9 +264,19 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
         }
 
         .alert-danger {
@@ -318,6 +347,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="login-card">
@@ -325,8 +355,8 @@
                 <div class="logo-icon">
                     <i class="bi bi-box-seam"></i>
                 </div>
-                <h1 class="brand-name">Neo ERP</h1>
-                <p class="brand-tagline">Sistema de Gestión Empresarial</p>
+                <h1 class="brand-name">EventUP</h1>
+                <p class="brand-tagline">Sistema de Gestión de Eventos</p>
             </div>
 
             @if($errors->any())
@@ -346,14 +376,8 @@
                         <span class="input-group-text">
                             <i class="bi bi-envelope-fill"></i>
                         </span>
-                        <input type="email"
-                               class="form-control"
-                               id="email"
-                               name="email"
-                               placeholder="usuario@empresa.com"
-                               value="{{ old('email') }}"
-                               required
-                               autofocus>
+                        <input type="email" class="form-control" id="email" name="email"
+                            placeholder="usuario@empresa.com" value="{{ old('email') }}" required autofocus>
                     </div>
                 </div>
 
@@ -363,12 +387,8 @@
                         <span class="input-group-text">
                             <i class="bi bi-lock-fill"></i>
                         </span>
-                        <input type="password"
-                               class="form-control"
-                               id="password"
-                               name="password"
-                               placeholder="••••••••"
-                               required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="••••••••"
+                            required>
                         <span class="toggle-password" onclick="togglePassword()">
                             <i class="bi bi-eye-fill" id="toggleIcon"></i>
                         </span>
@@ -376,10 +396,7 @@
                 </div>
 
                 <div class="form-check">
-                    <input type="checkbox"
-                           class="form-check-input"
-                           id="remember"
-                           name="remember">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
                     <label class="form-check-label" for="remember">
                         Mantener sesión iniciada
                     </label>
@@ -393,7 +410,7 @@
         </div>
 
         <div class="footer-text">
-            <p>&copy; {{ date('Y') }} Neo ERP. Todos los derechos reservados.</p>
+            <p>&copy; {{ date('Y') }} EventUP. Todos los derechos reservados.</p>
         </div>
     </div>
 
@@ -415,4 +432,5 @@
         }
     </script>
 </body>
+
 </html>

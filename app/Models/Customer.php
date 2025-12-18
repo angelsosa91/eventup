@@ -20,30 +20,25 @@ class Customer extends Model
         'phone',
         'mobile',
         'address',
-        'city',
-        'country',
-        'family_id',
+        'family_name',
         'grade_id',
         'section_id',
         'shift_id',
         'bachillerato_id',
-        'credit_limit',
-        'credit_days',
+        'delegate_id',
+        'billing_name',
+        'billing_ruc',
+        'billing_email',
+        'budget_type',
         'notes',
         'is_active',
     ];
 
     protected $casts = [
         'birth_date' => 'date',
-        'credit_limit' => 'decimal:2',
-        'credit_days' => 'integer',
         'is_active' => 'boolean',
     ];
 
-    public function family()
-    {
-        return $this->belongsTo(Family::class);
-    }
 
     public function grade()
     {
@@ -65,10 +60,9 @@ class Customer extends Model
         return $this->belongsTo(AcademicBachillerato::class, 'bachillerato_id');
     }
 
-    public function parents()
+    public function delegate()
     {
-        return $this->belongsToMany(ParentModel::class, 'parent_student', 'customer_id', 'parent_id')
-            ->withPivot('relationship')
-            ->withTimestamps();
+        return $this->belongsTo(Delegate::class, 'delegate_id');
     }
+
 }

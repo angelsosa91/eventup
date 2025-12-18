@@ -2,12 +2,12 @@
 
 set -e
 
-echo "Starting Neo ERP application..."
+echo "Starting EventUP application..."
 
 # Create .env file from environment variables
 echo "Creating .env file from environment variables..."
 cat > /var/www/html/.env << EOF
-APP_NAME="${APP_NAME:-Neo ERP}"
+APP_NAME="${APP_NAME:-EventUP}"
 APP_ENV=${APP_ENV:-production}
 APP_KEY=${APP_KEY}
 APP_DEBUG=${APP_DEBUG:-false}

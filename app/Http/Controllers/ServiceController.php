@@ -55,18 +55,35 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'code' => 'required|string|max:50|unique:products,code',
-            'name' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:categories,id',
-            'description' => 'nullable|string',
-            'unit' => 'required|string|max:20',
-            'purchase_price' => 'required|numeric|min:0',
-            'sale_price' => 'required|numeric|min:0',
-            'tax_rate' => 'required|in:0,5,10',
-            'is_active' => 'boolean',
-            'notes' => 'nullable|string',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'code' => 'required|string|max:50|unique:products,code',
+                'name' => 'required|string|max:255',
+                'category_id' => 'nullable|exists:categories,id',
+                'description' => 'nullable|string',
+                'unit' => 'required|string|max:20',
+                'purchase_price' => 'required|numeric|min:0',
+                'sale_price' => 'required|numeric|min:0',
+                'tax_rate' => 'required|in:0,5,10',
+                'is_active' => 'boolean',
+                'notes' => 'nullable|string',
+            ],
+            [
+                'code.required' => 'El código es obligatorio.',
+                'code.unique' => 'El código ya existe.',
+                'name.required' => 'El nombre es obligatorio.',
+                'category_id.exists' => 'La categoría no existe.',
+                'description.string' => 'La descripción debe ser una cadena.',
+                'unit.required' => 'La unidad es obligatoria.',
+                'purchase_price.required' => 'El precio de compra es obligatorio.',
+                'sale_price.required' => 'El precio de venta es obligatorio.',
+                'tax_rate.required' => 'El tipo de IVA es obligatorio.',
+                'tax_rate.in' => 'El tipo de IVA debe ser 0, 5 o 10.',
+                'is_active.boolean' => 'El estado debe ser un booleano.',
+                'notes.string' => 'Las notas deben ser una cadena.',
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -101,18 +118,35 @@ class ServiceController extends Controller
             return response()->json(['message' => 'Not a service'], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'code' => 'required|string|max:50|unique:products,code,' . $service->id,
-            'name' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:categories,id',
-            'description' => 'nullable|string',
-            'unit' => 'required|string|max:20',
-            'purchase_price' => 'required|numeric|min:0',
-            'sale_price' => 'required|numeric|min:0',
-            'tax_rate' => 'required|in:0,5,10',
-            'is_active' => 'boolean',
-            'notes' => 'nullable|string',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'code' => 'required|string|max:50|unique:products,code,' . $service->id,
+                'name' => 'required|string|max:255',
+                'category_id' => 'nullable|exists:categories,id',
+                'description' => 'nullable|string',
+                'unit' => 'required|string|max:20',
+                'purchase_price' => 'required|numeric|min:0',
+                'sale_price' => 'required|numeric|min:0',
+                'tax_rate' => 'required|in:0,5,10',
+                'is_active' => 'boolean',
+                'notes' => 'nullable|string',
+            ],
+            [
+                'code.required' => 'El código es obligatorio.',
+                'code.unique' => 'El código ya existe.',
+                'name.required' => 'El nombre es obligatorio.',
+                'category_id.exists' => 'La categoría no existe.',
+                'description.string' => 'La descripción debe ser una cadena.',
+                'unit.required' => 'La unidad es obligatoria.',
+                'purchase_price.required' => 'El precio de compra es obligatorio.',
+                'sale_price.required' => 'El precio de venta es obligatorio.',
+                'tax_rate.required' => 'El tipo de IVA es obligatorio.',
+                'tax_rate.in' => 'El tipo de IVA debe ser 0, 5 o 10.',
+                'is_active.boolean' => 'El estado debe ser un booleano.',
+                'notes.string' => 'Las notas deben ser una cadena.',
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);

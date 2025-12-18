@@ -1,4 +1,4 @@
-# Neo ERP
+# EventUP
 
 Sistema de Gestión Empresarial (ERP) moderno y completo desarrollado con Laravel 12, diseñado específicamente para empresas en Paraguay con soporte para el sistema de IVA local.
 
@@ -243,7 +243,7 @@ php artisan serve
 
 ```env
 # Aplicación
-APP_NAME="Neo ERP"
+APP_NAME="EventUP"
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://tu-dominio.com
@@ -562,7 +562,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ## 👥 Autores
 
-- **Equipo de Desarrollo Neo ERP**
+- **Equipo de Desarrollo EventUP**
 
 ## 📞 Soporte
 
@@ -580,4 +580,4 @@ Para soporte y consultas:
 
 ---
 
-**Neo ERP** - Sistema de Gestión Empresarial Moderno
+**EventUP** - Sistema de Gestión Empresarial Moderno

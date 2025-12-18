@@ -6,9 +6,20 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <table id="dg" title="Secciones" class="easyui-datagrid" style="width:100%;height:450px"
-                url="{{ route('academic.sections.data') }}" toolbar="#toolbar" pagination="true" rownumbers="true"
-                fitColumns="true" singleSelect="true">
+            <table id="dg" title="Secciones" class="easyui-datagrid" style="width:100%;height:700px" data-options="
+                            url:'{{ route('academic.sections.data') }}',
+                            method:'get',
+                            toolbar:'#toolbar',
+                            pagination:true,
+                            pageSize:20,
+                            pageList:[10,20,50,100],
+                            rownumbers:true,
+                            singleSelect:true,
+                            fitColumns:true,
+                            sortName:'id',
+                            sortOrder:'desc',
+                            remoteSort:true
+                        ">
                 <thead>
                     <tr>
                         <th field="id" width="50" sortable="true">ID</th>
@@ -34,6 +45,7 @@
             <!-- Dialog -->
             <div id="dlg" class="easyui-dialog" style="width:400px" closed="true" buttons="#dlg-buttons" modal="true">
                 <form id="fm" method="post" novalidate style="margin:0;padding:20px 50px">
+                    @csrf
                     <div style="margin-bottom:10px">
                         <input name="name" class="easyui-textbox" required="true" label="Nombre:" style="width:100%">
                     </div>
@@ -58,66 +70,91 @@
 @push('scripts')
     <script type="text/javascript">
         var url;
+        var editingId = null;
+
         function newItem() {
+            editingId = null;
             $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Nueva Sección');
             $('#fm').form('clear');
             $('#fm').form('load', { is_active: 1 });
             url = "{{ route('academic.sections.store') }}";
         }
+
         function editItem() {
             var row = $('#dg').datagrid('getSelected');
             if (row) {
+                editingId = row.id;
                 $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Editar Sección');
                 $('#fm').form('load', row);
                 url = "{{ url('academic/sections') }}/" + row.id;
-                // Laravel needs PUT for update
-                $('<input>').attr({ type: 'hidden', name: '_method', value: 'PUT' }).appendTo('#fm');
             }
         }
+
         function saveItem() {
-            $('#fm').form('submit', {
+            if (!$('#fm').form('validate')) return;
+
+            var data = {};
+            $('#fm').serializeArray().forEach(function (item) {
+                data[item.name] = item.value;
+            });
+
+            $.ajax({
                 url: url,
-                onSubmit: function () {
-                    return $(this).form('validate');
-                },
+                method: editingId ? 'PUT' : 'POST',
+                data: data,
                 success: function (result) {
-                    var result = JSON.parse(result);
-                    if (result.errors) {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: 'Error al guardar los datos'
-                        });
+                    $('#dlg').dialog('close');
+                    $('#dg').datagrid('reload');
+                    $.messager.show({
+                        title: 'Éxito',
+                        msg: result.message || 'Datos guardados correctamente'
+                    });
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON?.errors;
+                    if (errors) {
+                        var msg = Object.values(errors).flat().join('<br>');
+                        $.messager.alert('Error de validación', msg, 'error');
                     } else {
-                        $('#dlg').dialog('close');
-                        $('#dg').datagrid('reload');
+                        $.messager.alert('Error', xhr.responseJSON?.message || 'Error al guardar', 'error');
                     }
                 }
             });
         }
+
         function destroyItem() {
             var row = $('#dg').datagrid('getSelected');
             if (row) {
                 $.messager.confirm('Confirmar', '¿Está seguro de eliminar esta sección?', function (r) {
                     if (r) {
-                        $.post("{{ url('academic/sections') }}/" + row.id, { _method: 'DELETE' }, function (result) {
-                            if (result.success) {
-                                $('#dg').datagrid('reload');
-                            } else {
-                                $.messager.show({
-                                    title: 'Error',
-                                    msg: result.message
-                                });
+                        $.ajax({
+                            url: "{{ url('academic/sections') }}/" + row.id,
+                            method: 'DELETE',
+                            success: function (result) {
+                                if (result.success) {
+                                    $('#dg').datagrid('reload');
+                                } else {
+                                    $.messager.show({
+                                        title: 'Error',
+                                        msg: result.message
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                $.messager.alert('Error', xhr.responseJSON?.message || 'Error al eliminar');
                             }
-                        }, 'json');
+                        });
                     }
                 });
             }
         }
+
         function doSearch() {
             $('#dg').datagrid('load', {
                 search: $('#search').val()
             });
         }
+
         function formatActive(val, row) {
             if (val == 1) {
                 return '<span class="badge bg-success">Activo</span>';

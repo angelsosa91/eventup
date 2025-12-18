@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Neo ERP')</title>
+    <title>@yield('title', 'EventUP')</title>
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -309,7 +309,7 @@
         <div class="brand">
             <h4>
                 <i class="bi bi-box-seam"></i>
-                <span class="brand-text">Neo ERP</span>
+                <span class="brand-text">EventUP</span>
             </h4>
             <button class="toggle-sidebar" onclick="toggleSidebar()">
                 <i class="bi bi-list" id="toggle-icon"></i>
@@ -435,7 +435,7 @@
                 <a href="javascript:void(0)"
                     class="{{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'active' : '' }}">
                     <i class="bi bi-box"></i>
-                    <span class="menu-text">Productos / Serv.</span>
+                    <span class="menu-text">Prod. / Serv.</span>
                     <i class="bi bi-chevron-right chevron"></i>
                 </a>
                 <ul
@@ -478,7 +478,7 @@
                 <a href="{{ route('customers.index') }}"
                     class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
                     <i class="bi bi-people"></i>
-                    <span class="menu-text">Clientes</span>
+                    <span class="menu-text">Alumnos</span>
                 </a>
             </li>
             <li>
@@ -728,18 +728,6 @@
                         <a href="{{ route('academic.delegates.index') }}"
                             class="{{ request()->routeIs('academic.delegates.*') ? 'active' : '' }}">
                             <i class="bi bi-person-badge-fill"></i> Delegados
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('families.index') }}"
-                            class="{{ request()->routeIs('families.*') ? 'active' : '' }}">
-                            <i class="bi bi-people-fill"></i> Familias
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('parents.index') }}"
-                            class="{{ request()->routeIs('parents.*') ? 'active' : '' }}">
-                            <i class="bi bi-person-heart"></i> Padres / Tutores
                         </a>
                     </li>
                 </ul>

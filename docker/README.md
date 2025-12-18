@@ -1,4 +1,4 @@
-# Neo ERP - Docker Configuration
+# EventUP - Docker Configuration
 
 ## Storage and File Upload Handling
 

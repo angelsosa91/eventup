@@ -1,4 +1,4 @@
-# Checklist de Deploy - Neo ERP
+# Checklist de Deploy - EventUP
 
 ## Antes del Deploy
 

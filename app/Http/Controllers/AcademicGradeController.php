@@ -57,7 +57,12 @@ class AcademicGradeController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $data = $request->all();
+        if ($request->has('is_active')) {
+            $data['is_active'] = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
             'is_active' => 'boolean',
         ]);
@@ -66,7 +71,7 @@ class AcademicGradeController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $item = AcademicGrade::create($request->all());
+        $item = AcademicGrade::create($data);
 
         return response()->json([
             'success' => true,
@@ -82,7 +87,12 @@ class AcademicGradeController extends Controller
 
     public function update(Request $request, AcademicGrade $academicGrade)
     {
-        $validator = Validator::make($request->all(), [
+        $data = $request->all();
+        if ($request->has('is_active')) {
+            $data['is_active'] = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
             'is_active' => 'boolean',
         ]);
@@ -91,7 +101,7 @@ class AcademicGradeController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $academicGrade->update($request->all());
+        $academicGrade->update($data);
 
         return response()->json([
             'success' => true,

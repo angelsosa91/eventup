@@ -8,117 +8,117 @@ use Illuminate\Database\Seeder;
 
 class HelpContentSeeder extends Seeder
 {
-    /**
-     * Run the database seeder.
-     */
-    public function run(): void
-    {
-        // Crear categorías
-        $categories = [
-            [
-                'name' => 'Primeros Pasos',
-                'slug' => 'primeros-pasos',
-                'icon' => 'bi-rocket',
-                'description' => 'Guías para comenzar a usar NEO ERP',
-                'order' => 1,
-            ],
-            [
-                'name' => 'Ventas',
-                'slug' => 'ventas',
-                'icon' => 'bi-cart-check',
-                'description' => 'Todo sobre el módulo de ventas',
-                'order' => 2,
-            ],
-            [
-                'name' => 'Compras',
-                'slug' => 'compras',
-                'icon' => 'bi-bag',
-                'description' => 'Gestión de compras y proveedores',
-                'order' => 3,
-            ],
-            [
-                'name' => 'Inventario',
-                'slug' => 'inventario',
-                'icon' => 'bi-box-seam',
-                'description' => 'Administración de productos y stock',
-                'order' => 4,
-            ],
-            [
-                'name' => 'Contabilidad',
-                'slug' => 'contabilidad',
-                'icon' => 'bi-calculator',
-                'description' => 'Módulo contable y reportes financieros',
-                'order' => 5,
-            ],
-            [
-                'name' => 'Cuentas por Cobrar/Pagar',
-                'slug' => 'cuentas',
-                'icon' => 'bi-cash-stack',
-                'description' => 'Gestión de cobros y pagos',
-                'order' => 6,
-            ],
-            [
-                'name' => 'Reportes',
-                'slug' => 'reportes',
-                'icon' => 'bi-graph-up',
-                'description' => 'Generación y análisis de reportes',
-                'order' => 7,
-            ],
-            [
-                'name' => 'Configuración',
-                'slug' => 'configuracion',
-                'icon' => 'bi-gear',
-                'description' => 'Configuración del sistema',
-                'order' => 8,
-            ],
-        ];
+   /**
+    * Run the database seeder.
+    */
+   public function run(): void
+   {
+      // Crear categorías
+      $categories = [
+         [
+            'name' => 'Primeros Pasos',
+            'slug' => 'primeros-pasos',
+            'icon' => 'bi-rocket',
+            'description' => 'Guías para comenzar a usar EventUP',
+            'order' => 1,
+         ],
+         [
+            'name' => 'Ventas',
+            'slug' => 'ventas',
+            'icon' => 'bi-cart-check',
+            'description' => 'Todo sobre el módulo de ventas',
+            'order' => 2,
+         ],
+         [
+            'name' => 'Compras',
+            'slug' => 'compras',
+            'icon' => 'bi-bag',
+            'description' => 'Gestión de compras y proveedores',
+            'order' => 3,
+         ],
+         [
+            'name' => 'Inventario',
+            'slug' => 'inventario',
+            'icon' => 'bi-box-seam',
+            'description' => 'Administración de productos y stock',
+            'order' => 4,
+         ],
+         [
+            'name' => 'Contabilidad',
+            'slug' => 'contabilidad',
+            'icon' => 'bi-calculator',
+            'description' => 'Módulo contable y reportes financieros',
+            'order' => 5,
+         ],
+         [
+            'name' => 'Cuentas por Cobrar/Pagar',
+            'slug' => 'cuentas',
+            'icon' => 'bi-cash-stack',
+            'description' => 'Gestión de cobros y pagos',
+            'order' => 6,
+         ],
+         [
+            'name' => 'Reportes',
+            'slug' => 'reportes',
+            'icon' => 'bi-graph-up',
+            'description' => 'Generación y análisis de reportes',
+            'order' => 7,
+         ],
+         [
+            'name' => 'Configuración',
+            'slug' => 'configuracion',
+            'icon' => 'bi-gear',
+            'description' => 'Configuración del sistema',
+            'order' => 8,
+         ],
+      ];
 
-        foreach ($categories as $categoryData) {
-            $category = HelpCategory::create($categoryData);
+      foreach ($categories as $categoryData) {
+         $category = HelpCategory::create($categoryData);
 
-            // Crear artículos según la categoría
-            $this->createArticlesForCategory($category);
-        }
-    }
+         // Crear artículos según la categoría
+         $this->createArticlesForCategory($category);
+      }
+   }
 
-    private function createArticlesForCategory($category)
-    {
-        switch ($category->slug) {
-            case 'primeros-pasos':
-                $this->createGettingStartedArticles($category);
-                break;
-            case 'ventas':
-                $this->createSalesArticles($category);
-                break;
-            case 'compras':
-                $this->createPurchaseArticles($category);
-                break;
-            case 'inventario':
-                $this->createInventoryArticles($category);
-                break;
-            case 'contabilidad':
-                $this->createAccountingArticles($category);
-                break;
-            case 'cuentas':
-                $this->createAccountsArticles($category);
-                break;
-            case 'reportes':
-                $this->createReportsArticles($category);
-                break;
-            case 'configuracion':
-                $this->createConfigArticles($category);
-                break;
-        }
-    }
+   private function createArticlesForCategory($category)
+   {
+      switch ($category->slug) {
+         case 'primeros-pasos':
+            $this->createGettingStartedArticles($category);
+            break;
+         case 'ventas':
+            $this->createSalesArticles($category);
+            break;
+         case 'compras':
+            $this->createPurchaseArticles($category);
+            break;
+         case 'inventario':
+            $this->createInventoryArticles($category);
+            break;
+         case 'contabilidad':
+            $this->createAccountingArticles($category);
+            break;
+         case 'cuentas':
+            $this->createAccountsArticles($category);
+            break;
+         case 'reportes':
+            $this->createReportsArticles($category);
+            break;
+         case 'configuracion':
+            $this->createConfigArticles($category);
+            break;
+      }
+   }
 
-    private function createGettingStartedArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => '¿Cómo empezar a usar NEO ERP?',
-            'slug' => 'como-empezar',
-            'summary' => 'Guía rápida para dar tus primeros pasos en el sistema',
-            'content' => "Bienvenido a NEO ERP. Esta guía te ayudará a comenzar:
+   private function createGettingStartedArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => '¿Cómo empezar a usar EventUP?',
+         'slug' => 'como-empezar',
+         'summary' => 'Guía rápida para dar tus primeros pasos en el sistema',
+         'content' => "Bienvenido a EventUP. Esta guía te ayudará a comenzar:
 
 1. CONFIGURACIÓN INICIAL
    - Completa los datos de tu empresa en Configuración > Empresa
@@ -152,19 +152,19 @@ class HelpContentSeeder extends Seeder
    - Agrega productos
    - Confirma la venta
 
-¡Listo! Ya estás usando NEO ERP.",
-            'module' => null,
-            'is_featured' => true,
-            'order' => 1,
-            'tags' => json_encode(['inicio', 'configuración', 'guía']),
-        ]);
+¡Listo! Ya estás usando EventUP.",
+         'module' => null,
+         'is_featured' => true,
+         'order' => 1,
+         'tags' => json_encode(['inicio', 'configuración', 'guía']),
+      ]);
 
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Navegación y estructura del menú',
-            'slug' => 'navegacion-menu',
-            'summary' => 'Aprende a navegar por el sistema y encontrar las funciones principales',
-            'content' => "El menú de NEO ERP está organizado en módulos:
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Navegación y estructura del menú',
+         'slug' => 'navegacion-menu',
+         'summary' => 'Aprende a navegar por el sistema y encontrar las funciones principales',
+         'content' => "El menú de EventUP está organizado en módulos:
 
 OPERACIONES
 - Dashboard: Vista general de tu negocio
@@ -194,20 +194,20 @@ TIPS DE NAVEGACIÓN:
 - Los módulos se expanden al hacer click
 - El menú se colapsa para más espacio
 - Breadcrumbs muestran tu ubicación",
-            'module' => null,
-            'order' => 2,
-            'tags' => json_encode(['navegación', 'menú', 'interfaz']),
-        ]);
-    }
+         'module' => null,
+         'order' => 2,
+         'tags' => json_encode(['navegación', 'menú', 'interfaz']),
+      ]);
+   }
 
-    private function createSalesArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Cómo crear una venta o factura',
-            'slug' => 'crear-venta',
-            'summary' => 'Paso a paso para registrar una venta en el sistema',
-            'content' => "CREAR UNA VENTA:
+   private function createSalesArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Cómo crear una venta o factura',
+         'slug' => 'crear-venta',
+         'summary' => 'Paso a paso para registrar una venta en el sistema',
+         'content' => "CREAR UNA VENTA:
 
 1. IR AL MÓDULO
    - Click en Ventas > Nueva Venta
@@ -254,18 +254,18 @@ CONSEJOS:
 - Completa datos del cliente
 - Revisa los totales
 - Confirma para no poder editar",
-            'module' => 'sales',
-            'is_featured' => true,
-            'order' => 1,
-            'tags' => json_encode(['ventas', 'facturación', 'tutorial']),
-        ]);
+         'module' => 'sales',
+         'is_featured' => true,
+         'order' => 1,
+         'tags' => json_encode(['ventas', 'facturación', 'tutorial']),
+      ]);
 
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Notas de Crédito: Devoluciones y anulaciones',
-            'slug' => 'notas-credito',
-            'summary' => 'Cómo procesar devoluciones con notas de crédito',
-            'content' => "CREAR NOTA DE CRÉDITO:
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Notas de Crédito: Devoluciones y anulaciones',
+         'slug' => 'notas-credito',
+         'summary' => 'Cómo procesar devoluciones con notas de crédito',
+         'content' => "CREAR NOTA DE CRÉDITO:
 
 ¿QUÉ ES?
 Una nota de crédito anula total o parcialmente una venta.
@@ -310,17 +310,17 @@ IMPORTANTE:
 - Una vez confirmada, no se puede editar
 - Afecta a la contabilidad
 - El cliente recupera saldo/dinero",
-            'module' => 'sales',
-            'order' => 2,
-            'tags' => json_encode(['notas de crédito', 'devoluciones']),
-        ]);
+         'module' => 'sales',
+         'order' => 2,
+         'tags' => json_encode(['notas de crédito', 'devoluciones']),
+      ]);
 
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Remisiones: Entregas sin facturación',
-            'slug' => 'remisiones',
-            'summary' => 'Usa remisiones para entregas, demostraciones y consignaciones',
-            'content' => "REMISIONES (NOTAS DE REMISIÓN):
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Remisiones: Entregas sin facturación',
+         'slug' => 'remisiones',
+         'summary' => 'Usa remisiones para entregas, demostraciones y consignaciones',
+         'content' => "REMISIONES (NOTAS DE REMISIÓN):
 
 ¿QUÉ ES?
 Documento para enviar mercadería SIN facturar aún.
@@ -369,20 +369,20 @@ VENTAJAS:
 ✓ Stock reservado pero disponible
 ✓ Documentación de traslados
 ✓ Conversión fácil a factura",
-            'module' => 'sales',
-            'order' => 3,
-            'tags' => json_encode(['remisiones', 'entregas']),
-        ]);
-    }
+         'module' => 'sales',
+         'order' => 3,
+         'tags' => json_encode(['remisiones', 'entregas']),
+      ]);
+   }
 
-    private function createPurchaseArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Registrar compras a proveedores',
-            'slug' => 'registrar-compras',
-            'summary' => 'Cómo registrar las compras de mercadería',
-            'content' => "REGISTRAR UNA COMPRA:
+   private function createPurchaseArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Registrar compras a proveedores',
+         'slug' => 'registrar-compras',
+         'summary' => 'Cómo registrar las compras de mercadería',
+         'content' => "REGISTRAR UNA COMPRA:
 
 1. NUEVA COMPRA
    - Compras > Nueva Compra
@@ -414,20 +414,20 @@ CONSEJOS:
 - Verifica el precio de compra
 - Registra el número de factura
 - Confirma para actualizar stock",
-            'module' => 'purchases',
-            'order' => 1,
-            'tags' => json_encode(['compras', 'proveedores']),
-        ]);
-    }
+         'module' => 'purchases',
+         'order' => 1,
+         'tags' => json_encode(['compras', 'proveedores']),
+      ]);
+   }
 
-    private function createInventoryArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Gestión de productos y stock',
-            'slug' => 'gestion-productos',
-            'summary' => 'Administra tu inventario de manera eficiente',
-            'content' => "GESTIÓN DE INVENTARIO:
+   private function createInventoryArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Gestión de productos y stock',
+         'slug' => 'gestion-productos',
+         'summary' => 'Administra tu inventario de manera eficiente',
+         'content' => "GESTIÓN DE INVENTARIO:
 
 CREAR PRODUCTO:
 1. Inventario > Productos > Nuevo
@@ -460,20 +460,20 @@ CONSEJOS:
 ✓ Haz inventarios periódicos
 ✓ Usa ajustes para correcciones
 ✓ Categoriza bien los productos",
-            'module' => 'products',
-            'order' => 1,
-            'tags' => json_encode(['inventario', 'productos', 'stock']),
-        ]);
-    }
+         'module' => 'products',
+         'order' => 1,
+         'tags' => json_encode(['inventario', 'productos', 'stock']),
+      ]);
+   }
 
-    private function createAccountingArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Plan de cuentas contable',
-            'slug' => 'plan-cuentas',
-            'summary' => 'Entiende y personaliza tu plan de cuentas',
-            'content' => "PLAN DE CUENTAS:
+   private function createAccountingArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Plan de cuentas contable',
+         'slug' => 'plan-cuentas',
+         'summary' => 'Entiende y personaliza tu plan de cuentas',
+         'content' => "PLAN DE CUENTAS:
 
 ¿QUÉ ES?
 El catálogo de todas las cuentas contables de tu empresa.
@@ -510,17 +510,17 @@ IMPORTANTE:
 ⚠️ Respeta la jerarquía
 ✓ Usa códigos numéricos consistentes
 ✓ Nombres claros y descriptivos",
-            'module' => 'accounting',
-            'order' => 1,
-            'tags' => json_encode(['contabilidad', 'plan de cuentas']),
-        ]);
+         'module' => 'accounting',
+         'order' => 1,
+         'tags' => json_encode(['contabilidad', 'plan de cuentas']),
+      ]);
 
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Asientos contables manuales',
-            'slug' => 'asientos-manuales',
-            'summary' => 'Cómo crear asientos contables manualmente',
-            'content' => "CREAR ASIENTO MANUAL:
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Asientos contables manuales',
+         'slug' => 'asientos-manuales',
+         'summary' => 'Cómo crear asientos contables manualmente',
+         'content' => "CREAR ASIENTO MANUAL:
 
 ¿CUÁNDO USAR?
 - Ajustes contables
@@ -575,20 +575,20 @@ TIPS:
 ✓ Usa descripciones claras
 ✓ Verifica que cuadre
 ✓ Consulta con contador si dudas",
-            'module' => 'accounting',
-            'order' => 2,
-            'tags' => json_encode(['contabilidad', 'asientos']),
-        ]);
-    }
+         'module' => 'accounting',
+         'order' => 2,
+         'tags' => json_encode(['contabilidad', 'asientos']),
+      ]);
+   }
 
-    private function createAccountsArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Cuentas por Cobrar: Gestión de cobros',
-            'slug' => 'cuentas-por-cobrar',
-            'summary' => 'Administra los cobros a tus clientes',
-            'content' => "CUENTAS POR COBRAR:
+   private function createAccountsArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Cuentas por Cobrar: Gestión de cobros',
+         'slug' => 'cuentas-por-cobrar',
+         'summary' => 'Administra los cobros a tus clientes',
+         'content' => "CUENTAS POR COBRAR:
 
 ¿QUÉ SON?
 Las ventas a crédito que tus clientes te deben.
@@ -631,17 +631,17 @@ CONSEJOS:
 ✓ Usa referencias (nro. transf.)
 ✓ Revisa vencimientos semanalmente
 ✓ Contacta clientes con mora",
-            'module' => 'account-receivables',
-            'order' => 1,
-            'tags' => json_encode(['cuentas por cobrar', 'cobros']),
-        ]);
+         'module' => 'account-receivables',
+         'order' => 1,
+         'tags' => json_encode(['cuentas por cobrar', 'cobros']),
+      ]);
 
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Cuentas por Pagar: Gestión de pagos',
-            'slug' => 'cuentas-por-pagar',
-            'summary' => 'Controla tus pagos a proveedores',
-            'content' => "CUENTAS POR PAGAR:
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Cuentas por Pagar: Gestión de pagos',
+         'slug' => 'cuentas-por-pagar',
+         'summary' => 'Controla tus pagos a proveedores',
+         'content' => "CUENTAS POR PAGAR:
 
 ¿QUÉ SON?
 Las compras a crédito que debes a proveedores.
@@ -673,20 +673,20 @@ CONSEJOS:
 ✓ Aprovecha descuentos por pronto pago
 ✓ Negocia plazos con proveedores
 ✓ Controla vencimientos",
-            'module' => 'account-payables',
-            'order' => 2,
-            'tags' => json_encode(['cuentas por pagar', 'pagos']),
-        ]);
-    }
+         'module' => 'account-payables',
+         'order' => 2,
+         'tags' => json_encode(['cuentas por pagar', 'pagos']),
+      ]);
+   }
 
-    private function createReportsArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Reportes financieros principales',
-            'slug' => 'reportes-financieros',
-            'summary' => 'Balance General, Estado de Resultados y más',
-            'content' => "REPORTES FINANCIEROS:
+   private function createReportsArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Reportes financieros principales',
+         'slug' => 'reportes-financieros',
+         'summary' => 'Balance General, Estado de Resultados y más',
+         'content' => "REPORTES FINANCIEROS:
 
 BALANCE GENERAL:
 - Contabilidad > Balance General
@@ -732,20 +732,20 @@ TIPS:
 ✓ Compara con períodos anteriores
 ✓ Exporta para análisis externos
 ✓ Revisa inconsistencias",
-            'module' => 'reports',
-            'order' => 1,
-            'tags' => json_encode(['reportes', 'informes', 'balance']),
-        ]);
-    }
+         'module' => 'reports',
+         'order' => 1,
+         'tags' => json_encode(['reportes', 'informes', 'balance']),
+      ]);
+   }
 
-    private function createConfigArticles($category)
-    {
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Configuración de la empresa',
-            'slug' => 'configuracion-empresa',
-            'summary' => 'Personaliza los datos de tu empresa',
-            'content' => "CONFIGURAR TU EMPRESA:
+   private function createConfigArticles($category)
+   {
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Configuración de la empresa',
+         'slug' => 'configuracion-empresa',
+         'summary' => 'Personaliza los datos de tu empresa',
+         'content' => "CONFIGURAR TU EMPRESA:
 
 1. ACCESO
    - Configuración > Empresa
@@ -792,17 +792,17 @@ IMPORTANTE:
 ⚠️ El timbrado es obligatorio en Paraguay
 ✓ Mantén actualizados los datos de contacto
 ✓ Respalda antes de cambios importantes",
-            'module' => null,
-            'order' => 1,
-            'tags' => json_encode(['configuración', 'empresa']),
-        ]);
+         'module' => null,
+         'order' => 1,
+         'tags' => json_encode(['configuración', 'empresa']),
+      ]);
 
-        HelpArticle::create([
-            'help_category_id' => $category->id,
-            'title' => 'Gestión de usuarios y permisos',
-            'slug' => 'usuarios-permisos',
-            'summary' => 'Controla quién accede a qué en el sistema',
-            'content' => "USUARIOS Y PERMISOS:
+      HelpArticle::create([
+         'help_category_id' => $category->id,
+         'title' => 'Gestión de usuarios y permisos',
+         'slug' => 'usuarios-permisos',
+         'summary' => 'Controla quién accede a qué en el sistema',
+         'content' => "USUARIOS Y PERMISOS:
 
 CREAR USUARIO:
 1. Configuración > Usuarios > Nuevo
@@ -851,9 +851,9 @@ SEGURIDAD:
 - No compartas usuarios
 - Revisa logs de acceso
 - Cada persona debe tener su usuario",
-            'module' => null,
-            'order' => 2,
-            'tags' => json_encode(['usuarios', 'permisos', 'seguridad']),
-        ]);
-    }
+         'module' => null,
+         'order' => 2,
+         'tags' => json_encode(['usuarios', 'permisos', 'seguridad']),
+      ]);
+   }
 }
