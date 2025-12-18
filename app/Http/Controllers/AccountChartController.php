@@ -31,9 +31,9 @@ class AccountChartController extends Controller
 
         if ($request->has('search') && $request->search) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('code', 'like', '%' . $search . '%')
-                  ->orWhere('name', 'like', '%' . $search . '%');
+                    ->orWhere('name', 'like', '%' . $search . '%');
             });
         }
 
@@ -95,11 +95,12 @@ class AccountChartController extends Controller
             $query->where('account_type', $request->account_type);
         }
 
-        $accounts = $query->orderBy('code')->get()->map(function($account) {
+        $accounts = $query->orderBy('code')->get()->map(function ($account) {
             return [
                 'id' => $account->id,
                 'code' => $account->code,
                 'name' => $account->code . ' - ' . $account->name,
+                'account_type' => $account->account_type,
             ];
         });
 

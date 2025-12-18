@@ -10,6 +10,7 @@ use App\Models\Purchase;
 use App\Models\AccountReceivablePayment;
 use App\Models\AccountPayablePayment;
 use App\Models\CreditNote;
+use App\Models\Contribution;
 use Illuminate\Support\Facades\DB;
 
 class AccountingIntegrationService
@@ -1055,5 +1056,167 @@ class AccountingIntegrationService
         }
 
         return $description;
+    }
+
+    /**
+     * Crear asiento contable para un aporte
+     */
+    public function createContributionJournalEntry(Contribution $contribution): JournalEntry
+    {
+        $tenantId = $contribution->tenant_id;
+
+        // Verificar que las cuentas necesarias estén configuradas
+        $this->validateContributionAccounts($tenantId, $contribution);
+
+        // Determinar la cuenta de débito según el método de pago
+        $debitAccountId = $this->getDebitAccountForContribution($tenantId, $contribution);
+
+        // Cuenta de crédito: Aportes (Pasivo)
+        $creditAccountId = AccountingSetting::getValue($tenantId, 'contributions_liability');
+
+        // Crear el asiento contable
+        DB::beginTransaction();
+        try {
+            $period = date('Y-m', strtotime($contribution->contribution_date));
+
+            $journalEntry = JournalEntry::create([
+                'tenant_id' => $tenantId,
+                'entry_number' => JournalEntry::generateEntryNumber($tenantId, $period),
+                'entry_date' => $contribution->contribution_date,
+                'period' => $period,
+                'reference' => $contribution->contribution_number,
+                'description' => 'Aporte ' . $contribution->contribution_number . ' - ' . $contribution->customer->name,
+                'status' => 'posted',
+                'user_id' => $contribution->user_id,
+            ]);
+
+            // Línea de débito: Caja/Banco
+            JournalEntryLine::create([
+                'journal_entry_id' => $journalEntry->id,
+                'account_id' => $debitAccountId,
+                'description' => 'Aporte ' . $contribution->contribution_number,
+                'debit' => $contribution->amount,
+                'credit' => 0,
+            ]);
+
+            // Línea de crédito: Aportes (Pasivo)
+            JournalEntryLine::create([
+                'journal_entry_id' => $journalEntry->id,
+                'account_id' => $creditAccountId,
+                'description' => 'Aporte ' . $contribution->contribution_number,
+                'debit' => 0,
+                'credit' => $contribution->amount,
+            ]);
+
+            // Actualizar saldos de cuentas
+            $journalEntry->updateAccountBalances();
+
+            // Vincular el asiento al aporte
+            $contribution->journal_entry_id = $journalEntry->id;
+            $contribution->save();
+
+            DB::commit();
+
+            return $journalEntry;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Reversar asiento contable de un aporte anulado
+     */
+    public function reverseContributionJournalEntry(Contribution $contribution): ?JournalEntry
+    {
+        if (!$contribution->journal_entry_id) {
+            return null;
+        }
+
+        $originalEntry = JournalEntry::find($contribution->journal_entry_id);
+        if (!$originalEntry) {
+            return null;
+        }
+
+        DB::beginTransaction();
+        try {
+            $period = date('Y-m');
+
+            $reversalEntry = JournalEntry::create([
+                'tenant_id' => $contribution->tenant_id,
+                'entry_number' => JournalEntry::generateEntryNumber($contribution->tenant_id, $period),
+                'entry_date' => now()->toDateString(),
+                'period' => $period,
+                'reference' => $contribution->contribution_number . ' (Anulación)',
+                'description' => 'Anulación de aporte ' . $contribution->contribution_number,
+                'status' => 'posted',
+                'user_id' => auth()->id(),
+            ]);
+
+            foreach ($originalEntry->lines as $line) {
+                JournalEntryLine::create([
+                    'journal_entry_id' => $reversalEntry->id,
+                    'account_id' => $line->account_id,
+                    'description' => 'Reversa: ' . $line->description,
+                    'debit' => $line->credit,
+                    'credit' => $line->debit,
+                ]);
+            }
+
+            $reversalEntry->updateAccountBalances();
+
+            DB::commit();
+
+            return $reversalEntry;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Validar cuentas para aportes
+     */
+    private function validateContributionAccounts(int $tenantId, Contribution $contribution): void
+    {
+        $errors = [];
+
+        if (!AccountingSetting::getValue($tenantId, 'contributions_liability')) {
+            $errors[] = 'Cuenta de Aportes';
+        }
+
+        if ($contribution->payment_method === 'Efectivo') {
+            if (!AccountingSetting::getValue($tenantId, 'cash')) {
+                $errors[] = 'Cuenta de Caja';
+            }
+        } elseif ($contribution->payment_method === 'Transferencia') {
+            if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
+                $errors[] = 'Cuenta de Banco por Defecto';
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new \Exception(
+                'Debe configurar las siguientes cuentas contables antes de confirmar el aporte: ' .
+                implode(', ', $errors) . '. ' .
+                'Vaya a Contabilidad > Configuración Contable para configurarlas.'
+            );
+        }
+    }
+
+    /**
+     * Obtener cuenta de débito para aportes
+     */
+    private function getDebitAccountForContribution(int $tenantId, Contribution $contribution): int
+    {
+        if ($contribution->payment_method === 'Efectivo') {
+            return AccountingSetting::getValue($tenantId, 'cash');
+        } elseif ($contribution->payment_method === 'Transferencia') {
+            return AccountingSetting::getValue($tenantId, 'bank_default');
+        }
+
+        return AccountingSetting::getValue($tenantId, 'cash');
     }
 }

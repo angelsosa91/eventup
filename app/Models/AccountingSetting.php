@@ -81,6 +81,9 @@ class AccountingSetting extends Model
 
             // Gastos
             'expenses_default' => 'Cuenta de Gastos por Defecto',
+
+            // Aportes
+            'contributions_liability' => 'Cuenta de Aportes',
         ];
     }
 }

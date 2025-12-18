@@ -327,6 +327,15 @@
             <!-- OPERACIONES -->
             <div class="menu-section-title">Operaciones</div>
 
+            <!-- Aportes (Aportes de Alumnos) -->
+            <li>
+                <a href="{{ route('contributions.index') }}"
+                    class="{{ request()->routeIs('contributions.*') ? 'active' : '' }}">
+                    <i class="bi bi-person-heart"></i>
+                    <span class="menu-text">Aportes</span>
+                </a>
+            </li>
+
             <!-- Ventas -->
             <li
                 class="has-submenu {{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'open' : '' }}">

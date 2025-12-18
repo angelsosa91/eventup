@@ -17,6 +17,7 @@ class CashRegisterMovement extends Model
         'purchase_id',
         'account_receivable_payment_id',
         'account_payable_payment_id',
+        'contribution_id',
     ];
 
     protected $casts = [
@@ -31,6 +32,11 @@ class CashRegisterMovement extends Model
     public function sale()
     {
         return $this->belongsTo(Sale::class);
+    }
+
+    public function contribution()
+    {
+        return $this->belongsTo(Contribution::class);
     }
 
     public function purchase()

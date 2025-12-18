@@ -37,6 +37,7 @@ use App\Http\Controllers\DelegateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\RemissionController;
 use App\Http\Controllers\CreditNoteController;
+use App\Http\Controllers\ContributionController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas publicas
@@ -438,4 +439,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/help/contextual', [HelpController::class, 'contextual'])->name('help.contextual');
     Route::get('/help/search', [HelpController::class, 'search'])->name('help.search');
     Route::get('/help/{slug}', [HelpController::class, 'show'])->name('help.show');
+
+    // Aportes
+    Route::get('/contributions', [ContributionController::class, 'index'])->name('contributions.index');
+    Route::get('/contributions/data', [ContributionController::class, 'data'])->name('contributions.data');
+    Route::post('/contributions', [ContributionController::class, 'store'])->name('contributions.store');
+    Route::post('/contributions/{contribution}/confirm', [ContributionController::class, 'confirm'])->name('contributions.confirm');
+    Route::post('/contributions/{contribution}/cancel', [ContributionController::class, 'cancel'])->name('contributions.cancel');
+    Route::get('/contributions/{contribution}/receipt', [ContributionController::class, 'generateReceipt'])->name('contributions.receipt');
+    Route::delete('/contributions/{contribution}', [ContributionController::class, 'destroy'])->name('contributions.destroy');
 });
