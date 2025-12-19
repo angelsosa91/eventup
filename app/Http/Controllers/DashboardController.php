@@ -2,90 +2,194 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sale;
-use App\Models\Purchase;
-use App\Models\Expense;
-use App\Models\Product;
+use App\Models\Contribution;
+use App\Models\Event;
+use App\Models\EventBudget;
 use App\Models\Customer;
-use App\Models\Supplier;
+use App\Models\CashRegister;
+use App\Models\BankAccount;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $tenantId = Auth::user()->tenant_id;
         $today = now()->format('Y-m-d');
         $startOfMonth = now()->startOfMonth()->format('Y-m-d');
         $endOfMonth = now()->endOfMonth()->format('Y-m-d');
+        $startOfLastMonth = now()->subMonth()->startOfMonth()->format('Y-m-d');
+        $endOfLastMonth = now()->subMonth()->endOfMonth()->format('Y-m-d');
 
-        // Ventas del mes
-        $salesMonth = Sale::whereBetween('sale_date', [$startOfMonth, $endOfMonth])
+        // ==================== MÉTRICAS FINANCIERAS ====================
+
+        // Aportes del mes
+        $contributionsMonth = Contribution::where('tenant_id', $tenantId)
             ->where('status', 'confirmed')
-            ->selectRaw('COUNT(*) as count, COALESCE(SUM(total), 0) as total')
+            ->whereBetween('contribution_date', [$startOfMonth, $endOfMonth])
+            ->where('amount', '>', 0) // Solo aportes positivos
+            ->sum('amount');
+
+        // Aportes del mes pasado (para comparación)
+        $contributionsLastMonth = Contribution::where('tenant_id', $tenantId)
+            ->where('status', 'confirmed')
+            ->whereBetween('contribution_date', [$startOfLastMonth, $endOfLastMonth])
+            ->where('amount', '>', 0)
+            ->sum('amount');
+
+        // Calcular porcentaje de cambio
+        $contributionsChange = 0;
+        if ($contributionsLastMonth > 0) {
+            $contributionsChange = (($contributionsMonth - $contributionsLastMonth) / $contributionsLastMonth) * 100;
+        }
+
+        // Devoluciones del mes
+        $refundsMonth = abs(Contribution::where('tenant_id', $tenantId)
+            ->where('status', 'confirmed')
+            ->whereBetween('contribution_date', [$startOfMonth, $endOfMonth])
+            ->where('amount', '<', 0) // Solo devoluciones
+            ->sum('amount'));
+
+        // Balance neto (Aportes - Devoluciones)
+        $netBalance = $contributionsMonth - $refundsMonth;
+
+        // Saldo en Caja/Banco
+        $cashBalance = CashRegister::where('tenant_id', $tenantId)
+            ->where('status', 'open')
+            ->sum('expected_balance');
+
+        $bankBalance = BankAccount::where('tenant_id', $tenantId)
+            ->where('status', 'active')
+            ->sum('current_balance');
+
+        $totalBalance = $cashBalance + $bankBalance;
+
+        // ==================== MÉTRICAS DE EVENTOS ====================
+
+        // Eventos activos
+        $activeEvents = Event::where('tenant_id', $tenantId)
+            ->where('status', 'confirmed')
+            ->count();
+
+        // Próximo evento
+        $upcomingEvent = Event::where('tenant_id', $tenantId)
+            ->where('status', 'confirmed')
+            ->where('event_date', '>=', $today)
+            ->orderBy('event_date', 'asc')
             ->first();
 
-        // Ventas de hoy
-        $salesToday = Sale::where('sale_date', $today)
+        // Presupuestos pendientes
+        $pendingBudgets = EventBudget::where('tenant_id', $tenantId)
+            ->where('status', 'draft')
+            ->count();
+
+        // Total alumnos inscritos en eventos
+        $enrolledStudents = EventBudget::where('tenant_id', $tenantId)
+            ->distinct('customer_id')
+            ->count('customer_id');
+
+        // ==================== MÉTRICAS DE ALUMNOS ====================
+
+        // Total alumnos activos
+        $totalStudents = Customer::where('tenant_id', $tenantId)
+            ->where('is_active', true)
+            ->count();
+
+        // Nuevos alumnos del mes
+        $newStudentsMonth = Customer::where('tenant_id', $tenantId)
+            ->whereBetween('created_at', [$startOfMonth . ' 00:00:00', $endOfMonth . ' 23:59:59'])
+            ->count();
+
+        // Alumnos con saldo pendiente (han aportado)
+        $studentsWithBalance = Contribution::where('tenant_id', $tenantId)
             ->where('status', 'confirmed')
-            ->selectRaw('COUNT(*) as count, COALESCE(SUM(total), 0) as total')
-            ->first();
+            ->distinct('customer_id')
+            ->count('customer_id');
 
-        // Compras del mes
-        $purchasesMonth = Purchase::whereBetween('purchase_date', [$startOfMonth, $endOfMonth])
+        // ==================== GRÁFICOS ====================
+
+        // Aportes vs Devoluciones (últimos 6 meses)
+        $contributionsTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i);
+            $startDate = $month->copy()->startOfMonth()->format('Y-m-d');
+            $endDate = $month->copy()->endOfMonth()->format('Y-m-d');
+
+            $monthContributions = Contribution::where('tenant_id', $tenantId)
+                ->where('status', 'confirmed')
+                ->whereBetween('contribution_date', [$startDate, $endDate])
+                ->where('amount', '>', 0)
+                ->sum('amount');
+
+            $monthRefunds = abs(Contribution::where('tenant_id', $tenantId)
+                ->where('status', 'confirmed')
+                ->whereBetween('contribution_date', [$startDate, $endDate])
+                ->where('amount', '<', 0)
+                ->sum('amount'));
+
+            $contributionsTrend[] = [
+                'month' => $month->format('M Y'),
+                'contributions' => (float) $monthContributions,
+                'refunds' => (float) $monthRefunds,
+            ];
+        }
+
+        // Aportes por método de pago (mes actual)
+        $contributionsByMethod = Contribution::where('tenant_id', $tenantId)
             ->where('status', 'confirmed')
-            ->selectRaw('COUNT(*) as count, COALESCE(SUM(total), 0) as total')
-            ->first();
+            ->whereBetween('contribution_date', [$startOfMonth, $endOfMonth])
+            ->where('amount', '>', 0)
+            ->selectRaw('payment_method, SUM(amount) as total')
+            ->groupBy('payment_method')
+            ->get();
 
-        // Gastos del mes
-        $expensesMonth = Expense::whereBetween('expense_date', [$startOfMonth, $endOfMonth])
-            ->where('status', 'paid')
-            ->selectRaw('COUNT(*) as count, COALESCE(SUM(amount), 0) as total')
-            ->first();
+        // ==================== ACTIVIDADES RECIENTES ====================
 
-        // Productos con stock bajo
-        $lowStockProducts = Product::where('is_active', true)
-            ->whereRaw('stock <= min_stock')
-            ->orderBy('stock', 'asc')
-            ->limit(10)
-            ->get(['id', 'code', 'name', 'stock', 'min_stock', 'unit']);
-
-        // Últimas ventas
-        $recentSales = Sale::with('customer')
+        // Últimos 5 aportes
+        $recentContributions = Contribution::with('customer')
+            ->where('tenant_id', $tenantId)
             ->where('status', 'confirmed')
-            ->orderBy('sale_date', 'desc')
+            ->orderBy('contribution_date', 'desc')
             ->orderBy('id', 'desc')
             ->limit(5)
             ->get();
 
-        // Ventas por día (últimos 7 días)
-        $salesByDay = Sale::where('status', 'confirmed')
-            ->where('sale_date', '>=', now()->subDays(6)->format('Y-m-d'))
-            ->selectRaw('sale_date, COUNT(*) as count, SUM(total) as total')
-            ->groupBy('sale_date')
-            ->orderBy('sale_date')
+        // Presupuestos recientes
+        $recentBudgets = EventBudget::with(['customer', 'event'])
+            ->where('tenant_id', $tenantId)
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
             ->get();
 
-        // Contadores generales
-        $totalCustomers = Customer::where('is_active', true)->count();
-        $totalSuppliers = Supplier::where('is_active', true)->count();
-        $totalProducts = Product::where('is_active', true)->count();
-
-        // Calcular ganancia bruta del mes
-        $profit = ($salesMonth->total ?? 0) - ($purchasesMonth->total ?? 0) - ($expensesMonth->total ?? 0);
+        // Eventos próximos (siguiente semana)
+        $upcomingEvents = Event::where('tenant_id', $tenantId)
+            ->where('status', 'confirmed')
+            ->whereBetween('event_date', [$today, now()->addDays(7)->format('Y-m-d')])
+            ->orderBy('event_date', 'asc')
+            ->get();
 
         return view('dashboard', compact(
-            'salesMonth',
-            'salesToday',
-            'purchasesMonth',
-            'expensesMonth',
-            'lowStockProducts',
-            'recentSales',
-            'salesByDay',
-            'totalCustomers',
-            'totalSuppliers',
-            'totalProducts',
-            'profit'
+            'contributionsMonth',
+            'contributionsChange',
+            'refundsMonth',
+            'netBalance',
+            'totalBalance',
+            'cashBalance',
+            'bankBalance',
+            'activeEvents',
+            'upcomingEvent',
+            'pendingBudgets',
+            'enrolledStudents',
+            'totalStudents',
+            'newStudentsMonth',
+            'studentsWithBalance',
+            'contributionsTrend',
+            'contributionsByMethod',
+            'recentContributions',
+            'recentBudgets',
+            'upcomingEvents'
         ));
     }
 }

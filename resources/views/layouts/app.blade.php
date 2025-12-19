@@ -686,7 +686,7 @@
             </li>
 
             <!-- REPORTES Section -->
-            <div class="menu-section-title">Reportes</div>
+            <!--<div class="menu-section-title">Reportes</div>
 
             <li class="has-submenu {{ request()->routeIs('reports.*') ? 'open' : '' }}">
                 <a href="javascript:void(0)" class="{{ request()->routeIs('reports.*') ? 'active' : '' }}">
@@ -756,7 +756,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li>-->
 
             <!-- ADMINISTRACIÓN Section -->
             <div class="menu-section-title">Administración</div>
