@@ -38,6 +38,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\RemissionController;
 use App\Http\Controllers\CreditNoteController;
 use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventBudgetController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas publicas
@@ -448,4 +450,41 @@ Route::middleware('auth')->group(function () {
     Route::post('/contributions/{contribution}/cancel', [ContributionController::class, 'cancel'])->name('contributions.cancel');
     Route::get('/contributions/{contribution}/receipt', [ContributionController::class, 'generateReceipt'])->name('contributions.receipt');
     Route::delete('/contributions/{contribution}', [ContributionController::class, 'destroy'])->name('contributions.destroy');
+
+    // Eventos
+    Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/events/data', [EventController::class, 'data'])->name('events.data');
+    Route::get('/events/{event}/tables/data', [EventController::class, 'tablesData'])->name('events.tables.data');
+    Route::post('/events', [EventController::class, 'store'])->name('events.store');
+    Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+    Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
+
+    // Presupuesto de Eventos
+    Route::post('/events/{event}/budget/item', [EventController::class, 'addItem'])->name('events.budget.item.store');
+    Route::post('/events/{event}/budget/items-from-catalog', [EventController::class, 'addItemsFromCatalog'])->name('events.budget.add-from-catalog');
+    Route::put('/events/budget-items/{item}', [EventController::class, 'updateBudgetItem'])->name('events.budget-items.update');
+    Route::delete('/events/budget-items/{item}', [EventController::class, 'removeBudgetItem'])->name('events.budget-items.destroy');
+
+    // Invitados de Eventos
+    Route::post('/events/guests/{guest}/validate', [EventController::class, 'validateGuest'])->name('events.guests.validate');
+
+    // Mesas de Eventos
+    Route::post('/events/{event}/tables', [EventController::class, 'addTable'])->name('events.tables.store');
+
+    // Presupuestos de Eventos (Individuales por Alumno)
+    Route::get('/event-budgets', [EventBudgetController::class, 'index'])->name('event-budgets.index');
+    Route::get('/event-budgets/data', [EventBudgetController::class, 'data'])->name('event-budgets.data');
+    Route::post('/event-budgets', [EventBudgetController::class, 'store'])->name('event-budgets.store');
+    Route::get('/event-budgets/{eventBudget}', [EventBudgetController::class, 'show'])->name('event-budgets.show');
+    Route::put('/event-budgets/{eventBudget}', [EventBudgetController::class, 'update'])->name('event-budgets.update');
+    Route::get('/event-budgets/{eventBudget}/pdf', [EventBudgetController::class, 'generatePDF'])->name('event-budgets.pdf');
+    // Items de Presupuesto
+    Route::post('/event-budgets/{eventBudget}/items', [EventBudgetController::class, 'addItem'])->name('event-budgets.items.store');
+    Route::put('/event-budgets/items/{item}', [EventBudgetController::class, 'updateItem'])->name('event-budgets.items.update');
+    Route::delete('/event-budgets/items/{item}', [EventBudgetController::class, 'removeItem'])->name('event-budgets.items.destroy');
+    // Invitados de Presupuesto
+    Route::post('/event-budgets/{eventBudget}/guests', [EventBudgetController::class, 'addGuest'])->name('event-budgets.guests.store');
+    Route::put('/event-budgets/guests/{guest}', [EventBudgetController::class, 'updateGuest'])->name('event-budgets.guests.update');
+    Route::delete('/event-budgets/guests/{guest}', [EventBudgetController::class, 'removeGuest'])->name('event-budgets.guests.destroy');
 });

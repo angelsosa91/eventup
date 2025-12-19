@@ -336,6 +336,22 @@
                 </a>
             </li>
 
+            <!-- Eventos -->
+            <li>
+                <a href="{{ route('events.index') }}" class="{{ request()->routeIs('events.*') ? 'active' : '' }}">
+                    <i class="bi bi-calendar-event"></i>
+                    <span class="menu-text">Eventos</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('event-budgets.index') }}"
+                    class="{{ request()->routeIs('event-budgets.*') ? 'active' : '' }}">
+                    <i class="bi bi-file-earmark-spreadsheet"></i>
+                    <span class="menu-text">Presupuestos</span>
+                </a>
+            </li>
+
             <!-- Ventas -->
             <li
                 class="has-submenu {{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'open' : '' }}">
