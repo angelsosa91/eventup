@@ -454,6 +454,8 @@ Route::middleware('auth')->group(function () {
     // Eventos
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/events/data', [EventController::class, 'data'])->name('events.data');
+    Route::get('/events/{event}/items/data', [EventController::class, 'itemsData'])->name('events.items.data');
+    Route::get('/events/{event}/tables/grid-data', [EventController::class, 'tablesGridData'])->name('events.tables.grid.data');
     Route::get('/events/{event}/tables/data', [EventController::class, 'tablesData'])->name('events.tables.data');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
@@ -477,10 +479,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-budgets/data', [EventBudgetController::class, 'data'])->name('event-budgets.data');
     Route::post('/event-budgets', [EventBudgetController::class, 'store'])->name('event-budgets.store');
     Route::get('/event-budgets/{eventBudget}', [EventBudgetController::class, 'show'])->name('event-budgets.show');
+    Route::get('/event-budgets/{eventBudget}/items/data', [EventBudgetController::class, 'itemsData'])->name('event-budgets.items.data');
+    Route::get('/event-budgets/{eventBudget}/guests/data', [EventBudgetController::class, 'guestsData'])->name('event-budgets.guests.data');
     Route::put('/event-budgets/{eventBudget}', [EventBudgetController::class, 'update'])->name('event-budgets.update');
     Route::get('/event-budgets/{eventBudget}/pdf', [EventBudgetController::class, 'generatePDF'])->name('event-budgets.pdf');
     // Items de Presupuesto
     Route::post('/event-budgets/{eventBudget}/items', [EventBudgetController::class, 'addItem'])->name('event-budgets.items.store');
+    Route::post('/event-budgets/{eventBudget}/import', [EventBudgetController::class, 'importFromEvent'])->name('event-budgets.import');
     Route::put('/event-budgets/items/{item}', [EventBudgetController::class, 'updateItem'])->name('event-budgets.items.update');
     Route::delete('/event-budgets/items/{item}', [EventBudgetController::class, 'removeItem'])->name('event-budgets.items.destroy');
     // Invitados de Presupuesto

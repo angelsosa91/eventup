@@ -41,14 +41,14 @@
                                 <label class="form-label">Estado:</label>
                                 <input class="easyui-combobox" name="status" value="{{ $eventBudget->status }}"
                                     style="width:100%" data-options="
-                                            panelHeight:'auto',
-                                            data: [
-                                                {value:'draft',text:'Borrador'},
-                                                {value:'sent',text:'Enviado'},
-                                                {value:'accepted',text:'Aceptado'},
-                                                {value:'rejected',text:'Rechazado'}
-                                            ]
-                                        ">
+                                                        panelHeight:'auto',
+                                                        data: [
+                                                            {value:'draft',text:'Borrador'},
+                                                            {value:'sent',text:'Enviado'},
+                                                            {value:'accepted',text:'Aceptado'},
+                                                            {value:'rejected',text:'Rechazado'}
+                                                        ]
+                                                    ">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Notas:</label>
@@ -71,6 +71,8 @@
                         onclick="editItem()">Editar</a>
                     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
                         onclick="removeItem()">Eliminar</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload"
+                        onclick="importItems()">Cargar desde Evento</a>
 
                     <span class="ms-4 fw-bold text-success">
                         Subtotal: <span
@@ -79,8 +81,14 @@
                     </span>
                 </div>
 
-                <table id="dg-items" class="easyui-datagrid" style="width:100%;height:580px"
-                    data-options="singleSelect:true,fitColumns:true,rownumbers:true,toolbar:'#tb-items'">
+                <table id="dg-items" class="easyui-datagrid" style="width:100%;height:580px" data-options="
+                            url:'{{ route('event-budgets.items.data', $eventBudget->id) }}',
+                            method:'get',
+                            singleSelect:true,
+                            fitColumns:true,
+                            rownumbers:true,
+                            toolbar:'#tb-items'
+                        ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -93,18 +101,6 @@
                             <th data-options="field:'notes',width:200">Notas</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach($eventBudget->items as $item)
-                            <tr>
-                                <td>{{ $item->id }}</td>
-                                <td>{{ $item->description }}</td>
-                                <td>{{ number_format($item->quantity, 0, ',', '.') }}</td>
-                                <td>{{ number_format($item->unit_price, 0, ',', '.') }}</td>
-                                <td>{{ number_format($item->total, 0, ',', '.') }}</td>
-                                <td>{{ $item->notes }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
                 </table>
             </div>
 
@@ -117,8 +113,14 @@
                         onclick="removeGuest()">Eliminar</a>
                     <span class="ms-3 text-muted">Total Invitados: {{ $eventBudget->guests->count() }}</span>
                 </div>
-                <table id="dg-guests" class="easyui-datagrid" style="width:100%;height:580px"
-                    data-options="singleSelect:true,fitColumns:true,rownumbers:true,toolbar:'#tb-guests'">
+                <table id="dg-guests" class="easyui-datagrid" style="width:100%;height:580px" data-options="
+                            url:'{{ route('event-budgets.guests.data', $eventBudget->id) }}',
+                            method:'get',
+                            singleSelect:true,
+                            fitColumns:true,
+                            rownumbers:true,
+                            toolbar:'#tb-guests'
+                        ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -127,16 +129,6 @@
                             <th data-options="field:'table_name',width:200">Mesa Asignada</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach($eventBudget->guests as $guest)
-                            <tr>
-                                <td>{{ $guest->id }}</td>
-                                <td>{{ $guest->name }}</td>
-                                <td>{{ $guest->phone }}</td>
-                                <td>{{ $guest->table?->name ?? 'Sin asignar' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -192,12 +184,12 @@
             <div class="mb-3">
                 <label class="form-label">Mesa:</label>
                 <input class="easyui-combobox" name="table_id" style="width:100%" data-options="
-                        url:'{{ route('events.tables.data', $eventBudget->event_id) }}', 
-                        method:'get',
-                        valueField:'id',
-                        textField:'text',
-                        prompt:'Seleccione mesa'
-                    ">
+                                    url:'{{ route('events.tables.data', $eventBudget->event_id) }}', 
+                                    method:'get',
+                                    valueField:'id',
+                                    textField:'text',
+                                    prompt:'Seleccione mesa'
+                                ">
             </div>
         </form>
     </div>
@@ -210,7 +202,16 @@
 
     @push('scripts')
         <script>
-            var current_item_id = null;
+            function formatMoney(amount) {
+                return new Intl.NumberFormat('es-PY').format(amount);
+            }
+
+            function updateBudgetTotal(total) {
+                var formatted = formatMoney(total);
+                $('#budget-total-display').text(formatted);
+                // También actualizar el total en la pestaña General
+                $('.fw-bold.fs-5.text-primary').first().text(formatted);
+            }
 
             function saveHeader() {
                 $('#fm-header').form('submit', {
@@ -236,8 +237,8 @@
                 $('#dlg-item').dialog('open').dialog('setTitle', 'Editar Item');
                 $('#fm-item').form('load', {
                     description: row.description,
-                    quantity: row.quantity.replace(/\./g, ''),
-                    unit_price: row.unit_price.replace(/\./g, ''),
+                    quantity: row.raw_quantity,
+                    unit_price: row.raw_unit_price,
                     notes: row.notes
                 });
             }
@@ -258,8 +259,27 @@
                         var res = JSON.parse(result);
                         if (res.success) {
                             $('#dlg-item').dialog('close');
-                            location.reload();
+                            $('#dg-items').datagrid('reload');
+                            updateBudgetTotal(res.total_budget);
                         }
+                    }
+                });
+            }
+
+            function importItems() {
+                $.messager.confirm('Confirmar', '¿Deseas cargar los items configurados en el evento general?', function (r) {
+                    if (r) {
+                        $.post('{{ route('event-budgets.import', $eventBudget->id) }}', {
+                            _token: '{{ csrf_token() }}'
+                        }, function (res) {
+                            if (res.success) {
+                                $.messager.show({ title: 'Éxito', msg: res.message });
+                                $('#dg-items').datagrid('reload');
+                                updateBudgetTotal(res.total_budget);
+                            } else {
+                                $.messager.alert('Error', res.message, 'error');
+                            }
+                        });
                     }
                 });
             }
@@ -272,7 +292,10 @@
                         $.post('{{ url('event-budgets/items') }}/' + row.id, {
                             _token: '{{ csrf_token() }}',
                             _method: 'DELETE'
-                        }, function () { location.reload(); });
+                        }, function (res) {
+                            $('#dg-items').datagrid('reload');
+                            updateBudgetTotal(res.total_budget);
+                        });
                     }
                 });
             }
@@ -287,7 +310,10 @@
                 $('#fm-guest').form('submit', {
                     url: '{{ route('event-budgets.guests.store', $eventBudget->id) }}',
                     onSubmit: function (param) { param._token = '{{ csrf_token() }}'; return $(this).form('validate'); },
-                    success: function (result) { location.reload(); }
+                    success: function (result) {
+                        $('#dlg-guest').dialog('close');
+                        $('#dg-guests').datagrid('reload');
+                    }
                 });
             }
 
@@ -297,7 +323,9 @@
                     $.post('{{ url('event-budgets/guests') }}/' + row.id, {
                         _token: '{{ csrf_token() }}',
                         _method: 'DELETE'
-                    }, function () { location.reload(); });
+                    }, function () {
+                        $('#dg-guests').datagrid('reload');
+                    });
                 }
             }
         </script>

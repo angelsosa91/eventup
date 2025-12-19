@@ -61,6 +61,33 @@ class EventController extends Controller
         ]);
     }
 
+    public function itemsData(Event $event)
+    {
+        $items = $event->items()->get()->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'description' => $item->description,
+                'amount' => number_format($item->estimated_unit_price, 0, ',', '.'),
+                'raw_amount' => $item->estimated_unit_price,
+                'notes' => $item->notes,
+            ];
+        });
+        return response()->json($items);
+    }
+
+    public function tablesGridData(Event $event)
+    {
+        $tables = $event->tables()->withCount('guests')->get()->map(function ($table) {
+            return [
+                'id' => $table->id,
+                'name' => $table->name,
+                'capacity' => $table->capacity,
+                'occupied' => $table->guests_count,
+            ];
+        });
+        return response()->json($tables);
+    }
+
     /**
      * Guardar nuevo evento
      */
@@ -191,7 +218,8 @@ class EventController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Item agregado correctamente',
-                'item' => $item
+                'item' => $item,
+                'total_items' => number_format($event->items()->sum('total'), 0, ',', '.')
             ]);
 
         } catch (\Exception $e) {
@@ -235,7 +263,8 @@ class EventController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Items agregados al presupuesto'
+                'message' => 'Items agregados al presupuesto',
+                'total_items' => number_format($event->items()->sum('total'), 0, ',', '.')
             ]);
 
         } catch (\Exception $e) {
@@ -265,7 +294,8 @@ class EventController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Item actualizado'
+            'message' => 'Item actualizado',
+            'total_items' => number_format($item->event->items()->sum('total'), 0, ',', '.')
         ]);
     }
 
@@ -274,8 +304,13 @@ class EventController extends Controller
      */
     public function removeBudgetItem(EventItem $item)
     {
+        $event = $item->event;
         $item->delete();
-        return response()->json(['success' => true, 'message' => 'Item eliminado']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Item eliminado',
+            'total_items' => number_format($event->items()->sum('total'), 0, ',', '.')
+        ]);
     }
 
     // --- Gestión de Invitados ---
