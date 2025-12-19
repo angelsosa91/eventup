@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: neo-erp-app-dev
+    container_name: eventup-app-dev
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
@@ -27,13 +27,13 @@ services:
     depends_on:
       - db
     networks:
-      - neo-erp-network
+      - eventup-network
     ports:
       - "8000:80"
 
   db:
     image: mysql:8.0
-    container_name: neo-erp-db-dev
+    container_name: eventup-db-dev
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE=${DB_DATABASE:-neo_erp_dev}
@@ -43,13 +43,13 @@ services:
     volumes:
       - db-dev-data:/var/lib/mysql
     networks:
-      - neo-erp-network
+      - eventup-network
     ports:
       - "3307:3306"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: neo-erp-phpmyadmin
+    container_name: eventup-phpmyadmin
     restart: unless-stopped
     environment:
       - PMA_HOST=db
@@ -59,12 +59,12 @@ services:
     depends_on:
       - db
     networks:
-      - neo-erp-network
+      - eventup-network
     ports:
       - "8081:80"
 
 networks:
-  neo-erp-network:
+  eventup-network:
     driver: bridge
 
 volumes:

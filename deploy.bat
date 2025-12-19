@@ -60,7 +60,7 @@ echo.
 echo La aplicacion esta disponible en: http://localhost:8080
 echo.
 echo Credenciales por defecto:
-echo   Email: admin@neo-erp.com
+echo   Email: admin@eventup.com
 echo   Password: password
 echo.
 echo Comandos utiles:

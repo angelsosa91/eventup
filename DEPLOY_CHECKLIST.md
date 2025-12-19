@@ -15,7 +15,7 @@
 ssh usuario@servidor
 
 # 2. Ir al directorio del proyecto
-cd /path/to/neo-erp
+cd /path/to/eventup
 
 # 3. Hacer backup (IMPORTANTE)
 # Usar herramientas de DigitalOcean o:

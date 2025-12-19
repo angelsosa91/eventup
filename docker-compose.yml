@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: neo-erp-app
+    container_name: eventup-app
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
@@ -41,37 +41,37 @@ services:
     depends_on:
       - redis
     networks:
-      - neo-erp-network
+      - eventup-network
     ports:
       - "${APP_PORT:-8080}:80"
 
   # db:
   #   image: mysql:8.0
-  #   container_name: neo-erp-db
+  #   container_name: eventup-db
   #   restart: unless-stopped
   #   environment:
-  #     - MYSQL_DATABASE=${DB_DATABASE:-neo_erp}
-  #     - MYSQL_USER=${DB_USERNAME:-neo_user}
+  #     - MYSQL_DATABASE=${DB_DATABASE:-eventup}
+  #     - MYSQL_USER=${DB_USERNAME:-eventup_user}
   #     - MYSQL_PASSWORD=${DB_PASSWORD}
   #     - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
   #   volumes:
   #     - db-data:/var/lib/mysql
   #     - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
   #   networks:
-  #     - neo-erp-network
+  #     - eventup-network
   #   ports:
   #     - "${DB_PORT:-3306}:3306"
   # NOTA: Servicio deshabilitado - Se usa base de datos externa en DigitalOcean
 
   redis:
     image: redis:7-alpine
-    container_name: neo-erp-redis
+    container_name: eventup-redis
     restart: unless-stopped
     command: redis-server --appendonly yes
     volumes:
       - redis-data:/data
     networks:
-      - neo-erp-network
+      - eventup-network
     ports:
       - "${REDIS_PORT:-6379}:6379"
 
@@ -79,7 +79,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: neo-erp-worker
+    container_name: eventup-worker
     restart: unless-stopped
     working_dir: /var/www/html
     command: php artisan queue:work --tries=3 --max-time=3600
@@ -117,13 +117,13 @@ services:
     depends_on:
       - redis
     networks:
-      - neo-erp-network
+      - eventup-network
 
   scheduler:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: neo-erp-scheduler
+    container_name: eventup-scheduler
     restart: unless-stopped
     working_dir: /var/www/html
     command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
@@ -161,10 +161,10 @@ services:
     depends_on:
       - redis
     networks:
-      - neo-erp-network
+      - eventup-network
 
 networks:
-  neo-erp-network:
+  eventup-network:
     driver: bridge
 
 volumes:

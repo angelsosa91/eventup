@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 BACKUP_DIR="backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="${BACKUP_DIR}/backup_${TIMESTAMP}.sql"
-DB_CONTAINER="neo-erp-db-1"  # Ajusta según tu configuración
+DB_CONTAINER="eventup-db-1"  # Ajusta según tu configuración
 APP_URL="https://demo-erp.neosystem.com.py"  # Ajusta tu URL
 
 # Función para mostrar mensajes

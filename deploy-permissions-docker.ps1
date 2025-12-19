@@ -2,7 +2,7 @@
 # Uso: .\deploy-permissions-docker.ps1 [nombre_contenedor]
 
 param(
-    [string]$ContainerName = "neo-erp_app_1"
+    [string]$ContainerName = "eventup_app_1"
 )
 
 Write-Host "======================================" -ForegroundColor Blue

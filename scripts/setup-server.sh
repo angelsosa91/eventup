@@ -58,8 +58,8 @@ ufw allow 443/tcp
 # 7. Clonar repositorio (ajusta según tu repo)
 echo "📥 Clonando aplicación..."
 cd /home
-# git clone https://github.com/tu-usuario/neo-erp.git
-# cd neo-erp
+# git clone https://github.com/tu-usuario/eventup.git
+# cd eventup
 
 echo "⚠️  Configuración manual requerida:"
 echo "1. Copiar .env de plantilla"

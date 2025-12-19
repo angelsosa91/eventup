@@ -16,7 +16,7 @@ Scripts para desplegar la aplicación en producción de forma segura.
 **Tiempo:** ~30 segundos
 
 ```bash
-cd /path/to/neo-erp
+cd /path/to/eventup
 ./scripts/deploy-fast.sh
 ```
 
@@ -40,7 +40,7 @@ cd /path/to/neo-erp
 **Tiempo:** ~2 minutos
 
 ```bash
-cd /path/to/neo-erp
+cd /path/to/eventup
 ./scripts/deploy-production.sh
 ```
 
@@ -64,7 +64,7 @@ cd /path/to/neo-erp
 **Tiempo:** ~1 minuto
 
 ```bash
-cd /path/to/neo-erp
+cd /path/to/eventup
 ./scripts/deploy-credit-notes.sh
 ```
 
@@ -84,7 +84,7 @@ chmod +x scripts/*.sh
 ### 2. Configurar variables de entorno
 Editar cada script y ajustar:
 ```bash
-DB_CONTAINER="neo-erp-db-1"  # Nombre de tu contenedor de BD
+DB_CONTAINER="eventup-db-1"  # Nombre de tu contenedor de BD
 APP_URL="https://tu-dominio.com"  # Tu URL de producción
 MYSQL_ROOT_PASSWORD="tu-password"  # Password de MySQL
 ```
@@ -100,7 +100,7 @@ docker compose ps  # Verificar nombres de contenedores
 
 ### Ubicación de Backups
 ```
-neo-erp/
+eventup/
 └── backups/
     ├── backup_20251210_143022.sql
     ├── backup_20251210_150530.sql

@@ -11,7 +11,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Nombre del contenedor (puedes pasarlo como argumento)
-CONTAINER_NAME=${1:-"neo-erp_app_1"}
+CONTAINER_NAME=${1:-"eventup_app_1"}
 
 echo -e "${BLUE}======================================${NC}"
 echo -e "${BLUE}  Despliegue Sistema de Permisos${NC}"

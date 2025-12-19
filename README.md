@@ -154,8 +154,8 @@ Sistema de Gestión Empresarial (ERP) moderno y completo desarrollado con Larave
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/neo-erp.git
-cd neo-erp
+git clone https://github.com/tu-usuario/eventup.git
+cd eventup
 
 # 2. Ejecutar el script de deployment
 chmod +x deploy.sh
@@ -168,8 +168,8 @@ chmod +x deploy.sh
 
 ```batch
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/neo-erp.git
-cd neo-erp
+git clone https://github.com/tu-usuario/eventup.git
+cd eventup
 
 # 2. Ejecutar el script de deployment
 deploy.bat
@@ -191,7 +191,7 @@ make seed     # Ejecutar seeders
 La aplicación estará disponible en: `http://localhost:8080`
 
 **Credenciales por defecto:**
-- Email: `admin@neo-erp.com`
+- Email: `admin@eventup.com`
 - Password: `password`
 
 ⚠️ **IMPORTANTE**: Cambia estas credenciales inmediatamente en producción.
@@ -200,8 +200,8 @@ La aplicación estará disponible en: `http://localhost:8080`
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/neo-erp.git
-cd neo-erp
+git clone https://github.com/tu-usuario/eventup.git
+cd eventup
 
 # 2. Instalar dependencias
 composer install --optimize-autoloader --no-dev
@@ -362,7 +362,7 @@ docker-compose exec -T db mysql -u neo_user -p neo_erp < backup.sql
 ## 📁 Estructura del Proyecto
 
 ```
-neo-erp/
+eventup/
 ├── app/
 │   ├── Http/
 │   │   └── Controllers/      # Controladores del sistema
@@ -486,8 +486,8 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 2. **Clonar y configurar:**
 ```bash
-git clone https://github.com/tu-usuario/neo-erp.git
-cd neo-erp
+git clone https://github.com/tu-usuario/eventup.git
+cd eventup
 cp .env.docker .env
 # Editar .env con credenciales seguras
 ```
@@ -567,9 +567,9 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 ## 📞 Soporte
 
 Para soporte y consultas:
-- Email: soporte@neo-erp.com
-- Issues: https://github.com/tu-usuario/neo-erp/issues
-- Documentación: https://docs.neo-erp.com
+- Email: soporte@eventup.com
+- Issues: https://github.com/tu-usuario/eventup/issues
+- Documentación: https://docs.eventup.com
 
 ## 🙏 Agradecimientos
 

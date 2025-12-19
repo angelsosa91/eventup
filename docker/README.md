@@ -63,7 +63,7 @@ Para **persistir** los archivos subidos entre reinicios del contenedor, usa vol�
 ```yaml
 services:
   app:
-    image: neo-erp:latest
+    image: eventup:latest
     volumes:
       - storage-data:/var/www/html/storage/app/public
       - logs-data:/var/www/html/storage/logs
@@ -78,9 +78,9 @@ volumes:
 #### Docker Run
 ```bash
 docker run -d \
-  -v neo-erp-storage:/var/www/html/storage/app/public \
-  -v neo-erp-logs:/var/www/html/storage/logs \
-  neo-erp:latest
+  -v eventup-storage:/var/www/html/storage/app/public \
+  -v eventup-logs:/var/www/html/storage/logs \
+  eventup:latest
 ```
 
 ### Troubleshooting
@@ -92,7 +92,7 @@ docker run -d \
 **Solución**:
 ```bash
 # Entrar al contenedor
-docker exec -it neo-erp-app sh
+docker exec -it eventup-app sh
 
 # Verificar symlink
 ls -la /var/www/html/public/storage
@@ -142,7 +142,7 @@ Options -MultiViews -Indexes +FollowSymLinks
 2. **Ejecutar como administrador**:
 ```bash
 # CMD como Administrador
-mklink /D "C:\xampp\htdocs\neo-erp\public\storage" "C:\xampp\htdocs\neo-erp\storage\app\public"
+mklink /D "C:\xampp\htdocs\eventup\public\storage" "C:\xampp\htdocs\eventup\storage\app\public"
 ```
 
 3. **Verificar configuración de Apache**:
@@ -171,13 +171,13 @@ Para ver logs relacionados con storage:
 
 ```bash
 # Logs de Laravel
-docker exec -it neo-erp-app tail -f /var/www/html/storage/logs/laravel.log
+docker exec -it eventup-app tail -f /var/www/html/storage/logs/laravel.log
 
 # Logs de Nginx
-docker exec -it neo-erp-app tail -f /var/log/nginx/error.log
+docker exec -it eventup-app tail -f /var/log/nginx/error.log
 
 # Logs de PHP-FPM
-docker exec -it neo-erp-app tail -f /var/log/php-fpm/error.log
+docker exec -it eventup-app tail -f /var/log/php-fpm/error.log
 ```
 
 ### Seguridad
@@ -196,13 +196,13 @@ Para respaldar archivos subidos:
 ```bash
 # Backup
 docker run --rm \
-  -v neo-erp-storage:/data \
+  -v eventup-storage:/data \
   -v $(pwd):/backup \
   alpine tar czf /backup/storage-backup.tar.gz /data
 
 # Restore
 docker run --rm \
-  -v neo-erp-storage:/data \
+  -v eventup-storage:/data \
   -v $(pwd):/backup \
   alpine sh -c "cd /data && tar xzf /backup/storage-backup.tar.gz --strip 1"
 ```
