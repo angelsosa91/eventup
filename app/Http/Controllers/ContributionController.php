@@ -55,11 +55,13 @@ class ContributionController extends Controller
             ->map(function ($item) {
                 return [
                     'id' => $item->id,
+                    'customer_id' => $item->customer_id,
                     'contribution_number' => $item->contribution_number,
                     'contribution_date' => $item->contribution_date->format('d/m/Y'),
                     'customer_name' => $item->customer ? $item->customer->name : 'Sin alumno',
                     'user_name' => $item->user->name,
                     'amount' => number_format($item->amount, 0, ',', '.'),
+                    'raw_amount' => (float) $item->amount,
                     'status' => $item->status,
                     'status_label' => $item->status_label,
                     'payment_method' => $item->payment_method,
@@ -308,6 +310,135 @@ class ContributionController extends Controller
         return $pdf->stream('recibo-' . $contribution->contribution_number . '.pdf');
     }
 
+
+    /**
+     * Devolver aporte (crear registro negativo)
+     */
+    public function refund(Request $request, Contribution $contribution)
+    {
+        // Validar que el aporte esté confirmado
+        if ($contribution->status !== 'confirmed') {
+            return response()->json([
+                'errors' => ['general' => ['Solo se pueden devolver aportes confirmados']]
+            ], 422);
+        }
+
+        // Verificar que no sea una devolución (no se puede devolver una devolución)
+        if ($contribution->isRefund()) {
+            return response()->json([
+                'errors' => ['general' => ['No se puede devolver una devolución. Solo se pueden devolver aportes originales']]
+            ], 422);
+        }
+
+        // Verificar que no haya sido devuelto previamente
+        if ($contribution->hasBeenRefunded()) {
+            return response()->json([
+                'errors' => ['general' => ['Este aporte ya fue devuelto previamente']]
+            ], 422);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'payment_method' => 'required|in:Efectivo,Transferencia',
+            'notes' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Crear registro de devolución con monto negativo
+            $refund = Contribution::create([
+                'tenant_id' => Auth::user()->tenant_id,
+                'customer_id' => $contribution->customer_id,
+                'user_id' => Auth::id(),
+                'contribution_number' => Contribution::generateContributionNumber(Auth::user()->tenant_id),
+                'contribution_date' => now(),
+                'amount' => -1 * abs($contribution->amount), // Monto negativo
+                'payment_method' => $request->payment_method,
+                'reference' => 'Devolución de ' . $contribution->contribution_number,
+                'notes' => $request->notes,
+                'status' => 'confirmed', // Se crea ya confirmado
+                'refunded_from_id' => $contribution->id, // Relación con el aporte original
+            ]);
+
+            // 1. Registrar salida en Caja (si es por Efectivo)
+            if ($request->payment_method === 'Efectivo') {
+                $cashRegister = CashRegister::getOpenRegister(Auth::user()->tenant_id, Auth::id());
+
+                if (!$cashRegister) {
+                    throw new \Exception('Debes tener una caja abierta para realizar devoluciones en efectivo');
+                }
+
+                // Registrar movimiento de egreso
+                $cashRegister->movements()->create([
+                    'type' => 'expense',
+                    'concept' => 'other',
+                    'amount' => abs($refund->amount),
+                    'description' => 'Devolución de Aporte ' . $refund->contribution_number . ' - ' . $contribution->customer->name,
+                    'reference' => $refund->contribution_number,
+                    'contribution_id' => $refund->id,
+                ]);
+
+                // Actualizar totales de caja
+                $cashRegister->collections -= abs($refund->amount);
+                $cashRegister->calculateExpectedBalance();
+                $cashRegister->save();
+            }
+
+            // 2. Registrar salida en Banco (si es por Transferencia)
+            if ($request->payment_method === 'Transferencia') {
+                $defaultAccount = BankAccount::getDefaultAccount(Auth::user()->tenant_id);
+
+                if (!$defaultAccount) {
+                    throw new \Exception('Debe configurar una cuenta bancaria predeterminada para realizar devoluciones por transferencia');
+                }
+
+                // Calcular el balance después de la transacción
+                $balanceAfter = $defaultAccount->current_balance - abs($refund->amount);
+
+                // Crear transacción bancaria de retiro
+                BankTransaction::create([
+                    'tenant_id' => Auth::user()->tenant_id,
+                    'bank_account_id' => $defaultAccount->id,
+                    'transaction_number' => BankTransaction::generateTransactionNumber(Auth::user()->tenant_id),
+                    'transaction_date' => now(),
+                    'type' => 'withdrawal', // Retiro/Egreso
+                    'amount' => abs($refund->amount),
+                    'concept' => 'Devolución de aporte',
+                    'description' => 'Devolución de Aporte ' . $refund->contribution_number . ' - ' . $contribution->customer->name,
+                    'reference' => $refund->contribution_number,
+                    'balance_after' => $balanceAfter,
+                    'user_id' => Auth::id(),
+                    'status' => 'completed',
+                    'reconciled' => false,
+                ]);
+
+                // Actualizar saldo de la cuenta bancaria
+                $defaultAccount->updateBalance();
+            }
+
+            // 3. Crear asiento contable de devolución
+            $accountingService = new AccountingIntegrationService();
+            $accountingService->createRefundJournalEntry($refund);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Devolución procesada correctamente'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'errors' => ['general' => [$e->getMessage()]]
+            ], 422);
+        }
+    }
+
     /**
      * Eliminar aporte (solo borradores)
      */
@@ -323,5 +454,58 @@ class ContributionController extends Controller
             'success' => true,
             'message' => 'Aporte eliminado correctamente'
         ]);
+    }
+
+    /**
+     * Generar estado de cuenta del alumno en PDF
+     */
+    public function generateAccountStatement(Customer $customer)
+    {
+        // Obtener todos los aportes del alumno ordenados por fecha
+        $contributions = Contribution::where('customer_id', $customer->id)
+            ->where('status', 'confirmed')
+            ->orderBy('contribution_date', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        // Calcular saldo acumulado
+        $balance = 0;
+        $movements = $contributions->map(function ($contribution) use (&$balance) {
+            $balance += (float) $contribution->amount;
+
+            return [
+                'date' => $contribution->contribution_date->format('d/m/Y'),
+                'number' => $contribution->contribution_number,
+                'description' => $contribution->isRefund()
+                    ? 'Devolución' . ($contribution->refundedFrom ? ' - Ref: ' . $contribution->refundedFrom->contribution_number : '')
+                    : 'Aporte',
+                'payment_method' => $contribution->payment_method,
+                'amount' => (float) $contribution->amount,
+                'balance' => $balance,
+                'is_refund' => $contribution->isRefund(),
+                'notes' => $contribution->notes,
+            ];
+        });
+
+        // Obtener configuración de la empresa
+        $companySettings = CompanySetting::getOrCreate(Auth::user()->tenant_id);
+        $companyName = $companySettings->company_name ?? 'Mi Empresa';
+        $companyLogo = $companySettings->logo_path;
+
+        $data = [
+            'customer' => $customer,
+            'movements' => $movements,
+            'company_name' => $companyName,
+            'company_logo' => $companyLogo,
+            'generated_date' => now()->format('d/m/Y H:i'),
+            'total_contributions' => $movements->where('is_refund', false)->sum('amount'),
+            'total_refunds' => abs($movements->where('is_refund', true)->sum('amount')),
+            'final_balance' => $balance,
+        ];
+
+        $pdf = Pdf::loadView('pdf.account-statement', $data);
+        $pdf->setPaper('letter', 'portrait');
+
+        return $pdf->stream('estado-cuenta-' . $customer->name . '.pdf');
     }
 }

@@ -353,7 +353,7 @@
             </li>
 
             <!-- Ventas -->
-            <li
+            <!--<li
                 class="has-submenu {{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'open' : '' }}">
                 <a href="javascript:void(0)"
                     class="{{ request()->routeIs('sales.*') || request()->routeIs('credit-notes.*') || request()->routeIs('remissions.*') ? 'active' : '' }}">
@@ -392,7 +392,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li>-->
 
             <!-- Compras -->
             <li class="has-submenu {{ request()->routeIs('purchases.*') ? 'open' : '' }}">
@@ -452,6 +452,67 @@
                 </ul>
             </li>
 
+            <!-- CONTACTOS -->
+            <div class="menu-section-title">Contactos</div>
+
+            <li>
+                <a href="{{ route('customers.index') }}"
+                    class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
+                    <i class="bi bi-people"></i>
+                    <span class="menu-text">Alumnos</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('suppliers.index') }}"
+                    class="{{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+                    <i class="bi bi-truck"></i>
+                    <span class="menu-text">Proveedores</span>
+                </a>
+            </li>
+
+            <!-- ACADEMIC Section -->
+            <div class="menu-section-title">Gestión Escolar</div>
+
+            <li class="has-submenu {{ request()->routeIs('academic.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)" class="{{ request()->routeIs('academic.*') ? 'active' : '' }}">
+                    <i class="bi bi-mortarboard"></i>
+                    <span class="menu-text">Académica</span>
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu {{ request()->routeIs('academic.*') ? 'show' : '' }}">
+                    <li>
+                        <a href="{{ route('academic.grades.index') }}"
+                            class="{{ request()->routeIs('academic.grades.*') ? 'active' : '' }}">
+                            <i class="bi bi-journal-text"></i> Cursos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.sections.index') }}"
+                            class="{{ request()->routeIs('academic.sections.*') ? 'active' : '' }}">
+                            <i class="bi bi-grid-3x3"></i> Secciones
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.shifts.index') }}"
+                            class="{{ request()->routeIs('academic.shifts.*') ? 'active' : '' }}">
+                            <i class="bi bi-clock"></i> Turnos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.bachilleratos.index') }}"
+                            class="{{ request()->routeIs('academic.bachilleratos.*') ? 'active' : '' }}">
+                            <i class="bi bi-mortarboard-fill"></i> Bachilleratos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('academic.delegates.index') }}"
+                            class="{{ request()->routeIs('academic.delegates.*') ? 'active' : '' }}">
+                            <i class="bi bi-person-badge-fill"></i> Delegados
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <!-- INVENTARIO & PRODUCTOS -->
             <div class="menu-section-title">Inventario</div>
 
@@ -496,28 +557,10 @@
                 </ul>
             </li>
 
-            <!-- CONTACTOS -->
-            <div class="menu-section-title">Contactos</div>
-
-            <li>
-                <a href="{{ route('customers.index') }}"
-                    class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
-                    <i class="bi bi-people"></i>
-                    <span class="menu-text">Alumnos</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('suppliers.index') }}"
-                    class="{{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
-                    <i class="bi bi-truck"></i>
-                    <span class="menu-text">Proveedores</span>
-                </a>
-            </li>
-
             <!-- FINANZAS Section -->
             <div class="menu-section-title">Finanzas</div>
 
-            <li>
+            <!--<li>
                 <a href="{{ route('account-receivables.index') }}"
                     class="{{ request()->routeIs('account-receivables.*') ? 'active' : '' }}">
                     <i class="bi bi-wallet2"></i>
@@ -531,7 +574,7 @@
                     <i class="bi bi-credit-card"></i>
                     <span class="menu-text">Cuentas por Pagar</span>
                 </a>
-            </li>
+            </li>-->
 
             <li>
                 <a href="{{ route('cash-registers.current') }}"
@@ -710,49 +753,6 @@
                         <a href="{{ route('reports.inventory-movements') }}"
                             class="{{ request()->routeIs('reports.inventory-movements') ? 'active' : '' }}">
                             <i class="bi bi-arrow-down-up"></i> Movimientos de Inventario
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <!-- ACADEMIC Section -->
-            <div class="menu-section-title">Gestión Escolar</div>
-
-            <li class="has-submenu {{ request()->routeIs('academic.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('academic.*') ? 'active' : '' }}">
-                    <i class="bi bi-mortarboard"></i>
-                    <span class="menu-text">Académica</span>
-                    <i class="bi bi-chevron-right chevron"></i>
-                </a>
-                <ul class="submenu {{ request()->routeIs('academic.*') ? 'show' : '' }}">
-                    <li>
-                        <a href="{{ route('academic.grades.index') }}"
-                            class="{{ request()->routeIs('academic.grades.*') ? 'active' : '' }}">
-                            <i class="bi bi-journal-text"></i> Cursos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('academic.sections.index') }}"
-                            class="{{ request()->routeIs('academic.sections.*') ? 'active' : '' }}">
-                            <i class="bi bi-grid-3x3"></i> Secciones
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('academic.shifts.index') }}"
-                            class="{{ request()->routeIs('academic.shifts.*') ? 'active' : '' }}">
-                            <i class="bi bi-clock"></i> Turnos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('academic.bachilleratos.index') }}"
-                            class="{{ request()->routeIs('academic.bachilleratos.*') ? 'active' : '' }}">
-                            <i class="bi bi-mortarboard-fill"></i> Bachilleratos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('academic.delegates.index') }}"
-                            class="{{ request()->routeIs('academic.delegates.*') ? 'active' : '' }}">
-                            <i class="bi bi-person-badge-fill"></i> Delegados
                         </a>
                     </li>
                 </ul>

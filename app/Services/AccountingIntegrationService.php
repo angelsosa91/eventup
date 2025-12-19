@@ -1219,4 +1219,107 @@ class AccountingIntegrationService
 
         return AccountingSetting::getValue($tenantId, 'cash');
     }
+
+    /**
+     * Crear asiento contable para devolución de aporte
+     */
+    public function createRefundJournalEntry(Contribution $refund): void
+    {
+        // Validar que sea una devolución (monto negativo)
+        if ($refund->amount >= 0) {
+            throw new \Exception('Solo se pueden crear asientos para devoluciones (montos negativos)');
+        }
+
+        $tenantId = $refund->tenant_id;
+        $this->validateRefundAccounts($tenantId, $refund);
+
+        $description = 'Devolución de Aporte ' . $refund->contribution_number;
+        if ($refund->refundedFrom) {
+            $description .= ' - Ref: ' . $refund->refundedFrom->contribution_number;
+        }
+        $description .= ' - ' . $refund->customer->name;
+
+        // Determinar cuenta de débito (Pasivo - Aportes)
+        $debitAccount = AccountingSetting::getValue($tenantId, 'contributions_liability');
+
+        // Determinar cuenta de crédito según método de pago
+        if ($refund->payment_method === 'Efectivo') {
+            $creditAccount = AccountingSetting::getValue($tenantId, 'cash');
+        } else {
+            $creditAccount = AccountingSetting::getValue($tenantId, 'bank_default');
+        }
+
+        // Usar el valor absoluto del monto (ya que estamos devolviendo)
+        $amount = abs((float) $refund->amount);
+
+        $period = $refund->contribution_date->format('Ym'); // Formato YYYYMM
+
+        $journalEntry = JournalEntry::create([
+            'tenant_id' => $tenantId,
+            'entry_number' => JournalEntry::generateEntryNumber($tenantId, $period),
+            'entry_date' => $refund->contribution_date,
+            'period' => $period,
+            'description' => $description,
+            'total_debit' => $amount,
+            'total_credit' => $amount,
+            'status' => 'posted',
+            'user_id' => auth()->id(),
+        ]);
+
+        // Línea de débito: Cuenta de Aportes (Pasivo)
+        JournalEntryLine::create([
+            'journal_entry_id' => $journalEntry->id,
+            'account_id' => $debitAccount,
+            'description' => $description,
+            'debit' => $amount,
+            'credit' => 0,
+        ]);
+
+        // Línea de crédito: Cuenta de Caja o Banco
+        JournalEntryLine::create([
+            'journal_entry_id' => $journalEntry->id,
+            'account_id' => $creditAccount,
+            'description' => $description,
+            'debit' => 0,
+            'credit' => $amount,
+        ]);
+
+        // Asociar el asiento con la devolución
+        $refund->update(['journal_entry_id' => $journalEntry->id]);
+
+        // Actualizar saldos de las cuentas contables afectadas
+        $journalEntry->updateAccountBalances();
+    }
+
+    /**
+     * Validar que las cuentas necesarias para devoluciones estén configuradas
+     */
+    private function validateRefundAccounts(int $tenantId, Contribution $refund): void
+    {
+        $errors = [];
+
+        // Validar cuenta de aportes (pasivo)
+        if (!AccountingSetting::getValue($tenantId, 'contributions_liability')) {
+            $errors[] = 'Cuenta de Aportes';
+        }
+
+        // Validar cuenta según método de pago
+        if ($refund->payment_method === 'Efectivo') {
+            if (!AccountingSetting::getValue($tenantId, 'cash')) {
+                $errors[] = 'Cuenta de Caja';
+            }
+        } else {
+            if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
+                $errors[] = 'Cuenta de Banco por Defecto';
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new \Exception(
+                'Debe configurar las siguientes cuentas contables antes de confirmar la devolución: ' .
+                implode(', ', $errors) . '. ' .
+                'Vaya a Contabilidad > Configuración Contable para configurarlas.'
+            );
+        }
+    }
 }

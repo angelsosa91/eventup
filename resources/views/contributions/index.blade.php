@@ -18,6 +18,8 @@
                             onclick="printReceipt()">Imprimir Recibo</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
                             onclick="cancelContribution()">Anular</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-back"
+                            style="background: #ff9800; color: white;" onclick="refundContribution()">Devolver</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
                             onclick="deleteContribution()">Eliminar</a>
 
@@ -30,19 +32,19 @@
 
                 <!-- DataGrid -->
                 <table id="dg" class="easyui-datagrid" style="width:100%;height:600px;" data-options="
-                           url: '{{ route('contributions.data') }}',
-                           method: 'get',
-                           toolbar: '#toolbar',
-                           pagination: true,
-                           rownumbers: true,
-                           singleSelect: true,
-                           fitColumns: true,
-                           pageSize: 20,
-                           pageList: [10, 20, 50, 100],
-                           sortName: 'id',
-                           sortOrder: 'desc',
-                           remoteSort: true
-                       ">
+                                                               url: '{{ route('contributions.data') }}',
+                                                               method: 'get',
+                                                               toolbar: '#toolbar',
+                                                               pagination: true,
+                                                               rownumbers: true,
+                                                               singleSelect: true,
+                                                               fitColumns: true,
+                                                               pageSize: 20,
+                                                               pageList: [10, 20, 50, 100],
+                                                               sortName: 'id',
+                                                               sortOrder: 'desc',
+                                                               remoteSort: true
+                                                           ">
                     <thead>
                         <tr>
                             <th data-options="field:'contribution_number',width:120,sortable:true">Número</th>
@@ -70,14 +72,14 @@
             <div class="mb-3">
                 <label class="form-label">Alumno:</label>
                 <input class="easyui-combobox" name="customer_id" id="customer_id" style="width:100%" data-options="
-                           url:'{{ route('customers.list') }}',
-                           method:'get',
-                           valueField:'id',
-                           textField:'name',
-                           required:true,
-                           mode:'remote',
-                           prompt:'Buscar alumno...'
-                       ">
+                                                               url:'{{ route('customers.list') }}',
+                                                               method:'get',
+                                                               valueField:'id',
+                                                               textField:'name',
+                                                               required:true,
+                                                               mode:'remote',
+                                                               prompt:'Buscar alumno...'
+                                                           ">
             </div>
 
             <div class="row">
@@ -120,6 +122,34 @@
             style="width:90px">Guardar</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
             onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancelar</a>
+    </div>
+
+    <!-- Diálogo: Devolver Aporte -->
+    <div id="dlg-refund" class="easyui-dialog" style="width:450px"
+        data-options="closed:true,modal:true,title:'Devolver Aporte',buttons:'#refund-buttons'">
+        <div style="padding:20px">
+            <p class="mb-3"><strong>Atención:</strong> Esta acción creará un registro negativo en el estado de cuenta del
+                alumno y realizará la reversa contable completa.</p>
+            <div class="mb-3">
+                <label class="form-label">Método de Devolución:</label>
+                <select id="refund-payment-method" class="easyui-combobox" style="width:100%"
+                    data-options="required:true,panelHeight:'auto',editable:false">
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Transferencia">Transferencia Bancaria</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Motivo de la Devolución:</label>
+                <input id="refund-notes" class="easyui-textbox" style="width:100%;height:80px"
+                    data-options="multiline:true,prompt:'Ej: Alumno se retira del establecimiento'">
+            </div>
+        </div>
+    </div>
+    <div id="refund-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="processRefund()"
+            style="width:90px">Procesar</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+            onclick="javascript:$('#dlg-refund').dialog('close')" style="width:90px">Cancelar</a>
     </div>
 
     @push('styles')
@@ -293,6 +323,80 @@
                 }
 
                 window.open('{{ url('contributions') }}/' + row.id + '/receipt', '_blank');
+            }
+
+            var selectedContributionId = null;
+
+            function refundContribution() {
+                var row = $('#dg').datagrid('getSelected');
+                if (!row) {
+                    $.messager.alert('Aviso', 'Seleccione un aporte', 'warning');
+                    return;
+                }
+
+                if (row.status !== 'confirmed') {
+                    $.messager.alert('Error', 'Solo se pueden devolver aportes confirmados', 'error');
+                    return;
+                }
+
+                // Validar que no sea una devolución (monto negativo)
+                var amount = parseFloat(row.raw_amount || row.amount.replace(/\./g, '').replace(',', '.'));
+                if (amount < 0) {
+                    $.messager.alert('Error', 'No se puede devolver una devolución. Solo se pueden devolver aportes originales', 'error');
+                    return;
+                }
+
+                selectedContributionId = row.id;
+                $('#dlg-refund').dialog('open');
+                $('#refund-payment-method').combobox('clear');
+                $('#refund-notes').textbox('clear');
+            }
+
+            function processRefund() {
+                var paymentMethod = $('#refund-payment-method').combobox('getValue');
+                var notes = $('#refund-notes').textbox('getValue');
+
+                if (!paymentMethod) {
+                    $.messager.alert('Error', 'Debe seleccionar el método de devolución', 'error');
+                    return;
+                }
+
+                $.messager.confirm('Confirmar Devolución',
+                    '¿Está seguro de devolver este aporte? Esta acción creará un registro negativo y reversará la contabilidad.',
+                    function (r) {
+                        if (r) {
+                            $.ajax({
+                                url: '{{ url('contributions') }}/' + selectedContributionId + '/refund',
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    payment_method: paymentMethod,
+                                    notes: notes
+                                },
+                                success: function (response) {
+                                    if (response.success) {
+                                        $('#dlg-refund').dialog('close');
+                                        $('#dg').datagrid('reload');
+                                        $.messager.show({
+                                            title: 'Éxito',
+                                            msg: response.message
+                                        });
+                                    } else {
+                                        $.messager.alert('Error', response.errors.general[0], 'error');
+                                    }
+                                },
+                                error: function (xhr) {
+                                    var errors = xhr.responseJSON.errors;
+                                    if (errors && errors.general) {
+                                        $.messager.alert('Error', errors.general[0], 'error');
+                                    } else {
+                                        $.messager.alert('Error', 'Error al procesar la devolución', 'error');
+                                    }
+                                }
+                            });
+                        }
+                    }
+                );
             }
         </script>
     @endpush

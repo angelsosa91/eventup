@@ -21,6 +21,7 @@ class Contribution extends Model
         'reference',
         'status',
         'journal_entry_id',
+        'refunded_from_id',
         'notes',
     ];
 
@@ -51,6 +52,32 @@ class Contribution extends Model
     public function journalEntry(): BelongsTo
     {
         return $this->belongsTo(JournalEntry::class);
+    }
+
+    /**
+     * Relación con el aporte que se está devolviendo (si es una devolución)
+     */
+    public function refundedFrom(): BelongsTo
+    {
+        return $this->belongsTo(Contribution::class, 'refunded_from_id');
+    }
+
+    /**
+     * Verificar si este aporte ya fue devuelto
+     */
+    public function hasBeenRefunded(): bool
+    {
+        return self::where('refunded_from_id', $this->id)
+            ->where('status', 'confirmed')
+            ->exists();
+    }
+
+    /**
+     * Verificar si es una devolución (monto negativo)
+     */
+    public function isRefund(): bool
+    {
+        return $this->amount < 0;
     }
 
     /**
@@ -87,7 +114,7 @@ class Contribution extends Model
     {
         return match ($this->status) {
             'draft' => 'Borrador',
-            'confirmed' => 'Confirmado',
+            'confirmed' => $this->amount < 0 ? 'Devuelto' : 'Confirmado',
             'cancelled' => 'Anulado',
             default => $this->status,
         };

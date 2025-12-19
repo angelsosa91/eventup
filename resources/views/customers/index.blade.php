@@ -14,6 +14,8 @@
                     onclick="editCustomer()">Editar</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
                     onclick="deleteCustomer()">Eliminar</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-files" plain="true"
+                    style="background: #3498db; color: white;" onclick="printAccountStatement()">Estado de Cuenta</a>
                 <span class="ms-3">
                     <input id="searchbox" class="easyui-searchbox" style="width:250px"
                         data-options="searcher:doSearch,prompt:'Buscar alumno...'">
@@ -22,19 +24,19 @@
 
             <!-- DataGrid -->
             <table id="dg-customers" class="easyui-datagrid" style="width:100%;height:700px" data-options="
-                                        url:'{{ route('customers.data') }}',
-                                        method:'get',
-                                        toolbar:'#toolbar',
-                                        pagination:true,
-                                        pageSize:20,
-                                        pageList:[10,20,50,100],
-                                        rownumbers:true,
-                                        singleSelect:true,
-                                        fitColumns:true,
-                                        sortName:'id',
-                                        sortOrder:'desc',
-                                        remoteSort:true
-                                    ">
+                                                url:'{{ route('customers.data') }}',
+                                                method:'get',
+                                                toolbar:'#toolbar',
+                                                pagination:true,
+                                                pageSize:20,
+                                                pageList:[10,20,50,100],
+                                                rownumbers:true,
+                                                singleSelect:true,
+                                                fitColumns:true,
+                                                sortName:'id',
+                                                sortOrder:'desc',
+                                                remoteSort:true
+                                            ">
                 <thead>
                     <tr>
                         <th data-options="field:'id',width:60,sortable:true">ID</th>
@@ -380,6 +382,15 @@
                 });
             } else {
                 $.messager.alert('Aviso', 'Seleccione un alumno para eliminar', 'warning');
+            }
+        }
+
+        function printAccountStatement() {
+            var row = $('#dg-customers').datagrid('getSelected');
+            if (row) {
+                window.open('{{ url('customers') }}/' + row.id + '/account-statement', '_blank');
+            } else {
+                $.messager.alert('Aviso', 'Seleccione un alumno para ver su estado de cuenta', 'warning');
             }
         }
     </script>
