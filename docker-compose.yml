@@ -43,7 +43,7 @@ services:
     networks:
       - eventup-network
     ports:
-      - "${APP_PORT:-8080}:80"
+      - "${APP_PORT:-8085}:80"
 
   # db:
   #   image: mysql:8.0
@@ -73,7 +73,7 @@ services:
     networks:
       - eventup-network
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "${REDIS_PORT:-6385}:6379"
 
   worker:
     build:
