@@ -288,6 +288,7 @@
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: var(--sidebar-width) !important;
             }
 
             .sidebar.mobile-open {
@@ -295,7 +296,37 @@
             }
 
             .main-content {
-                margin-left: 0;
+                margin-left: 0 !important;
+            }
+
+            .main-content.expanded {
+                margin-left: 0 !important;
+            }
+
+            /* Hide toggle desktop button on mobile */
+            #sidebar-toggle {
+                display: none;
+            }
+
+            /* Show mobile toggle button */
+            #mobile-toggle {
+                display: block !important;
+            }
+
+            /* Overlay for mobile */
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
             }
         }
     </style>
@@ -812,7 +843,11 @@
     <div class="main-content">
         <!-- Top Navbar -->
         <div class="top-navbar">
-            <div>
+            <div class="d-flex align-items-center">
+                <button id="mobile-toggle" class="btn btn-link text-dark me-3 d-none p-0"
+                    onclick="toggleMobileSidebar()">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
                 <h5 class="mb-0">@yield('page-title', 'Dashboard')</h5>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -929,7 +964,26 @@
                 toggleIcon.classList.add('bi-chevron-right');
             }
         });
+
+        // Mobile toggle sidebar
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+
+        // Close sidebar when clicking overlay
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('sidebar-overlay')) {
+                toggleMobileSidebar();
+            }
+        });
     </script>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
 
     @stack('scripts')
 
