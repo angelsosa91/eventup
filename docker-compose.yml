@@ -67,13 +67,16 @@ services:
     image: redis:7-alpine
     container_name: eventup-redis
     restart: unless-stopped
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
     volumes:
       - redis-data:/data
     networks:
       - eventup-network
-    ports:
-      - "${REDIS_PORT:-6385}:6379"
+    # SEGURIDAD: NO exponer Redis públicamente
+    # Los contenedores dentro de neo-erp-network pueden acceder vía redis:6379
+    # NO se necesita mapear el puerto al host
+    # ports:
+    #   - "${REDIS_PORT:-6379}:6379"  # ❌ ELIMINADO por seguridad
 
   worker:
     build:
