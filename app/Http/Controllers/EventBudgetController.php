@@ -201,7 +201,7 @@ class EventBudgetController extends Controller
     {
         $request->validate([
             'description' => 'required|string',
-            'quantity' => 'required|numeric|min:0.01',
+            'quantity' => 'required|numeric|min:0',
             'unit_price' => 'required|numeric|min:0',
         ]);
 

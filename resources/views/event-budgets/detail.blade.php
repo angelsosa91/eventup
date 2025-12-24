@@ -41,14 +41,14 @@
                                 <label class="form-label">Estado:</label>
                                 <input class="easyui-combobox" name="status" value="{{ $eventBudget->status }}"
                                     style="width:100%" data-options="
-                                                                    panelHeight:'auto',
-                                                                    data: [
-                                                                        {value:'draft',text:'Borrador'},
-                                                                        {value:'sent',text:'Enviado'},
-                                                                        {value:'accepted',text:'Aceptado'},
-                                                                        {value:'rejected',text:'Rechazado'}
-                                                                    ]
-                                                                ">
+                                                                        panelHeight:'auto',
+                                                                        data: [
+                                                                            {value:'draft',text:'Borrador'},
+                                                                            {value:'sent',text:'Enviado'},
+                                                                            {value:'accepted',text:'Aceptado'},
+                                                                            {value:'rejected',text:'Rechazado'}
+                                                                        ]
+                                                                    ">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Notas:</label>
@@ -82,13 +82,13 @@
                 </div>
 
                 <table id="dg-items" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                                        url:'{{ route('event-budgets.items.data', $eventBudget->id) }}',
-                                        method:'get',
-                                        singleSelect:true,
-                                        fitColumns:true,
-                                        rownumbers:true,
-                                        toolbar:'#tb-items'
-                                    ">
+                                            url:'{{ route('event-budgets.items.data', $eventBudget->id) }}',
+                                            method:'get',
+                                            singleSelect:true,
+                                            fitColumns:true,
+                                            rownumbers:true,
+                                            toolbar:'#tb-items'
+                                        ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -116,13 +116,13 @@
                     <span class="ms-3 text-muted">Total Invitados: {{ $eventBudget->guests->count() }}</span>
                 </div>
                 <table id="dg-guests" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                                        url:'{{ route('event-budgets.guests.data', $eventBudget->id) }}',
-                                        method:'get',
-                                        singleSelect:true,
-                                        fitColumns:true,
-                                        rownumbers:true,
-                                        toolbar:'#tb-guests'
-                                    ">
+                                            url:'{{ route('event-budgets.guests.data', $eventBudget->id) }}',
+                                            method:'get',
+                                            singleSelect:true,
+                                            fitColumns:true,
+                                            rownumbers:true,
+                                            toolbar:'#tb-guests'
+                                        ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -149,7 +149,7 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Cantidad:</label>
                     <input class="easyui-numberbox" name="quantity" id="item-qty" style="width:100%"
-                        data-options="required:true,min:0.01,precision:2">
+                        data-options="required:true,min:0,precision:0">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Monto Unit.:</label>
