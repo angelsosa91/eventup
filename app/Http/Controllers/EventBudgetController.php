@@ -87,13 +87,11 @@ class EventBudgetController extends Controller
 
     public function guestsData(EventBudget $eventBudget)
     {
-        $guests = $eventBudget->guests()->with('table')->get()->map(function ($guest) {
+        $guests = $eventBudget->guests()->get()->map(function ($guest) {
             return [
                 'id' => $guest->id,
                 'name' => $guest->name,
-                'phone' => $guest->phone,
-                'table_id' => $guest->table_id,
-                'table_name' => $guest->table ? $guest->table->name : 'Sin asignar',
+                'cedula' => $guest->cedula,
             ];
         });
         return response()->json($guests);
@@ -167,14 +165,14 @@ class EventBudgetController extends Controller
 
     public function show(EventBudget $eventBudget)
     {
-        $eventBudget->load(['event', 'customer', 'items', 'guests.table']);
+        $eventBudget->load(['event', 'customer', 'items', 'guests']);
         return view('event-budgets.detail', compact('eventBudget'));
     }
 
     public function update(Request $request, EventBudget $eventBudget)
     {
         $validator = Validator::make($request->all(), [
-            'budget_date' => 'required|date',
+            'budget_date' => 'sometimes|date',
             'status' => 'required|in:draft,sent,accepted,rejected',
             'notes' => 'nullable|string',
         ]);
@@ -268,8 +266,7 @@ class EventBudgetController extends Controller
 
         $guest = $eventBudget->guests()->create([
             'name' => $request->name,
-            'phone' => $request->phone,
-            'table_id' => $request->table_id,
+            'cedula' => $request->cedula,
         ]);
 
         return response()->json(['success' => true, 'guest' => $guest]);
@@ -297,7 +294,7 @@ class EventBudgetController extends Controller
             abort(403);
         }
 
-        $eventBudget->load(['event', 'customer', 'items', 'guests.table']);
+        $eventBudget->load(['event', 'customer', 'items', 'guests']);
         $companySettings = CompanySetting::where('tenant_id', Auth::user()->tenant_id)->first();
 
         $pdf = Pdf::loadView('pdf.event-budget', compact('eventBudget', 'companySettings'));

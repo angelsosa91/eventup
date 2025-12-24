@@ -24,19 +24,19 @@
 
             <!-- DataGrid -->
             <table id="dg-customers" class="easyui-datagrid" style="width:100%;height:700px" data-options="
-                                                url:'{{ route('customers.data') }}',
-                                                method:'get',
-                                                toolbar:'#toolbar',
-                                                pagination:true,
-                                                pageSize:20,
-                                                pageList:[10,20,50,100],
-                                                rownumbers:true,
-                                                singleSelect:true,
-                                                fitColumns:true,
-                                                sortName:'id',
-                                                sortOrder:'desc',
-                                                remoteSort:true
-                                            ">
+                                                    url:'{{ route('customers.data') }}',
+                                                    method:'get',
+                                                    toolbar:'#toolbar',
+                                                    pagination:true,
+                                                    pageSize:20,
+                                                    pageList:[10,20,50,100],
+                                                    rownumbers:true,
+                                                    singleSelect:true,
+                                                    fitColumns:true,
+                                                    sortName:'id',
+                                                    sortOrder:'desc',
+                                                    remoteSort:true
+                                                ">
                 <thead>
                     <tr>
                         <th data-options="field:'id',width:60,sortable:true">ID</th>
@@ -81,8 +81,9 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Familia</label>
-                            <input class="easyui-textbox" name="family_name" id="customer-family-name" style="width:100%">
+                            <label class="form-label">Familia <span class="text-danger">*</span></label>
+                            <input class="easyui-textbox" name="family_name" id="customer-family-name" style="width:100%"
+                                data-options="required:true">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">RUC / CI</label>

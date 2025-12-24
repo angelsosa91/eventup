@@ -77,15 +77,84 @@ class EventController extends Controller
 
     public function tablesGridData(Event $event)
     {
-        $tables = $event->tables()->withCount('guests')->get()->map(function ($table) {
+        $tables = $event->tables()->with(['budgets.guests'])->get()->map(function ($table) {
+
+            // Calcular ocupación basada en los invitados de los presupuestos asignados
+            $occupied = $table->guests()->count(); // Invitados individuales directos (si los hubiera)
+
+            // Sumar invitados de los presupuestos asignados (Familias)
+            $budgets = $table->budgets->map(function ($b) {
+                return [
+                    'id' => $b->id,
+                    'family_name' => $b->family_name,
+                    'guests_count' => $b->guests()->count(),
+                    'guests' => $b->guests->map(function ($g) {
+                        return ['name' => $g->name, 'cedula' => $g->cedula];
+                    })
+                ];
+            });
+
+            $occupiedFromBudgets = $table->budgets->sum(function ($b) {
+                return $b->guests()->count();
+            });
+
             return [
                 'id' => $table->id,
                 'name' => $table->name,
                 'capacity' => $table->capacity,
-                'occupied' => $table->guests_count,
+                'color' => $table->color,
+                'occupied' => $occupied + $occupiedFromBudgets,
+                'assigned_budgets' => $budgets
             ];
         });
         return response()->json($tables);
+    }
+
+    public function downloadTableReport(Event $event)
+    {
+        $event->load(['tables.budgets.guests']);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.event-tables', compact('event'));
+        return $pdf->stream('distribucion_mesas_' . $event->id . '.pdf');
+    }
+
+    public function unassignedBudgetsData(Event $event)
+    {
+        // Presupuestos Aceptados que NO tienen mesa asignada
+        $budgets = $event->budgets()
+            ->where('status', 'accepted')
+            ->whereNull('table_id')
+            ->withCount('guests')
+            ->get()
+            ->map(function ($b) {
+                return [
+                    'id' => $b->id,
+                    'family_name' => $b->family_name,
+                    'guests_count' => $b->guests_count
+                ];
+            });
+
+        return response()->json(['rows' => $budgets, 'total' => $budgets->count()]);
+    }
+
+    public function assignBudgetToTable(Request $request, Event $event)
+    {
+        $request->validate([
+            'budget_id' => 'required|exists:event_budgets,id',
+            'table_id' => 'nullable|exists:event_tables,id' // Nullable to allow unassigning
+        ]);
+
+        $budget = \App\Models\EventBudget::find($request->budget_id);
+
+        // Verificar que el presupuesto pertenezca al evento
+        if ($budget->event_id != $event->id) {
+            abort(403, 'El presupuesto no pertenece a este evento');
+        }
+
+        $budget->table_id = $request->table_id;
+        $budget->save();
+
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -350,9 +419,29 @@ class EventController extends Controller
         $table = EventTable::create([
             'event_id' => $event->id,
             'name' => $request->name,
-            'capacity' => $request->capacity
+            'capacity' => $request->capacity,
+            'color' => $request->color ?? '#e0e0e0'
         ]);
 
         return response()->json(['success' => true, 'table' => $table]);
+    }
+
+    public function updateTable(Request $request, EventTable $table)
+    {
+        $request->validate(['name' => 'required|string', 'capacity' => 'required|integer']);
+
+        $table->update([
+            'name' => $request->name,
+            'capacity' => $request->capacity,
+            'color' => $request->color ?? $table->color
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function removeTable(EventTable $table)
+    {
+        $table->delete();
+        return response()->json(['success' => true]);
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Presupuestos de Eventos')
-@section('page-title', 'Presupuestos por Alumno/Familia')
+@section('title', 'Presupuesto Familiar')
+@section('page-title', 'Presupuesto Familiar')
 
 @section('content')
     <div class="container-fluid">
@@ -14,6 +14,8 @@
                             onclick="newBudget()">Nuevo Presupuesto</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"
                             onclick="viewBudget()">Ver Detalles</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
+                            onclick="deleteBudget()">Eliminar</a>
 
                         <div class="ms-auto d-flex align-items-center gap-2">
                             <label>Evento:</label>
@@ -34,18 +36,18 @@
 
                 <!-- DataGrid -->
                 <table id="dg" class="easyui-datagrid" style="width:100%;height:600px;" data-options="
-                                                                                                   url: '{{ route('event-budgets.data') }}',
-                                                                                                   method: 'get',
-                                                                                                   toolbar: '#toolbar',
-                                                                                                   pagination: true,
-                                                                                                   rownumbers: true,
-                                                                                                   singleSelect: true,
-                                                                                                   fitColumns: true,
-                                                                                                   pageSize: 20,
-                                                                                                   sortName: 'id',
-                                                                                                   sortOrder: 'desc',
-                                                                                                   remoteSort: true
-                                                                                               ">
+                                                                                                                   url: '{{ route('event-budgets.data') }}',
+                                                                                                                   method: 'get',
+                                                                                                                   toolbar: '#toolbar',
+                                                                                                                   pagination: true,
+                                                                                                                   rownumbers: true,
+                                                                                                                   singleSelect: true,
+                                                                                                                   fitColumns: true,
+                                                                                                                   pageSize: 20,
+                                                                                                                   sortName: 'id',
+                                                                                                                   sortOrder: 'desc',
+                                                                                                                   remoteSort: true
+                                                                                                               ">
                     <thead>
                         <tr>
                             <th data-options="field:'event_name',width:200">Evento</th>
@@ -67,32 +69,32 @@
     <div id="dlg" class="easyui-dialog" style="width:500px"
         data-options="closed:true,modal:true,border:'thin',buttons:'#dlg-buttons'">
         <form id="fm" method="post" novalidate style="margin:0;padding:20px 50px">
-            <h5 class="mb-4">Crear Presupuesto Individual</h5>
+            <h5 class="mb-4">Crear Presupuesto Familiar</h5>
 
             <div class="mb-3">
                 <label class="form-label">Evento:</label>
                 <input class="easyui-combobox" name="event_id" style="width:100%" data-options="
-                                                                                            url:'{{ route('events.data') }}',
-                                                                                            method:'get',
-                                                                                            valueField:'id',
-                                                                                            textField:'name',
-                                                                                            required:true,
-                                                                                            prompt:'Seleccione un evento',
-                                                                                            loadFilter: function(data){ return data.rows; }
-                                                                                        ">
+                                                                                                            url:'{{ route('events.data') }}',
+                                                                                                            method:'get',
+                                                                                                            valueField:'id',
+                                                                                                            textField:'name',
+                                                                                                            required:true,
+                                                                                                            prompt:'Seleccione un evento',
+                                                                                                            loadFilter: function(data){ return data.rows; }
+                                                                                                        ">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Alumno/Alumno:</label>
                 <input class="easyui-combobox" name="customer_id" style="width:100%" data-options="
-                                                                                            url:'{{ route('customers.list') }}',
-                                                                                            method:'get',
-                                                                                            valueField:'id',
-                                                                                            textField:'name',
-                                                                                            required:true,
-                                                                                            prompt:'Busque el alumno...',
-                                                                                            mode:'remote'
-                                                                                        ">
+                                                                                                            url:'{{ route('customers.list') }}',
+                                                                                                            method:'get',
+                                                                                                            valueField:'id',
+                                                                                                            textField:'name',
+                                                                                                            required:true,
+                                                                                                            prompt:'Busque el alumno...',
+                                                                                                            mode:'remote'
+                                                                                                        ">
             </div>
 
             <div class="mb-3">
@@ -169,6 +171,29 @@
                 window.location.href = '{{ url('event-budgets') }}/' + row.id;
             } else {
                 $.messager.alert('Aviso', 'Seleccione un presupuesto', 'warning');
+            }
+        }
+
+        function deleteBudget() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row) {
+                $.messager.confirm('Confirmar', '¿Está seguro de eliminar este presupuesto?', function (r) {
+                    if (r) {
+                        $.post('{{ url('event-budgets') }}/' + row.id, {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}'
+                        }, function (result) {
+                            if (result.success) {
+                                $('#dg').datagrid('reload');
+                                $.messager.show({ title: 'Éxito', msg: result.message });
+                            } else {
+                                $.messager.alert('Error', result.message, 'error');
+                            }
+                        }, 'json');
+                    }
+                });
+            } else {
+                $.messager.alert('Aviso', 'Seleccione un presupuesto para eliminar', 'warning');
             }
         }
     </script>

@@ -458,7 +458,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/data', [EventController::class, 'data'])->name('events.data');
     Route::get('/events/{event}/items/data', [EventController::class, 'itemsData'])->name('events.items.data');
     Route::get('/events/{event}/tables/grid-data', [EventController::class, 'tablesGridData'])->name('events.tables.grid.data');
+    Route::get('/events/{event}/budget-unassigned', [EventController::class, 'unassignedBudgetsData'])->name('events.budget.unassigned');
+    Route::post('/events/{event}/assign-budget', [EventController::class, 'assignBudgetToTable'])->name('events.tables.assign-budget');
+    Route::post('/events/{event}/assign-budget', [EventController::class, 'assignBudgetToTable'])->name('events.tables.assign-budget');
     Route::get('/events/{event}/tables/data', [EventController::class, 'tablesData'])->name('events.tables.data');
+    Route::get('/events/{event}/tables/report', [EventController::class, 'downloadTableReport'])->name('events.tables.report');
+
+    // CRUD Mesas
+    Route::post('/events/{event}/tables', [EventController::class, 'addTable'])->name('events.tables.store');
+    Route::put('/events/tables/{table}', [EventController::class, 'updateTable'])->name('events.tables.update');
+    Route::delete('/events/tables/{table}', [EventController::class, 'removeTable'])->name('events.tables.destroy');
+
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
@@ -485,6 +495,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-budgets/{eventBudget}/guests/data', [EventBudgetController::class, 'guestsData'])->name('event-budgets.guests.data');
     Route::put('/event-budgets/{eventBudget}', [EventBudgetController::class, 'update'])->name('event-budgets.update');
     Route::get('/event-budgets/{eventBudget}/pdf', [EventBudgetController::class, 'generatePDF'])->name('event-budgets.pdf');
+    Route::delete('/event-budgets/{eventBudget}', [EventBudgetController::class, 'destroy'])->name('event-budgets.destroy');
     // Items de Presupuesto
     Route::post('/event-budgets/{eventBudget}/items', [EventBudgetController::class, 'addItem'])->name('event-budgets.items.store');
     Route::post('/event-budgets/{eventBudget}/import', [EventBudgetController::class, 'importFromEvent'])->name('event-budgets.import');

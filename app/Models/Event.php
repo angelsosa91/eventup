@@ -39,6 +39,11 @@ class Event extends Model
         return $this->hasMany(EventGuest::class);
     }
 
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(EventBudget::class);
+    }
+
     /**
      * Obtener etiqueta de estado
      */

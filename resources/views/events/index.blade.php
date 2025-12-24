@@ -12,6 +12,8 @@
                     <div class="d-flex align-items-center gap-2">
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" onclick="newEvent()">Nuevo
                             Evento</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"
+                            onclick="editEvent()">Editar</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"
                             onclick="viewEvent()">Ver Detalles</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
@@ -26,19 +28,19 @@
 
                 <!-- DataGrid -->
                 <table id="dg" class="easyui-datagrid" style="width:100%;height:600px;" data-options="
-                           url: '{{ route('events.data') }}',
-                           method: 'get',
-                           toolbar: '#toolbar',
-                           pagination: true,
-                           rownumbers: true,
-                           singleSelect: true,
-                           fitColumns: true,
-                           pageSize: 20,
-                           pageList: [10, 20, 50, 100],
-                           sortName: 'id',
-                           sortOrder: 'desc',
-                           remoteSort: true
-                       ">
+                                   url: '{{ route('events.data') }}',
+                                   method: 'get',
+                                   toolbar: '#toolbar',
+                                   pagination: true,
+                                   rownumbers: true,
+                                   singleSelect: true,
+                                   fitColumns: true,
+                                   pageSize: 20,
+                                   pageList: [10, 20, 50, 100],
+                                   sortName: 'id',
+                                   sortOrder: 'desc',
+                                   remoteSort: true
+                               ">
                     <thead>
                         <tr>
                             <th data-options="field:'name',width:300">Nombre del Evento</th>
@@ -80,6 +82,23 @@
                 <label class="form-label">Notas:</label>
                 <input class="easyui-textbox" name="notes" style="width:100%;height:80px" data-options="multiline:true">
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">Estado:</label>
+                <input class="easyui-combobox" name="status" style="width:100%" data-options="
+                        valueField:'id', textField:'text', panelHeight:'auto',
+                        data: [
+                            {id:'draft', text:'Borrador'},
+                            {id:'confirmed', text:'Confirmado'},
+                            {id:'cancelled', text:'Anulado'},
+                            {id:'completed', text:'Completado'}
+                        ],
+                        value:'draft',
+                        label:'Estado:',
+                        labelPosition:'top',
+                        editable:false
+                    ">
+            </div>
         </form>
     </div>
     <div id="dlg-buttons">
@@ -115,16 +134,44 @@
                 $('#dg').datagrid('load', { search: value });
             }
 
+            var current_event_id = null;
+
             function newEvent() {
+                current_event_id = null;
                 $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Nuevo Evento');
                 $('#fm').form('clear');
+                // Set default status for new
+                $('#fm').form('load', { status: 'draft' });
+            }
+
+            function editEvent() {
+                var row = $('#dg').datagrid('getSelected');
+                if (!row) {
+                    $.messager.alert('Aviso', 'Seleccione un evento', 'warning');
+                    return;
+                }
+                current_event_id = row.id;
+                $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Editar Evento');
+                $('#fm').form('clear');
+
+                // Convert DD/MM/YYYY to accepted format if needed by datebox, but usually load handles it specificially.
+                // EasyUI DateBox expects MM/DD/YYYY or standardized format depending on config.
+                // Since we output d/m/Y in grid, let's just load the row. 
+                // However, standard datebox might struggle with d/m/Y if not configured locally.
+                // Let's rely on standard load for now.
+                $('#fm').form('load', row);
             }
 
             function saveEvent() {
+                var url = current_event_id
+                    ? '{{ url('events') }}/' + current_event_id
+                    : '{{ route('events.store') }}';
+
                 $('#fm').form('submit', {
-                    url: '{{ route('events.store') }}',
+                    url: url,
                     onSubmit: function (param) {
                         param._token = '{{ csrf_token() }}';
+                        if (current_event_id) param._method = 'PUT';
                         return $(this).form('validate');
                     },
                     success: function (result) {

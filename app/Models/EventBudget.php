@@ -20,6 +20,7 @@ class EventBudget extends Model
         'total_amount',
         'status',
         'notes',
+        'table_id',
     ];
 
     protected $casts = [
@@ -35,6 +36,11 @@ class EventBudget extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function table(): BelongsTo
+    {
+        return $this->belongsTo(EventTable::class);
     }
 
     public function items(): HasMany

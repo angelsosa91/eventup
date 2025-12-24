@@ -12,6 +12,7 @@ class EventTable extends Model
         'event_id',
         'name',
         'capacity',
+        'color',
     ];
 
     public function event(): BelongsTo
@@ -22,5 +23,10 @@ class EventTable extends Model
     public function guests(): HasMany
     {
         return $this->hasMany(EventGuest::class, 'table_id');
+    }
+
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(EventBudget::class, 'table_id');
     }
 }

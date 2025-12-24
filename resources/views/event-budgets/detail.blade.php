@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Detalle de Presupuesto')
-@section('page-title', 'Presupuesto: ' . ($eventBudget->customer->name))
+@section('page-title', 'Presupuesto Familiar: ' . ($eventBudget->customer->name))
 
 @section('content')
     <div class="container-fluid">
@@ -41,14 +41,14 @@
                                 <label class="form-label">Estado:</label>
                                 <input class="easyui-combobox" name="status" value="{{ $eventBudget->status }}"
                                     style="width:100%" data-options="
-                                                        panelHeight:'auto',
-                                                        data: [
-                                                            {value:'draft',text:'Borrador'},
-                                                            {value:'sent',text:'Enviado'},
-                                                            {value:'accepted',text:'Aceptado'},
-                                                            {value:'rejected',text:'Rechazado'}
-                                                        ]
-                                                    ">
+                                                                    panelHeight:'auto',
+                                                                    data: [
+                                                                        {value:'draft',text:'Borrador'},
+                                                                        {value:'sent',text:'Enviado'},
+                                                                        {value:'accepted',text:'Aceptado'},
+                                                                        {value:'rejected',text:'Rechazado'}
+                                                                    ]
+                                                                ">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Notas:</label>
@@ -82,13 +82,13 @@
                 </div>
 
                 <table id="dg-items" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                            url:'{{ route('event-budgets.items.data', $eventBudget->id) }}',
-                            method:'get',
-                            singleSelect:true,
-                            fitColumns:true,
-                            rownumbers:true,
-                            toolbar:'#tb-items'
-                        ">
+                                        url:'{{ route('event-budgets.items.data', $eventBudget->id) }}',
+                                        method:'get',
+                                        singleSelect:true,
+                                        fitColumns:true,
+                                        rownumbers:true,
+                                        toolbar:'#tb-items'
+                                    ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -109,24 +109,25 @@
                 <div id="tb-guests" class="p-2 border-bottom mb-2">
                     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" onclick="newGuest()">Nuevo
                         Invitado</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"
+                        onclick="editGuest()">Editar</a>
                     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
                         onclick="removeGuest()">Eliminar</a>
                     <span class="ms-3 text-muted">Total Invitados: {{ $eventBudget->guests->count() }}</span>
                 </div>
                 <table id="dg-guests" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                            url:'{{ route('event-budgets.guests.data', $eventBudget->id) }}',
-                            method:'get',
-                            singleSelect:true,
-                            fitColumns:true,
-                            rownumbers:true,
-                            toolbar:'#tb-guests'
-                        ">
+                                        url:'{{ route('event-budgets.guests.data', $eventBudget->id) }}',
+                                        method:'get',
+                                        singleSelect:true,
+                                        fitColumns:true,
+                                        rownumbers:true,
+                                        toolbar:'#tb-guests'
+                                    ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
                             <th data-options="field:'name',width:300">Nombre del Invitado</th>
-                            <th data-options="field:'phone',width:150">Teléfono</th>
-                            <th data-options="field:'table_name',width:200">Mesa Asignada</th>
+                            <th data-options="field:'cedula',width:150">Cédula</th>
                         </tr>
                     </thead>
                 </table>
@@ -178,18 +179,8 @@
                 <input class="easyui-textbox" name="name" style="width:100%" data-options="required:true">
             </div>
             <div class="mb-3">
-                <label class="form-label">Teléfono:</label>
-                <input class="easyui-textbox" name="phone" style="width:100%">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Mesa:</label>
-                <input class="easyui-combobox" name="table_id" style="width:100%" data-options="
-                                    url:'{{ route('events.tables.data', $eventBudget->event_id) }}', 
-                                    method:'get',
-                                    valueField:'id',
-                                    textField:'text',
-                                    prompt:'Seleccione mesa'
-                                ">
+                <label class="form-label">Cédula:</label>
+                <input class="easyui-textbox" name="cedula" style="width:100%">
             </div>
         </form>
     </div>
@@ -301,18 +292,48 @@
             }
 
             // --- Invitados ---
+            var current_guest_id = null;
+
             function newGuest() {
-                $('#dlg-guest').dialog('open');
+                current_guest_id = null;
+                $('#dlg-guest').dialog('open').dialog('setTitle', 'Nuevo Invitado');
                 $('#fm-guest').form('clear');
             }
 
+            function editGuest() {
+                var row = $('#dg-guests').datagrid('getSelected');
+                if (!row) {
+                    $.messager.alert('Aviso', 'Seleccione un invitado', 'warning');
+                    return;
+                }
+                current_guest_id = row.id;
+                $('#dlg-guest').dialog('open').dialog('setTitle', 'Editar Invitado');
+                $('#fm-guest').form('clear');
+                $('#fm-guest').form('load', row);
+            }
+
             function saveGuest() {
+                var url = current_guest_id
+                    ? '{{ url('event-budgets/guests') }}/' + current_guest_id
+                    : '{{ route('event-budgets.guests.store', $eventBudget->id) }}';
+
                 $('#fm-guest').form('submit', {
-                    url: '{{ route('event-budgets.guests.store', $eventBudget->id) }}',
-                    onSubmit: function (param) { param._token = '{{ csrf_token() }}'; return $(this).form('validate'); },
+                    url: url,
+                    onSubmit: function (param) {
+                        param._token = '{{ csrf_token() }}';
+                        if (current_guest_id) param._method = 'PUT';
+                        return $(this).form('validate');
+                    },
                     success: function (result) {
-                        $('#dlg-guest').dialog('close');
-                        $('#dg-guests').datagrid('reload');
+                        var res = JSON.parse(result);
+                        if (res.success || result.includes('success')) {
+                            $('#dlg-guest').dialog('close');
+                            $('#dg-guests').datagrid('reload');
+                        } else {
+                            // Try fallback parsing if controller returns strict json
+                            $('#dlg-guest').dialog('close');
+                            $('#dg-guests').datagrid('reload');
+                        }
                     }
                 });
             }

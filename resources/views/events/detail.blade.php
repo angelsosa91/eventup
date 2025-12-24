@@ -53,13 +53,13 @@
                 </div>
 
                 <table id="dg-items" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                           url: '{{ route('events.items.data', $event->id) }}',
-                           method: 'get',
-                           singleSelect:true,
-                           fitColumns:true,
-                           rownumbers:true,
-                           toolbar:'#tb-items'
-                       ">
+                                                   url: '{{ route('events.items.data', $event->id) }}',
+                                                   method: 'get',
+                                                   singleSelect:true,
+                                                   fitColumns:true,
+                                                   rownumbers:true,
+                                                   toolbar:'#tb-items'
+                                               ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -75,27 +75,86 @@
 
             <!-- PESTAÑA: MESAS -->
             <div title="Mesas" style="padding:10px;">
-                <div id="tb-tables" class="p-2 border-bottom mb-2">
-                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" onclick="addTable()">Agregar
-                        Mesa</a>
+                <div class="row h-100">
+                    <!-- Columna Izquierda: Familias Sin Asignar -->
+                    <div class="col-md-4 h-100">
+                        <div class="card h-100">
+                            <div class="card-header bg-warning text-dark">
+                                <strong>Familias / Presupuestos por Asignar</strong>
+                            </div>
+                            <div class="card-body p-0">
+                                <table id="dg-unassigned" class="easyui-datagrid" style="width:100%;height:530px"
+                                    data-options="
+                                                            url: '{{ route('events.budget.unassigned', $event->id) }}',
+                                                            method: 'get',
+                                                            singleSelect:true,
+                                                            fitColumns:true,
+                                                            rownumbers:true,
+                                                            toolbar: '#tb-unassigned'
+                                                        ">
+                                    <thead>
+                                        <tr>
+                                            <th data-options="field:'family_name',width:180">Familia</th>
+                                            <th data-options="field:'guests_count',width:80,align:'center'">Inv.</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div id="tb-unassigned" class="p-1">
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok"
+                                        onclick="openAssignDialog()">Asignar a Mesa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Mesas -->
+                    <div class="col-md-8 h-100">
+                        <div class="card h-100">
+                            <div class="card-header bg-light">
+                                <strong>Distribución de Mesas</strong>
+                            </div>
+                            <div class="card-body p-0">
+                                <div id="tb-tables" class="p-2 border-bottom mb-2">
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add"
+                                        onclick="addTable()">Agregar Mesa</a>
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"
+                                        onclick="editTable()">Editar</a>
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
+                                        onclick="removeTable()">Eliminar</a>
+                                    <a href="{{ route('events.tables.report', $event->id) }}" class="easyui-linkbutton"
+                                        iconCls="icon-print" target="_blank">Imprimir Distribución</a>
+                                </div>
+                                <table id="dg-tables" class="easyui-datagrid" style="width:100%;height:530px" data-options="
+                                                                   url: '{{ route('events.tables.grid.data', $event->id) }}',
+                                                                   method: 'get',
+                                                                   singleSelect:true,
+                                                                   fitColumns:true,
+                                                                   rownumbers:true,
+                                                                   toolbar:'#tb-tables',
+                                                                   view: detailview,
+                                                                   detailFormatter: detailFormatter
+                                                               ">
+                                    <thead>
+                                        <tr>
+                                            <th data-options="field:'id',hidden:true">ID</th>
+                                            <th data-options="field:'name',width:150">Nombre de Mesa</th>
+                                            <th
+                                                data-options="field:'assigned_families',width:200,formatter:familiesFormatter">
+                                                Familia(s)</th>
+                                            <th data-options="field:'capacity',width:60,align:'center'">Cap.</th>
+                                            <th
+                                                data-options="field:'occupied',width:80,align:'center',formatter:occupiedFormatter">
+                                                Ocup.</th>
+                                            <th
+                                                data-options="field:'color',width:80,align:'center',formatter:colorFormatter">
+                                                Color</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <table id="dg-tables" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                           url: '{{ route('events.tables.grid.data', $event->id) }}',
-                           method: 'get',
-                           singleSelect:true,
-                           fitColumns:true,
-                           rownumbers:true,
-                           toolbar:'#tb-tables'
-                       ">
-                    <thead>
-                        <tr>
-                            <th data-options="field:'id',hidden:true">ID</th>
-                            <th data-options="field:'name',width:200">Nombre de Mesa</th>
-                            <th data-options="field:'capacity',width:100,align:'center'">Capacidad</th>
-                            <th data-options="field:'occupied',width:100,align:'center'">Ocupados</th>
-                        </tr>
-                    </thead>
-                </table>
             </div>
         </div>
     </div>
@@ -148,8 +207,133 @@
             onclick="javascript:$('#dlg-catalog').dialog('close')" style="width:90px">Cerrar</a>
     </div>
 
+    <!-- Diálogo: Asignar Mesa -->
+    <div id="dlg-assign" class="easyui-dialog" style="width:400px"
+        data-options="closed:true,modal:true,title:'Asignar Familia a Mesa',buttons:'#assign-buttons'">
+        <form id="fm-assign" method="post" novalidate style="padding:20px">
+            <div class="mb-3">
+                <p>Asignando: <strong id="assign-family-name"></strong></p>
+                <input type="hidden" name="budget_id" id="assign-budget-id">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Seleccione Mesa:</label>
+                <input class="easyui-combobox" name="table_id" style="width:100%" data-options="
+                                            url:'{{ route('events.tables.data', $event->id) }}',
+                                            method:'get',
+                                            valueField:'id',
+                                            textField:'text',
+                                            required:true,
+                                            prompt:'Elija una mesa...'
+                                        ">
+            </div>
+        </form>
+    </div>
+    <div id="assign-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveAssignment()"
+            style="width:90px">Asignar</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+            onclick="javascript:$('#dlg-assign').dialog('close')" style="width:90px">Cancelar</a>
+    </div>
+
+    <!-- Diálogo: Nueva/Editar Mesa -->
+    <div id="dlg-table" class="easyui-dialog" style="width:400px"
+        data-options="closed:true,modal:true,title:'Mesa',buttons:'#table-buttons'">
+        <form id="fm-table" method="post" novalidate style="padding:20px">
+            <div class="mb-3">
+                <label class="form-label">Nombre de la Mesa:</label>
+                <input class="easyui-textbox" name="name" style="width:100%" data-options="required:true">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Capacidad:</label>
+                <input class="easyui-numberbox" name="capacity" style="width:100%" data-options="required:true,min:1">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Color Identificativo:</label>
+                <input type="color" class="form-control form-control-color" name="color" value="#e0e0e0"
+                    title="Elegir color">
+            </div>
+        </form>
+    </div>
+    <div id="table-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveTable()"
+            style="width:90px">Guardar</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+            onclick="javascript:$('#dlg-table').dialog('close')" style="width:90px">Cancelar</a>
+    </div>
+
     @push('scripts')
         <script>
+            // ... (previous variables) ...
+
+            var current_table_id = null;
+
+            function addTable() {
+                current_table_id = null;
+                $('#dlg-table').dialog('open').dialog('setTitle', 'Nueva Mesa');
+                $('#fm-table').form('clear');
+                $('input[name="color"]').val('#e0e0e0');
+            }
+
+            function editTable() {
+                var row = $('#dg-tables').datagrid('getSelected');
+                if (!row) {
+                    $.messager.alert('Aviso', 'Seleccione una mesa', 'warning');
+                    return;
+                }
+                current_table_id = row.id;
+                $('#dlg-table').dialog('open').dialog('setTitle', 'Editar Mesa');
+                $('#fm-table').form('clear');
+                $('#fm-table').form('load', row);
+                // Cargar color manualmente
+                $('input[name="color"]').val(row.color);
+            }
+
+            function saveTable() {
+                var url = current_table_id
+                    ? '{{ url('events/tables') }}/' + current_table_id
+                    : '{{ route('events.tables.store', $event->id) }}';
+
+                $('#fm-table').form('submit', {
+                    url: url,
+                    onSubmit: function (param) {
+                        param._token = '{{ csrf_token() }}';
+                        if (current_table_id) param._method = 'PUT';
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        var res = JSON.parse(result);
+                        if (res.success) {
+                            $('#dlg-table').dialog('close');
+                            $('#dg-tables').datagrid('reload');
+                        } else {
+                            $.messager.alert('Error', 'Error al guardar mesa', 'error');
+                        }
+                    }
+                });
+            }
+
+            function removeTable() {
+                var row = $('#dg-tables').datagrid('getSelected');
+                if (!row) {
+                    $.messager.alert('Aviso', 'Seleccione una mesa', 'warning');
+                    return;
+                }
+                $.messager.confirm('Confirmar', '¿Eliminar esta mesa?', function (r) {
+                    if (r) {
+                        $.ajax({
+                            url: '{{ url('events/tables') }}/' + row.id,
+                            type: 'DELETE',
+                            data: { _token: '{{ csrf_token() }}' },
+                            success: function (res) {
+                                if (res.success) {
+                                    $('#dg-tables').datagrid('reload');
+                                    $('#dg-unassigned').datagrid('reload');
+                                }
+                            }
+                        });
+                    }
+                });
+            }
             var current_item_id = null;
 
             function formatMoney(amount) {
@@ -240,24 +424,96 @@
                 }, 'json');
             }
 
-            function addTable() {
-                $.messager.prompt('Nueva Mesa', 'Nombre de la mesa:', function (name) {
-                    if (name) {
-                        $.messager.prompt('Capacidad', 'Capacidad para ' + name + ':', function (cap) {
-                            if (cap) {
-                                $.post('{{ route('events.tables.store', $event->id) }}', {
-                                    _token: '{{ csrf_token() }}',
-                                    name: name,
-                                    capacity: cap
-                                }, function (result) {
-                                    if (result.success) {
-                                        $('#dg-tables').datagrid('reload');
-                                    }
-                                });
-                            }
-                        });
+
+            // --- Lógica de Asignación ---
+            function openAssignDialog() {
+                var row = $('#dg-unassigned').datagrid('getSelected');
+                if (!row) {
+                    $.messager.alert('Aviso', 'Seleccione una familia de la lista izquierda', 'warning');
+                    return;
+                }
+                $('#dlg-assign').dialog('open');
+                $('#fm-assign').form('clear');
+                $('#assign-family-name').text(row.family_name);
+                $('#assign-budget-id').val(row.id);
+            }
+
+            function saveAssignment() {
+                $('#fm-assign').form('submit', {
+                    url: '{{ route('events.tables.assign-budget', $event->id) }}',
+                    onSubmit: function (param) {
+                        param._token = '{{ csrf_token() }}';
+                        param.budget_id = $('#assign-budget-id').val();
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        var res = JSON.parse(result);
+                        if (res.success) {
+                            $('#dlg-assign').dialog('close');
+                            $('#dg-unassigned').datagrid('reload');
+                            $('#dg-tables').datagrid('reload');
+                        } else {
+                            $.messager.alert('Error', 'No se pudo asignar', 'error');
+                        }
                     }
                 });
+            }
+
+            // --- Formatters para DataGrid Mesas ---
+            function occupiedFormatter(val, row) {
+                if (val > row.capacity) return '<span style="color:red;font-weight:bold;">' + val + '</span>';
+                return val;
+            }
+
+            function colorFormatter(val, row) {
+                return '<div style="width:20px;height:20px;background-color:' + val + ';border:1px solid #ccc;margin:0 auto;"></div>';
+            }
+
+            function familiesFormatter(val, row) {
+                if (row.assigned_budgets && row.assigned_budgets.length > 0) {
+                    return row.assigned_budgets.map(function (b) { return b.family_name; }).join(', ');
+                }
+                return '<span class="text-muted">-</span>';
+            }
+
+            // --- Detail View para Mesas (Mostrar Familias adentro) ---
+            var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
+                renderRow: function (target, fields, frozen, rowIndex, rowData) {
+                    return $.fn.datagrid.defaults.view.renderRow.call(this, target, fields, frozen, rowIndex, rowData);
+                },
+                onExpandRow: function (index, row) {
+                    var ddv = $(this).datagrid('getRowDetail', index).find('div.ddv');
+                    if (row.assigned_budgets && row.assigned_budgets.length > 0) {
+                        var html = '<ul class="list-group list-group-flush">';
+                        row.assigned_budgets.forEach(function (b) {
+                            html += '<li class="list-group-item" style="background-color:' + row.color + '20">';
+                            html += '<div class="d-flex justify-content-between align-items-center">';
+                            html += '<strong>' + b.family_name + '</strong>';
+                            html += '<span class="badge bg-primary rounded-pill">' + b.guests_count + '</span>';
+                            html += '</div>';
+
+                            if (b.guests && b.guests.length > 0) {
+                                html += '<ul class="mt-2 text-muted small" style="list-style-type:circle; padding-left:20px;">';
+                                b.guests.forEach(function (g) {
+                                    html += '<li>' + g.name + (g.cedula ? ' (' + g.cedula + ')' : '') + '</li>';
+                                });
+                                html += '</ul>';
+                            }
+
+                            html += '</li>';
+                        });
+                        html += '</ul>';
+                        ddv.html(html);
+                        $('#dg-tables').datagrid('fixDetailRowHeight', index);
+                    } else {
+                        ddv.html('<div class="p-2 text-muted">Sin familias asignadas</div>');
+                        $('#dg-tables').datagrid('fixDetailRowHeight', index);
+                    }
+                }
+            });
+
+            function detailFormatter(index, row) {
+                return '<div class="ddv" style="padding:5px 0"></div>';
             }
         </script>
     @endpush

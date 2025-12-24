@@ -144,7 +144,7 @@
             <p>Tel: {{ $companySettings->phone ?? '' }} | RUC: {{ $companySettings->ruc ?? '' }}</p>
         </div>
         <div class="budget-info">
-            <div class="title">PRESUPUESTO</div>
+            <div class="title">PRESUPUESTO FLIAR</div>
             <div><strong>Nro:</strong> {{ str_pad($eventBudget->id, 6, '0', STR_PAD_LEFT) }}</div>
             <div><strong>Fecha:</strong> {{ $eventBudget->budget_date->format('d/m/Y') }}</div>
         </div>

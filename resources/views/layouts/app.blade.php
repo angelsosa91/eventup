@@ -379,7 +379,7 @@
                 <a href="{{ route('event-budgets.index') }}"
                     class="{{ request()->routeIs('event-budgets.*') ? 'active' : '' }}">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
-                    <span class="menu-text">Presupuestos</span>
+                    <span class="menu-text">Presupuesto Fliar</span>
                 </a>
             </li>
 
