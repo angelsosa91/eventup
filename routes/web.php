@@ -449,6 +449,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/contributions/{contribution}/confirm', [ContributionController::class, 'confirm'])->name('contributions.confirm');
     Route::post('/contributions/{contribution}/cancel', [ContributionController::class, 'cancel'])->name('contributions.cancel');
     Route::post('/contributions/{contribution}/refund', [ContributionController::class, 'refund'])->name('contributions.refund');
+    Route::put('/contributions/{contribution}', [ContributionController::class, 'update'])->name('contributions.update'); // Nueva ruta para actualizar
     Route::get('/contributions/{contribution}/receipt', [ContributionController::class, 'generateReceipt'])->name('contributions.receipt');
     Route::get('/customers/{customer}/account-statement', [ContributionController::class, 'generateAccountStatement'])->name('customers.account-statement');
     Route::delete('/contributions/{contribution}', [ContributionController::class, 'destroy'])->name('contributions.destroy');

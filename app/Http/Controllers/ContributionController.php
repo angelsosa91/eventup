@@ -57,7 +57,7 @@ class ContributionController extends Controller
                     'id' => $item->id,
                     'customer_id' => $item->customer_id,
                     'contribution_number' => $item->contribution_number,
-                    'contribution_date' => $item->contribution_date->format('d/m/Y'),
+                    'contribution_date' => $item->contribution_date->format('d-m-Y'),
                     'customer_name' => $item->customer ? $item->customer->name : 'Sin alumno',
                     'user_name' => $item->user->name,
                     'amount' => number_format($item->amount, 0, ',', '.'),
@@ -116,6 +116,53 @@ class ContributionController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'errors' => ['general' => ['Error al crear el aporte: ' . $e->getMessage()]]
+            ], 422);
+        }
+    }
+
+    /**
+     * Actualizar aporte (solo borrador)
+     */
+    public function update(Request $request, Contribution $contribution)
+    {
+        if ($contribution->status !== 'draft') {
+            return response()->json([
+                'errors' => ['general' => ['Solo se pueden modificar aportes en borrador. Si necesita cambiar el monto o fecha, debe anular este aporte y crear uno nuevo.']]
+            ], 422);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'customer_id' => 'required|exists:customers,id',
+            'contribution_date' => 'required|date',
+            'amount' => 'required|numeric|min:1',
+            'payment_method' => 'required|in:Efectivo,Transferencia',
+            'reference' => 'nullable|string|max:50',
+            'notes' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $contribution->update([
+                'customer_id' => $request->customer_id,
+                'contribution_date' => $request->contribution_date,
+                'amount' => $request->amount,
+                'payment_method' => $request->payment_method,
+                'reference' => $request->reference,
+                'notes' => $request->notes,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Aporte actualizado correctamente',
+                'data' => $contribution
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'errors' => ['general' => ['Error al actualizar el aporte: ' . $e->getMessage()]]
             ], 422);
         }
     }

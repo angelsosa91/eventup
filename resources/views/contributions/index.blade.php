@@ -12,6 +12,8 @@
                     <div class="d-flex align-items-center gap-2 flex-wrap">
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add"
                             onclick="newContribution()">Nuevo Aporte</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"
+                            onclick="editContribution()">Editar</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok"
                             onclick="confirmContribution()">Confirmar</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print"
@@ -32,18 +34,18 @@
 
                 <!-- DataGrid -->
                 <table id="dg" class="easyui-datagrid" style="width:100%;height:600px;" data-options="
-                                                                                                   url: '{{ route('contributions.data') }}',
-                                                                                                   method: 'get',
-                                                                                                   toolbar: '#toolbar',
-                                                                                                   pagination: true,
-                                                                                                   rownumbers: true,
-                                                                                                   singleSelect: true,
-                                                                                                   pageSize: 20,
-                                                                                                   pageList: [10, 20, 50, 100],
-                                                                                                   sortName: 'id',
-                                                                                                   sortOrder: 'desc',
-                                                                                                   remoteSort: true
-                                                                                               ">
+                                                                                                       url: '{{ route('contributions.data') }}',
+                                                                                                       method: 'get',
+                                                                                                       toolbar: '#toolbar',
+                                                                                                       pagination: true,
+                                                                                                       rownumbers: true,
+                                                                                                       singleSelect: true,
+                                                                                                       pageSize: 20,
+                                                                                                       pageList: [10, 20, 50, 100],
+                                                                                                       sortName: 'id',
+                                                                                                       sortOrder: 'desc',
+                                                                                                       remoteSort: true
+                                                                                                   ">
                     <thead>
                         <tr>
                             <th data-options="field:'contribution_number',width:120,sortable:true">Número</th>
@@ -62,23 +64,26 @@
         </div>
     </div>
 
-    <!-- Dialog para Nuevo Aporte -->
+    <!-- Dialog para Nuevo/Editar Aporte -->
     <div id="dlg" class="easyui-dialog" style="width:500px"
         data-options="closed:true,modal:true,border:'thin',buttons:'#dlg-buttons'">
         <form id="fm" method="post" novalidate style="margin:0;padding:20px">
-            <h5 class="mb-4">Registrar Aporte</h5>
+            <!-- Método spoofing dinámico se agregará via JS si es necesario -->
+            <input type="hidden" name="_method" id="_method" value="POST">
+
+            <h5 class="mb-4" id="dlg-title">Registrar Aporte</h5>
 
             <div class="mb-3">
                 <label class="form-label">Alumno:</label>
                 <input class="easyui-combobox" name="customer_id" id="customer_id" style="width:100%" data-options="
-                                                                                                   url:'{{ route('customers.list') }}',
-                                                                                                   method:'get',
-                                                                                                   valueField:'id',
-                                                                                                   textField:'name',
-                                                                                                   required:true,
-                                                                                                   mode:'remote',
-                                                                                                   prompt:'Buscar alumno...'
-                                                                                               ">
+                                                                                                       url:'{{ route('customers.list') }}',
+                                                                                                       method:'get',
+                                                                                                       valueField:'id',
+                                                                                                       textField:'name',
+                                                                                                       required:true,
+                                                                                                       mode:'remote',
+                                                                                                       prompt:'Buscar alumno...'
+                                                                                                   ">
             </div>
 
             <div class="row">
@@ -163,6 +168,8 @@
 
     @push('scripts')
         <script>
+            var url;
+
             $(function () {
                 // Configurar fitColumns dinámicamente según el ancho de pantalla
                 $('#dg').datagrid({
@@ -191,18 +198,54 @@
 
             function newContribution() {
                 var width = $(window).width() > 600 ? 500 : '90%';
-                $('#dlg').dialog('resize', {
-                    width: width
-                }).dialog('open').dialog('center').dialog('setTitle', 'Nuevo Aporte');
-
+                $('#dlg').dialog('open').dialog('resize', { width: width }).dialog('center');
+                $('#dlg').dialog('setTitle', 'Registrar Aporte');
                 $('#fm').form('clear');
+
+                // Configurar para POST (crear)
+                $('#_method').val('POST');
+                url = '{{ route('contributions.store') }}';
+
                 $('#contribution_date').datebox('setValue', '{{ date('d-m-Y') }}');
                 $('#payment_method').combobox('setValue', 'Efectivo');
             }
 
+            function editContribution() {
+                var row = $('#dg').datagrid('getSelected');
+                if (!row) {
+                    $.messager.alert('Aviso', 'Seleccione un aporte para editar', 'warning');
+                    return;
+                }
+
+                if (row.status !== 'draft') {
+                    $.messager.alert('Aviso', 'Solo se pueden modificar aportes en estado BORRADOR.<br><br>Los aportes confirmados ya han impactado en Caja/Banco y Contabilidad. Para corregirlos, debe anularlos y crear uno nuevo.', 'warning');
+                    return;
+                }
+
+                var width = $(window).width() > 600 ? 500 : '90%';
+                $('#dlg').dialog('open').dialog('resize', { width: width }).dialog('center');
+                $('#dlg').dialog('setTitle', 'Editar Aporte');
+                $('#fm').form('clear');
+
+                // Cargar datos en el formulario
+                $('#fm').form('load', row);
+                
+                // Asegurar que el monto se cargue con el valor numérico puro
+                if (row.raw_amount) {
+                    $('#amount').numberbox('setValue', row.raw_amount);
+                }
+
+                // Formatear la fecha para el datebox si viene en otro formato, aunque 'load' suele manejarlo si coincide el nombre
+                // Ajustar cliente manualmente si es necesario, pero el combobox debería cargarlo si valueField coincide
+
+                // Configurar para PUT (actualizar)
+                $('#_method').val('PUT');
+                url = '{{ url('contributions') }}/' + row.id;
+            }
+
             function saveContribution() {
                 $('#fm').form('submit', {
-                    url: '{{ route('contributions.store') }}',
+                    url: url,
                     onSubmit: function (param) {
                         param._token = '{{ csrf_token() }}';
                         return $(this).form('validate');
@@ -357,7 +400,7 @@
                 }
 
                 selectedContributionId = row.id;
-                
+
                 var width = $(window).width() > 600 ? 450 : '90%';
                 $('#dlg-refund').dialog('resize', {
                     width: width
