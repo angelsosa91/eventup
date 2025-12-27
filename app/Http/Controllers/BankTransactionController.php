@@ -8,9 +8,16 @@ use App\Models\CashRegister;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\AccountingIntegrationService;
 
 class BankTransactionController extends Controller
 {
+    protected $accountingService;
+
+    public function __construct(AccountingIntegrationService $accountingService)
+    {
+        $this->accountingService = $accountingService;
+    }
     public function index()
     {
         $accounts = BankAccount::where('status', 'active')->get();
@@ -22,10 +29,10 @@ class BankTransactionController extends Controller
         $query = BankTransaction::with(['bankAccount', 'user']);
 
         if ($request->search) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('transaction_number', 'like', '%' . $request->search . '%')
-                  ->orWhere('reference', 'like', '%' . $request->search . '%')
-                  ->orWhere('concept', 'like', '%' . $request->search . '%');
+                    ->orWhere('reference', 'like', '%' . $request->search . '%')
+                    ->orWhere('concept', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -53,7 +60,7 @@ class BankTransactionController extends Controller
         $rows = $query->skip($request->offset ?? 0)
             ->take($request->limit ?? 20)
             ->get()
-            ->map(function($transaction) {
+            ->map(function ($transaction) {
                 return [
                     'id' => $transaction->id,
                     'transaction_number' => $transaction->transaction_number,
@@ -126,6 +133,9 @@ class BankTransactionController extends Controller
                 'user_id' => Auth::id(),
                 'status' => 'completed',
             ]);
+
+            // Generar asiento contable
+            $this->accountingService->createBankTransactionJournalEntry($transaction);
 
             DB::commit();
 
@@ -200,6 +210,10 @@ class BankTransactionController extends Controller
                 'status' => 'completed',
                 'related_transaction_id' => $transactionOut->id,
             ]);
+
+            // Generar asientos contables
+            $this->accountingService->createBankTransactionJournalEntry($transactionOut);
+            $this->accountingService->createBankTransactionJournalEntry($transactionIn);
 
             // Relacionar transacciones
             $transactionOut->related_transaction_id = $transactionIn->id;
@@ -292,6 +306,9 @@ class BankTransactionController extends Controller
                 'status' => 'completed',
             ]);
 
+            // Generar asiento contable
+            $this->accountingService->createBankTransactionJournalEntry($transaction);
+
             DB::commit();
 
             return response()->json([
@@ -378,6 +395,9 @@ class BankTransactionController extends Controller
                 'status' => 'completed',
             ]);
 
+            // Generar asiento contable
+            $this->accountingService->createBankTransactionJournalEntry($transaction);
+
             DB::commit();
 
             return response()->json([
@@ -425,6 +445,11 @@ class BankTransactionController extends Controller
             // Actualizar saldo de la cuenta
             $transaction->bankAccount->updateBalance();
 
+
+
+            // Reversar asiento contable principal
+            $this->accountingService->reverseBankTransactionJournalEntry($transaction);
+
             // Si tiene transacción relacionada (transferencia), cancelarla también
             if ($transaction->related_transaction_id) {
                 $relatedTransaction = BankTransaction::find($transaction->related_transaction_id);
@@ -432,6 +457,8 @@ class BankTransactionController extends Controller
                     $relatedTransaction->status = 'cancelled';
                     $relatedTransaction->save();
                     $relatedTransaction->bankAccount->updateBalance();
+                    // Reversar asiento contable relacionado
+                    $this->accountingService->reverseBankTransactionJournalEntry($relatedTransaction);
                 }
             }
 

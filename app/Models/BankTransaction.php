@@ -31,6 +31,7 @@ class BankTransaction extends Model
         'status',
         'reconciled',
         'reconciled_date',
+        'journal_entry_id',
     ];
 
     protected $casts = [
@@ -69,6 +70,11 @@ class BankTransaction extends Model
     public function accountPayablePayment(): BelongsTo
     {
         return $this->belongsTo(AccountPayablePayment::class);
+    }
+
+    public function journalEntry(): BelongsTo
+    {
+        return $this->belongsTo(JournalEntry::class);
     }
 
     public function user(): BelongsTo

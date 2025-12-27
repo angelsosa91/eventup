@@ -28,6 +28,8 @@ class AccountingSettingSeeder extends Seeder
             'bank_default' => '1.1.02',       // Bancos
             'inventory' => '1.1.04',          // Inventario
             'expenses_default' => '5.2',      // Gastos de Administración
+            'financial_income' => '4.2',      // Otros Ingresos
+            'bank_expenses' => '5.3',         // Gastos Financieros
         ];
 
         foreach ($accounts as $key => $code) {

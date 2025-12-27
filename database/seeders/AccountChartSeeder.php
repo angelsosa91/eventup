@@ -275,6 +275,14 @@ class AccountChartSeeder extends Seeder
                             ],
                         ],
                     ],
+                    [
+                        'code' => '5.3',
+                        'name' => 'Gastos Financieros',
+                        'account_type' => 'expense',
+                        'nature' => 'debit',
+                        'level' => 2,
+                        'is_detail' => true,
+                    ],
                 ],
             ],
         ];
@@ -288,13 +296,15 @@ class AccountChartSeeder extends Seeder
             $children = $accountData['children'] ?? [];
             unset($accountData['children']);
 
-            $account = AccountChart::create(array_merge($accountData, [
-                'tenant_id' => $tenantId,
-                'parent_id' => $parentId,
-                'is_active' => true,
-                'opening_balance' => 0,
-                'current_balance' => 0,
-            ]));
+            $account = AccountChart::firstOrCreate(
+                ['tenant_id' => $tenantId, 'code' => $accountData['code']],
+                array_merge($accountData, [
+                    'parent_id' => $parentId,
+                    'is_active' => true,
+                    'opening_balance' => 0,
+                    'current_balance' => 0,
+                ])
+            );
 
             if (!empty($children)) {
                 $this->createAccounts($children, $tenantId, $account->id);
