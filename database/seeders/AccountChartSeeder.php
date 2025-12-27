@@ -10,12 +10,12 @@ class AccountChartSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?int $tenantId = null): void
     {
         // Este seeder crea un plan de cuentas básico
         // NOTA: Solo ejecutar en tenant_id = 1 o ajustar según sea necesario
 
-        $tenantId = 1;
+        $tenantId = $tenantId ?? 1;
 
         $accounts = [
             // 1. ACTIVO

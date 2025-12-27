@@ -12,9 +12,9 @@ class AccountingSettingSeeder extends Seeder
      * Run the database seeds.
      * Este seeder configura las cuentas contables por defecto para el tenant 1
      */
-    public function run(): void
+    public function run(?int $tenantId = null): void
     {
-        $tenantId = 1;
+        $tenantId = $tenantId ?? 1;
 
         // Obtener las cuentas necesarias por su código
         $accounts = [
