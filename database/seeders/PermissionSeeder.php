@@ -15,31 +15,31 @@ class PermissionSeeder extends Seeder
             ['name' => 'Crear Usuarios', 'slug' => 'users.create', 'module' => 'usuarios'],
             ['name' => 'Editar Usuarios', 'slug' => 'users.edit', 'module' => 'usuarios'],
             ['name' => 'Eliminar Usuarios', 'slug' => 'users.delete', 'module' => 'usuarios'],
-            
+
             // Roles
             ['name' => 'Ver Roles', 'slug' => 'roles.view', 'module' => 'roles'],
             ['name' => 'Crear Roles', 'slug' => 'roles.create', 'module' => 'roles'],
             ['name' => 'Editar Roles', 'slug' => 'roles.edit', 'module' => 'roles'],
             ['name' => 'Eliminar Roles', 'slug' => 'roles.delete', 'module' => 'roles'],
-            
+
             // Clientes
             ['name' => 'Ver Clientes', 'slug' => 'customers.view', 'module' => 'clientes'],
             ['name' => 'Crear Clientes', 'slug' => 'customers.create', 'module' => 'clientes'],
             ['name' => 'Editar Clientes', 'slug' => 'customers.edit', 'module' => 'clientes'],
             ['name' => 'Eliminar Clientes', 'slug' => 'customers.delete', 'module' => 'clientes'],
-            
+
             // Proveedores
             ['name' => 'Ver Proveedores', 'slug' => 'suppliers.view', 'module' => 'proveedores'],
             ['name' => 'Crear Proveedores', 'slug' => 'suppliers.create', 'module' => 'proveedores'],
             ['name' => 'Editar Proveedores', 'slug' => 'suppliers.edit', 'module' => 'proveedores'],
             ['name' => 'Eliminar Proveedores', 'slug' => 'suppliers.delete', 'module' => 'proveedores'],
-            
+
             // Productos
             ['name' => 'Ver Productos', 'slug' => 'products.view', 'module' => 'productos'],
             ['name' => 'Crear Productos', 'slug' => 'products.create', 'module' => 'productos'],
             ['name' => 'Editar Productos', 'slug' => 'products.edit', 'module' => 'productos'],
             ['name' => 'Eliminar Productos', 'slug' => 'products.delete', 'module' => 'productos'],
-            
+
             // Ventas
             ['name' => 'Ver Ventas', 'slug' => 'sales.view', 'module' => 'ventas'],
             ['name' => 'Crear Ventas', 'slug' => 'sales.create', 'module' => 'ventas'],
@@ -64,15 +64,71 @@ class PermissionSeeder extends Seeder
             ['name' => 'Crear Compras', 'slug' => 'purchases.create', 'module' => 'compras'],
             ['name' => 'Editar Compras', 'slug' => 'purchases.edit', 'module' => 'compras'],
             ['name' => 'Anular Compras', 'slug' => 'purchases.cancel', 'module' => 'compras'],
-            
+
             // Gastos
             ['name' => 'Ver Gastos', 'slug' => 'expenses.view', 'module' => 'gastos'],
             ['name' => 'Crear Gastos', 'slug' => 'expenses.create', 'module' => 'gastos'],
             ['name' => 'Editar Gastos', 'slug' => 'expenses.edit', 'module' => 'gastos'],
             ['name' => 'Eliminar Gastos', 'slug' => 'expenses.delete', 'module' => 'gastos'],
-            
+
             // Reportes
             ['name' => 'Ver Reportes', 'slug' => 'reports.view', 'module' => 'reportes'],
+
+            // Aportes
+            ['name' => 'Ver Aportes', 'slug' => 'contributions.view', 'module' => 'aportes'],
+            ['name' => 'Crear Aportes', 'slug' => 'contributions.create', 'module' => 'aportes'],
+            ['name' => 'Confirmar Aportes', 'slug' => 'contributions.confirm', 'module' => 'aportes'],
+            ['name' => 'Anular Aportes', 'slug' => 'contributions.cancel', 'module' => 'aportes'],
+            ['name' => 'Reembolsar Aportes', 'slug' => 'contributions.refund', 'module' => 'aportes'],
+            ['name' => 'Eliminar Aportes', 'slug' => 'contributions.delete', 'module' => 'aportes'],
+
+            // Eventos
+            ['name' => 'Ver Eventos', 'slug' => 'events.view', 'module' => 'eventos'],
+            ['name' => 'Crear Eventos', 'slug' => 'events.create', 'module' => 'eventos'],
+            ['name' => 'Editar Eventos', 'slug' => 'events.edit', 'module' => 'eventos'],
+            ['name' => 'Eliminar Eventos', 'slug' => 'events.delete', 'module' => 'eventos'],
+
+            // Presupuesto Familiar
+            ['name' => 'Ver Presupuestos', 'slug' => 'event-budgets.view', 'module' => 'presupuestos'],
+            ['name' => 'Crear Presupuestos', 'slug' => 'event-budgets.create', 'module' => 'presupuestos'],
+            ['name' => 'Editar Presupuestos', 'slug' => 'event-budgets.edit', 'module' => 'presupuestos'],
+            ['name' => 'Eliminar Presupuestos', 'slug' => 'event-budgets.delete', 'module' => 'presupuestos'],
+
+            // Gestión Escolar - Cursos
+            ['name' => 'Ver Cursos', 'slug' => 'academic.grades.view', 'module' => 'academica'],
+            ['name' => 'Crear Cursos', 'slug' => 'academic.grades.create', 'module' => 'academica'],
+            ['name' => 'Editar Cursos', 'slug' => 'academic.grades.edit', 'module' => 'academica'],
+            ['name' => 'Eliminar Cursos', 'slug' => 'academic.grades.delete', 'module' => 'academica'],
+
+            // Gestión Escolar - Secciones
+            ['name' => 'Ver Secciones', 'slug' => 'academic.sections.view', 'module' => 'academica'],
+            ['name' => 'Crear Secciones', 'slug' => 'academic.sections.create', 'module' => 'academica'],
+            ['name' => 'Editar Secciones', 'slug' => 'academic.sections.edit', 'module' => 'academica'],
+            ['name' => 'Eliminar Secciones', 'slug' => 'academic.sections.delete', 'module' => 'academica'],
+
+            // Gestión Escolar - Turnos
+            ['name' => 'Ver Turnos', 'slug' => 'academic.shifts.view', 'module' => 'academica'],
+            ['name' => 'Crear Turnos', 'slug' => 'academic.shifts.create', 'module' => 'academica'],
+            ['name' => 'Editar Turnos', 'slug' => 'academic.shifts.edit', 'module' => 'academica'],
+            ['name' => 'Eliminar Turnos', 'slug' => 'academic.shifts.delete', 'module' => 'academica'],
+
+            // Gestión Escolar - Bachilleratos
+            ['name' => 'Ver Bachilleratos', 'slug' => 'academic.bachilleratos.view', 'module' => 'academica'],
+            ['name' => 'Crear Bachilleratos', 'slug' => 'academic.bachilleratos.create', 'module' => 'academica'],
+            ['name' => 'Editar Bachilleratos', 'slug' => 'academic.bachilleratos.edit', 'module' => 'academica'],
+            ['name' => 'Eliminar Bachilleratos', 'slug' => 'academic.bachilleratos.delete', 'module' => 'academica'],
+
+            // Gestión Escolar - Delegados
+            ['name' => 'Ver Delegados', 'slug' => 'academic.delegates.view', 'module' => 'academica'],
+            ['name' => 'Crear Delegados', 'slug' => 'academic.delegates.create', 'module' => 'academica'],
+            ['name' => 'Editar Delegados', 'slug' => 'academic.delegates.edit', 'module' => 'academica'],
+            ['name' => 'Eliminar Delegados', 'slug' => 'academic.delegates.delete', 'module' => 'academica'],
+
+            // Servicios
+            ['name' => 'Ver Servicios', 'slug' => 'services.view', 'module' => 'productos'],
+            ['name' => 'Crear Servicios', 'slug' => 'services.create', 'module' => 'productos'],
+            ['name' => 'Editar Servicios', 'slug' => 'services.edit', 'module' => 'productos'],
+            ['name' => 'Eliminar Servicios', 'slug' => 'services.delete', 'module' => 'productos'],
 
             // Configuración
             ['name' => 'Configuración General', 'slug' => 'settings.general', 'module' => 'configuracion'],
