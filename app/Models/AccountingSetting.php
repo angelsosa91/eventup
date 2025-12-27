@@ -84,6 +84,10 @@ class AccountingSetting extends Model
 
             // Aportes
             'contributions_liability' => 'Cuenta de Aportes',
+
+            // Bancos - Intereses y Cargos
+            'financial_income' => 'Cuenta de Ingresos Financieros',
+            'bank_expenses' => 'Cuenta de Gastos Bancarios',
         ];
     }
 }

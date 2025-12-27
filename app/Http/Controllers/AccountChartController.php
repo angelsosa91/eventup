@@ -161,8 +161,8 @@ class AccountChartController extends Controller
             'name' => 'required|string|max:255',
             'account_type' => 'required|in:asset,liability,equity,income,expense',
             'nature' => 'required|in:debit,credit',
-            'is_detail' => 'boolean',
-            'is_active' => 'boolean',
+            'is_detail' => 'sometimes',
+            'is_active' => 'sometimes',
         ]);
 
         $account->update([
@@ -170,8 +170,8 @@ class AccountChartController extends Controller
             'description' => $request->description,
             'account_type' => $request->account_type,
             'nature' => $request->nature,
-            'is_detail' => $request->is_detail ?? $account->is_detail,
-            'is_active' => $request->is_active ?? $account->is_active,
+            'is_detail' => filter_var($request->is_detail, FILTER_VALIDATE_BOOLEAN) ?? $account->is_detail,
+            'is_active' => filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN) ?? $account->is_active,
         ]);
 
         return response()->json([

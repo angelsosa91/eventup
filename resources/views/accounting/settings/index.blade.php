@@ -141,6 +141,25 @@
                     </div>
                 </div>
 
+                <!-- Intereses y Cargos Bancarios -->
+                <h5 class="mt-4 mb-3"><i class="bi bi-bank"></i> Intereses y Cargos Bancarios</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Cuenta de Ingresos Financieros</label>
+                        <select class="form-select account-filter-income" name="settings[financial_income]">
+                            <option value="">Seleccione una cuenta...</option>
+                        </select>
+                        <small class="text-muted">Para registrar intereses ganados</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Cuenta de Gastos Bancarios</label>
+                        <select class="form-select account-filter-expense" name="settings[bank_expenses]">
+                            <option value="">Seleccione una cuenta...</option>
+                        </select>
+                        <small class="text-muted">Para registrar comisiones y gastos bancarios</small>
+                    </div>
+                </div>
+
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save"></i> Guardar Configuración
