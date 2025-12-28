@@ -179,7 +179,7 @@ class PurchaseController extends Controller
             DB::beginTransaction();
 
             // Si es compra al contado en efectivo, verificar que haya caja abierta
-            if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'cash') {
+            if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'Efectivo') {
                 $cashRegister = CashRegister::getOpenRegister(Auth::user()->tenant_id, Auth::id());
 
                 if (!$cashRegister) {
@@ -225,7 +225,7 @@ class PurchaseController extends Controller
             }
 
             // Si es compra al contado en efectivo, registrar en caja
-            if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'cash') {
+            if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'Efectivo') {
                 $cashRegister = CashRegister::getOpenRegister(Auth::user()->tenant_id, Auth::id());
 
                 // Registrar movimiento en caja
@@ -245,7 +245,7 @@ class PurchaseController extends Controller
             }
 
             // Si es compra al contado por transferencia, registrar en cuenta bancaria predeterminada
-            if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'transfer') {
+            if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'Transferencia') {
                 $defaultAccount = BankAccount::getDefaultAccount(Auth::user()->tenant_id);
 
                 if (!$defaultAccount) {
@@ -320,7 +320,7 @@ class PurchaseController extends Controller
                 }
 
                 // Si fue compra en efectivo, reversar el movimiento de caja
-                if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'cash') {
+                if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'Efectivo') {
                     // Buscar la caja del usuario para la fecha de la compra
                     $cashRegister = CashRegister::getUserRegisterForDate(
                         Auth::user()->tenant_id,
@@ -347,7 +347,7 @@ class PurchaseController extends Controller
                 }
 
                 // Si fue compra por transferencia, cancelar la transacción bancaria
-                if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'transfer') {
+                if ($purchase->payment_type === 'cash' && $purchase->payment_method === 'Transferencia') {
                     // Buscar la transacción bancaria relacionada
                     $bankTransaction = BankTransaction::where('tenant_id', Auth::user()->tenant_id)
                         ->where('reference', $purchase->purchase_number)
