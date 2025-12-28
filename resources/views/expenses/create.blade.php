@@ -71,8 +71,6 @@
                         <select class="form-select" id="payment_method" name="payment_method">
                             <option value="Efectivo">Efectivo</option>
                             <option value="Transferencia">Transferencia</option>
-                            <!--<option value="Cheque">Cheque</option>
-                            <option value="Tarjeta">Tarjeta</option>-->
                         </select>
                     </div>
                 </div>

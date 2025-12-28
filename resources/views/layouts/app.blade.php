@@ -505,131 +505,131 @@
             <div class="menu-section-title">Contactos</div>
 
             @can('customers.view')
-            <li>
-                <a href="{{ route('customers.index') }}"
-                    class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
-                    <i class="bi bi-people"></i>
-                    <span class="menu-text">Alumnos</span>
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route('customers.index') }}"
+                        class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
+                        <i class="bi bi-people"></i>
+                        <span class="menu-text">Alumnos</span>
+                    </a>
+                </li>
             @endcan
             @can('suppliers.view')
-            <li>
-                <a href="{{ route('suppliers.index') }}"
-                    class="{{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
-                    <i class="bi bi-truck"></i>
-                    <span class="menu-text">Proveedores</span>
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route('suppliers.index') }}"
+                        class="{{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+                        <i class="bi bi-truck"></i>
+                        <span class="menu-text">Proveedores</span>
+                    </a>
+                </li>
             @endcan
 
             <!-- ACADEMIC Section -->
             <div class="menu-section-title">Gestión Escolar</div>
 
             @canany(['academic.grades.view', 'academic.sections.view', 'academic.shifts.view', 'academic.bachilleratos.view', 'academic.delegates.view'])
-            <li class="has-submenu {{ request()->routeIs('academic.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('academic.*') ? 'active' : '' }}">
-                    <i class="bi bi-mortarboard"></i>
-                    <span class="menu-text">Académica</span>
-                    <i class="bi bi-chevron-right chevron"></i>
-                </a>
-                <ul class="submenu {{ request()->routeIs('academic.*') ? 'show' : '' }}">
-                    @can('academic.grades.view')
-                    <li>
-                        <a href="{{ route('academic.grades.index') }}"
-                            class="{{ request()->routeIs('academic.grades.*') ? 'active' : '' }}">
-                            <i class="bi bi-journal-text"></i> Cursos
-                        </a>
-                    </li>
-                    @endcan
-                    @can('academic.sections.view')
-                    <li>
-                        <a href="{{ route('academic.sections.index') }}"
-                            class="{{ request()->routeIs('academic.sections.*') ? 'active' : '' }}">
-                            <i class="bi bi-grid-3x3"></i> Secciones
-                        </a>
-                    </li>
-                    @endcan
-                    @can('academic.shifts.view')
-                    <li>
-                        <a href="{{ route('academic.shifts.index') }}"
-                            class="{{ request()->routeIs('academic.shifts.*') ? 'active' : '' }}">
-                            <i class="bi bi-clock"></i> Turnos
-                        </a>
-                    </li>
-                    @endcan
-                    @can('academic.bachilleratos.view')
-                    <li>
-                        <a href="{{ route('academic.bachilleratos.index') }}"
-                            class="{{ request()->routeIs('academic.bachilleratos.*') ? 'active' : '' }}">
-                            <i class="bi bi-mortarboard-fill"></i> Bachilleratos
-                        </a>
-                    </li>
-                    @endcan
-                    @can('academic.delegates.view')
-                    <li>
-                        <a href="{{ route('academic.delegates.index') }}"
-                            class="{{ request()->routeIs('academic.delegates.*') ? 'active' : '' }}">
-                            <i class="bi bi-person-badge-fill"></i> Delegados
-                        </a>
-                    </li>
-                    @endcan
-                </ul>
-            </li>
+                <li class="has-submenu {{ request()->routeIs('academic.*') ? 'open' : '' }}">
+                    <a href="javascript:void(0)" class="{{ request()->routeIs('academic.*') ? 'active' : '' }}">
+                        <i class="bi bi-mortarboard"></i>
+                        <span class="menu-text">Académica</span>
+                        <i class="bi bi-chevron-right chevron"></i>
+                    </a>
+                    <ul class="submenu {{ request()->routeIs('academic.*') ? 'show' : '' }}">
+                        @can('academic.grades.view')
+                            <li>
+                                <a href="{{ route('academic.grades.index') }}"
+                                    class="{{ request()->routeIs('academic.grades.*') ? 'active' : '' }}">
+                                    <i class="bi bi-journal-text"></i> Cursos
+                                </a>
+                            </li>
+                        @endcan
+                        @can('academic.sections.view')
+                            <li>
+                                <a href="{{ route('academic.sections.index') }}"
+                                    class="{{ request()->routeIs('academic.sections.*') ? 'active' : '' }}">
+                                    <i class="bi bi-grid-3x3"></i> Secciones
+                                </a>
+                            </li>
+                        @endcan
+                        @can('academic.shifts.view')
+                            <li>
+                                <a href="{{ route('academic.shifts.index') }}"
+                                    class="{{ request()->routeIs('academic.shifts.*') ? 'active' : '' }}">
+                                    <i class="bi bi-clock"></i> Turnos
+                                </a>
+                            </li>
+                        @endcan
+                        @can('academic.bachilleratos.view')
+                            <li>
+                                <a href="{{ route('academic.bachilleratos.index') }}"
+                                    class="{{ request()->routeIs('academic.bachilleratos.*') ? 'active' : '' }}">
+                                    <i class="bi bi-mortarboard-fill"></i> Bachilleratos
+                                </a>
+                            </li>
+                        @endcan
+                        @can('academic.delegates.view')
+                            <li>
+                                <a href="{{ route('academic.delegates.index') }}"
+                                    class="{{ request()->routeIs('academic.delegates.*') ? 'active' : '' }}">
+                                    <i class="bi bi-person-badge-fill"></i> Delegados
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
             @endcanany
 
             <!-- INVENTARIO & PRODUCTOS -->
             <div class="menu-section-title">Inventario</div>
 
             @canany(['products.view', 'services.view', 'categories.view', 'inventory-adjustments.view'])
-            <li
-                class="has-submenu {{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)"
-                    class="{{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'active' : '' }}">
-                    <i class="bi bi-box"></i>
-                    <span class="menu-text">Prod. / Serv.</span>
-                    <i class="bi bi-chevron-right chevron"></i>
-                </a>
-                <ul
-                    class="submenu {{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'show' : '' }}">
-                    @can('products.view')
-                    <li>
-                        <a href="{{ route('products.index') }}"
-                            class="{{ request()->routeIs('products.*') ? 'active' : '' }}">
-                            <i class="bi bi-box-seam"></i>
-                            <span class="menu-text">Productos</span>
-                        </a>
-                    </li>
-                    @endcan
-                    @can('services.view')
-                    <li>
-                        <a href="{{ route('services.index') }}"
-                            class="{{ request()->routeIs('services.*') ? 'active' : '' }}">
-                            <i class="bi bi-tools"></i>
-                            <span class="menu-text">Servicios</span>
-                        </a>
-                    </li>
-                    @endcan
-                    @can('categories.view')
-                    <li>
-                        <a href="{{ route('categories.index') }}"
-                            class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                            <i class="bi bi-tags"></i>
-                            <span class="menu-text">Categorías</span>
-                        </a>
-                    </li>
-                    @endcan
-                    @can('inventory-adjustments.view')
-                    <li>
-                        <a href="{{ route('inventory-adjustments.index') }}"
-                            class="{{ request()->routeIs('inventory-adjustments.*') ? 'active' : '' }}">
-                            <i class="bi bi-sliders"></i>
-                            <span class="menu-text">Ajustes</span>
-                        </a>
-                    </li>
-                    @endcan
-                </ul>
-            </li>
+                <li
+                    class="has-submenu {{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'open' : '' }}">
+                    <a href="javascript:void(0)"
+                        class="{{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'active' : '' }}">
+                        <i class="bi bi-box"></i>
+                        <span class="menu-text">Prod. / Serv.</span>
+                        <i class="bi bi-chevron-right chevron"></i>
+                    </a>
+                    <ul
+                        class="submenu {{ request()->routeIs('products.*', 'services.*', 'categories.*', 'inventory-adjustments.*') ? 'show' : '' }}">
+                        @can('products.view')
+                            <li>
+                                <a href="{{ route('products.index') }}"
+                                    class="{{ request()->routeIs('products.*') ? 'active' : '' }}">
+                                    <i class="bi bi-box-seam"></i>
+                                    <span class="menu-text">Productos</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('services.view')
+                            <li>
+                                <a href="{{ route('services.index') }}"
+                                    class="{{ request()->routeIs('services.*') ? 'active' : '' }}">
+                                    <i class="bi bi-tools"></i>
+                                    <span class="menu-text">Servicios</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('categories.view')
+                            <li>
+                                <a href="{{ route('categories.index') }}"
+                                    class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                                    <i class="bi bi-tags"></i>
+                                    <span class="menu-text">Categorías</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('inventory-adjustments.view')
+                            <li>
+                                <a href="{{ route('inventory-adjustments.index') }}"
+                                    class="{{ request()->routeIs('inventory-adjustments.*') ? 'active' : '' }}">
+                                    <i class="bi bi-sliders"></i>
+                                    <span class="menu-text">Ajustes</span>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
             @endcanany
 
             <!-- FINANZAS Section -->
@@ -652,140 +652,140 @@
             </li>-->
 
             @can('cash-register.view')
-            <li>
-                <a href="{{ route('cash-registers.current') }}"
-                    class="{{ request()->routeIs('cash-registers.*') ? 'active' : '' }}">
-                    <i class="bi bi-cash-coin"></i>
-                    <span class="menu-text">Caja</span>
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route('cash-registers.current') }}"
+                        class="{{ request()->routeIs('cash-registers.*') ? 'active' : '' }}">
+                        <i class="bi bi-cash-coin"></i>
+                        <span class="menu-text">Caja</span>
+                    </a>
+                </li>
             @endcan
 
             @canany(['banks.view', 'bank-accounts.view', 'bank-transactions.view', 'checks.view', 'bank-reconciliations.view'])
-            <li
-                class="has-submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)"
-                    class="{{ request()->routeIs('bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'active' : '' }}">
-                    <i class="bi bi-bank"></i>
-                    <span class="menu-text">Bancos</span>
-                    <i class="bi bi-chevron-right chevron"></i>
-                </a>
-                <ul
-                    class="submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'show' : '' }}">
-                    @can('banks.view')
-                    <li>
-                        <a href="{{ route('banks.index') }}"
-                            class="{{ request()->routeIs('banks.*') ? 'active' : '' }}">
-                            <i class="bi bi-bank"></i> Bancos
-                        </a>
-                    </li>
-                    @endcan
-                    @can('bank-accounts.view')
-                    <li>
-                        <a href="{{ route('bank-accounts.index') }}"
-                            class="{{ request()->routeIs('bank-accounts.*') ? 'active' : '' }}">
-                            <i class="bi bi-credit-card-2-front"></i> Cuentas Bancarias
-                        </a>
-                    </li>
-                    @endcan
-                    @can('bank-transactions.view')
-                    <li>
-                        <a href="{{ route('bank-transactions.index') }}"
-                            class="{{ request()->routeIs('bank-transactions.*') ? 'active' : '' }}">
-                            <i class="bi bi-arrow-left-right"></i> Movimientos
-                        </a>
-                    </li>
-                    @endcan
-                    @can('checks.view')
-                    <li>
-                        <a href="{{ route('checks.index') }}"
-                            class="{{ request()->routeIs('checks.*') ? 'active' : '' }}">
-                            <i class="bi bi-receipt"></i> Cheques
-                        </a>
-                    </li>
-                    @endcan
-                    @can('bank-reconciliations.view')
-                    <li>
-                        <a href="{{ route('bank-reconciliations.index') }}"
-                            class="{{ request()->routeIs('bank-reconciliations.*') ? 'active' : '' }}">
-                            <i class="bi bi-check2-square"></i> Conciliación Bancaria
-                        </a>
-                    </li>
-                    @endcan
-                </ul>
-            </li>
+                <li
+                    class="has-submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'open' : '' }}">
+                    <a href="javascript:void(0)"
+                        class="{{ request()->routeIs('bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'active' : '' }}">
+                        <i class="bi bi-bank"></i>
+                        <span class="menu-text">Bancos</span>
+                        <i class="bi bi-chevron-right chevron"></i>
+                    </a>
+                    <ul
+                        class="submenu {{ request()->routeIs('banks.*', 'bank-accounts.*', 'bank-transactions.*', 'checks.*', 'bank-reconciliations.*') ? 'show' : '' }}">
+                        @can('banks.view')
+                            <li>
+                                <a href="{{ route('banks.index') }}"
+                                    class="{{ request()->routeIs('banks.*') ? 'active' : '' }}">
+                                    <i class="bi bi-bank"></i> Bancos
+                                </a>
+                            </li>
+                        @endcan
+                        @can('bank-accounts.view')
+                            <li>
+                                <a href="{{ route('bank-accounts.index') }}"
+                                    class="{{ request()->routeIs('bank-accounts.*') ? 'active' : '' }}">
+                                    <i class="bi bi-credit-card-2-front"></i> Cuentas Bancarias
+                                </a>
+                            </li>
+                        @endcan
+                        @can('bank-transactions.view')
+                            <li>
+                                <a href="{{ route('bank-transactions.index') }}"
+                                    class="{{ request()->routeIs('bank-transactions.*') ? 'active' : '' }}">
+                                    <i class="bi bi-arrow-left-right"></i> Movimientos
+                                </a>
+                            </li>
+                        @endcan
+                        <!--@can('checks.view')
+                        <li>
+                            <a href="{{ route('checks.index') }}"
+                                class="{{ request()->routeIs('checks.*') ? 'active' : '' }}">
+                                <i class="bi bi-receipt"></i> Cheques
+                            </a>
+                        </li>
+                        @endcan-->
+                        @can('bank-reconciliations.view')
+                            <li>
+                                <a href="{{ route('bank-reconciliations.index') }}"
+                                    class="{{ request()->routeIs('bank-reconciliations.*') ? 'active' : '' }}">
+                                    <i class="bi bi-check2-square"></i> Conciliación Bancaria
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
             @endcanany
 
             <!-- CONTABILIDAD Section -->
             <div class="menu-section-title">Contabilidad</div>
 
             @canany(['account-chart.view', 'journal-entries.view', 'general-ledger.view', 'financial-statements.balance-sheet', 'financial-statements.income-statement', 'settings.general'])
-            <li
-                class="has-submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)"
-                    class="{{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'active' : '' }}">
-                    <i class="bi bi-journal-text"></i>
-                    <span class="menu-text">Contabilidad</span>
-                    <i class="bi bi-chevron-right chevron"></i>
-                </a>
-                <ul
-                    class="submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'show' : '' }}">
-                    @can('account-chart.view')
-                    <li>
-                        <a href="{{ route('account-chart.index') }}"
-                            class="{{ request()->routeIs('account-chart.*') ? 'active' : '' }}">
-                            <i class="bi bi-diagram-3"></i> Plan de Cuentas
-                        </a>
-                    </li>
-                    @endcan
-                    @can('journal-entries.view')
-                    <li>
-                        <a href="{{ route('journal-entries.index') }}"
-                            class="{{ request()->routeIs('journal-entries.*') ? 'active' : '' }}">
-                            <i class="bi bi-journal-bookmark"></i> Asientos Contables
-                        </a>
-                    </li>
-                    @endcan
-                    @can('general-ledger.view')
-                    <li>
-                        <a href="{{ route('general-ledger.index') }}"
-                            class="{{ request()->routeIs('general-ledger.*') ? 'active' : '' }}">
-                            <i class="bi bi-book"></i> Libro Mayor
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('trial-balance.index') }}"
-                            class="{{ request()->routeIs('trial-balance.*') ? 'active' : '' }}">
-                            <i class="bi bi-calculator"></i> Balance de Comprobación
-                        </a>
-                    </li>
-                    @endcan
-                    @can('financial-statements.balance-sheet')
-                    <li>
-                        <a href="{{ route('accounting.balance-sheet') }}"
-                            class="{{ request()->routeIs('accounting.balance-sheet') ? 'active' : '' }}">
-                            <i class="bi bi-file-earmark-bar-graph"></i> Balance General
-                        </a>
-                    </li>
-                    @endcan
-                    @can('financial-statements.income-statement')
-                    <li>
-                        <a href="{{ route('accounting.income-statement') }}"
-                            class="{{ request()->routeIs('accounting.income-statement') ? 'active' : '' }}">
-                            <i class="bi bi-graph-up"></i> Estado de Resultados
-                        </a>
-                    </li>
-                    @endcan
-                    @can('settings.general')
-                    <li>
-                        <a href="{{ route('accounting-settings.index') }}"
-                            class="{{ request()->routeIs('accounting-settings.*') ? 'active' : '' }}">
-                            <i class="bi bi-gear"></i> Configuración Contable
-                        </a>
-                    </li>
-                    @endcan
-                </ul>
-            </li>
+                <li
+                    class="has-submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'open' : '' }}">
+                    <a href="javascript:void(0)"
+                        class="{{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'active' : '' }}">
+                        <i class="bi bi-journal-text"></i>
+                        <span class="menu-text">Contabilidad</span>
+                        <i class="bi bi-chevron-right chevron"></i>
+                    </a>
+                    <ul
+                        class="submenu {{ request()->routeIs('account-chart.*', 'journal-entries.*', 'general-ledger.*', 'trial-balance.*', 'accounting.*', 'accounting-settings.*') ? 'show' : '' }}">
+                        @can('account-chart.view')
+                            <li>
+                                <a href="{{ route('account-chart.index') }}"
+                                    class="{{ request()->routeIs('account-chart.*') ? 'active' : '' }}">
+                                    <i class="bi bi-diagram-3"></i> Plan de Cuentas
+                                </a>
+                            </li>
+                        @endcan
+                        @can('journal-entries.view')
+                            <li>
+                                <a href="{{ route('journal-entries.index') }}"
+                                    class="{{ request()->routeIs('journal-entries.*') ? 'active' : '' }}">
+                                    <i class="bi bi-journal-bookmark"></i> Asientos Contables
+                                </a>
+                            </li>
+                        @endcan
+                        @can('general-ledger.view')
+                            <li>
+                                <a href="{{ route('general-ledger.index') }}"
+                                    class="{{ request()->routeIs('general-ledger.*') ? 'active' : '' }}">
+                                    <i class="bi bi-book"></i> Libro Mayor
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('trial-balance.index') }}"
+                                    class="{{ request()->routeIs('trial-balance.*') ? 'active' : '' }}">
+                                    <i class="bi bi-calculator"></i> Balance de Comprobación
+                                </a>
+                            </li>
+                        @endcan
+                        @can('financial-statements.balance-sheet')
+                            <li>
+                                <a href="{{ route('accounting.balance-sheet') }}"
+                                    class="{{ request()->routeIs('accounting.balance-sheet') ? 'active' : '' }}">
+                                    <i class="bi bi-file-earmark-bar-graph"></i> Balance General
+                                </a>
+                            </li>
+                        @endcan
+                        @can('financial-statements.income-statement')
+                            <li>
+                                <a href="{{ route('accounting.income-statement') }}"
+                                    class="{{ request()->routeIs('accounting.income-statement') ? 'active' : '' }}">
+                                    <i class="bi bi-graph-up"></i> Estado de Resultados
+                                </a>
+                            </li>
+                        @endcan
+                        @can('settings.general')
+                            <li>
+                                <a href="{{ route('accounting-settings.index') }}"
+                                    class="{{ request()->routeIs('accounting-settings.*') ? 'active' : '' }}">
+                                    <i class="bi bi-gear"></i> Configuración Contable
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
             @endcanany
 
             <!-- REPORTES Section -->
@@ -865,54 +865,54 @@
             <div class="menu-section-title">Administración</div>
 
             @can('users.view')
-            <li>
-                <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
-                    <i class="bi bi-person-badge"></i>
-                    <span class="menu-text">Usuarios</span>
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
+                        <i class="bi bi-person-badge"></i>
+                        <span class="menu-text">Usuarios</span>
+                    </a>
+                </li>
             @endcan
 
             @can('roles.view')
-            <li>
-                <a href="{{ route('roles.index') }}" class="{{ request()->routeIs('roles.*') ? 'active' : '' }}">
-                    <i class="bi bi-shield-lock"></i>
-                    <span class="menu-text">Roles</span>
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route('roles.index') }}" class="{{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                        <i class="bi bi-shield-lock"></i>
+                        <span class="menu-text">Roles</span>
+                    </a>
+                </li>
             @endcan
 
             <!-- CONFIGURACIÓN Section -->
             @can('settings.general')
-            <div class="menu-section-title">Configuración</div>
+                <div class="menu-section-title">Configuración</div>
 
-            <li class="has-submenu {{ request()->routeIs('settings.*') ? 'open' : '' }}">
-                <a href="javascript:void(0)" class="{{ request()->routeIs('settings.*') ? 'active' : '' }}">
-                    <i class="bi bi-gear"></i>
-                    <span class="menu-text">Configuración</span>
-                    <i class="bi bi-chevron-right chevron"></i>
-                </a>
-                <ul class="submenu {{ request()->routeIs('settings.*') ? 'show' : '' }}">
-                    <li>
-                        <a href="{{ route('settings.company') }}"
-                            class="{{ request()->routeIs('settings.company*') ? 'active' : '' }}">
-                            <i class="bi bi-building"></i> Datos de la Entidad
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('settings.documents') }}"
-                            class="{{ request()->routeIs('settings.documents*') ? 'active' : '' }}">
-                            <i class="bi bi-file-earmark-text"></i> Numeración de Documentos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('settings.taxes') }}"
-                            class="{{ request()->routeIs('settings.taxes*') ? 'active' : '' }}">
-                            <i class="bi bi-percent"></i> Impuestos (IVA)
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                <li class="has-submenu {{ request()->routeIs('settings.*') ? 'open' : '' }}">
+                    <a href="javascript:void(0)" class="{{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                        <i class="bi bi-gear"></i>
+                        <span class="menu-text">Configuración</span>
+                        <i class="bi bi-chevron-right chevron"></i>
+                    </a>
+                    <ul class="submenu {{ request()->routeIs('settings.*') ? 'show' : '' }}">
+                        <li>
+                            <a href="{{ route('settings.company') }}"
+                                class="{{ request()->routeIs('settings.company*') ? 'active' : '' }}">
+                                <i class="bi bi-building"></i> Datos de la Entidad
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('settings.documents') }}"
+                                class="{{ request()->routeIs('settings.documents*') ? 'active' : '' }}">
+                                <i class="bi bi-file-earmark-text"></i> Numeración de Documentos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('settings.taxes') }}"
+                                class="{{ request()->routeIs('settings.taxes*') ? 'active' : '' }}">
+                                <i class="bi bi-percent"></i> Impuestos (IVA)
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endcan
         </ul>
     </div>

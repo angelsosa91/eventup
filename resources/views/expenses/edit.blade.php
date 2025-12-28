@@ -74,8 +74,6 @@
                             </option>
                             <option value="Transferencia" {{ $expense->payment_method == 'Transferencia' ? 'selected' : '' }}>
                                 Transferencia</option>
-                            <!--<option value="Cheque" {{ $expense->payment_method == 'Cheque' ? 'selected' : '' }}>Cheque</option>
-                            <option value="Tarjeta" {{ $expense->payment_method == 'Tarjeta' ? 'selected' : '' }}>Tarjeta</option>-->
                         </select>
                     </div>
                 </div>
