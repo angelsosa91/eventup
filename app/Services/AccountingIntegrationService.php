@@ -884,9 +884,9 @@ class AccountingIntegrationService
      */
     private function getCreditAccountForExpense(int $tenantId, \App\Models\Expense $expense): int
     {
-        if ($expense->payment_method === 'cash') {
+        if ($expense->payment_method === 'Efectivo') {
             return AccountingSetting::getValue($tenantId, 'cash');
-        } elseif (in_array($expense->payment_method, ['card', 'transfer', 'debit'])) {
+        } elseif (in_array($expense->payment_method, ['Tarjeta', 'Transferencia'])) {
             return AccountingSetting::getValue($tenantId, 'bank_default');
         }
 
