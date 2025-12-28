@@ -398,11 +398,11 @@ class AccountingIntegrationService
             }
         } else {
             // Compra al contado
-            if ($purchase->payment_method === 'cash') {
+            if ($purchase->payment_method === 'Efectivo') {
                 if (!AccountingSetting::getValue($tenantId, 'cash')) {
                     $errors[] = 'Cuenta de Caja';
                 }
-            } elseif (in_array($purchase->payment_method, ['card', 'transfer'])) {
+            } elseif (in_array($purchase->payment_method, ['Tarjeta', 'Transferencia'])) {
                 if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
                     $errors[] = 'Cuenta de Banco por Defecto';
                 }
@@ -436,9 +436,9 @@ class AccountingIntegrationService
         }
 
         // Si es compra al contado, determinar según método de pago
-        if ($purchase->payment_method === 'cash') {
+        if ($purchase->payment_method === 'Efectivo') {
             return AccountingSetting::getValue($tenantId, 'cash');
-        } elseif (in_array($purchase->payment_method, ['card', 'transfer'])) {
+        } elseif (in_array($purchase->payment_method, ['Tarjeta', 'Transferencia'])) {
             return AccountingSetting::getValue($tenantId, 'bank_default');
         }
 
@@ -599,11 +599,11 @@ class AccountingIntegrationService
             $errors[] = 'Cuenta de Cuentas por Cobrar';
         }
 
-        if ($payment->payment_method === 'cash') {
+        if ($payment->payment_method === 'Efectivo') {
             if (!AccountingSetting::getValue($tenantId, 'cash')) {
                 $errors[] = 'Cuenta de Caja';
             }
-        } elseif (in_array($payment->payment_method, ['card', 'transfer'])) {
+        } elseif (in_array($payment->payment_method, ['Tarjeta', 'Transferencia'])) {
             if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
                 $errors[] = 'Cuenta de Banco por Defecto';
             }
@@ -629,11 +629,11 @@ class AccountingIntegrationService
             $errors[] = 'Cuenta de Cuentas por Pagar';
         }
 
-        if ($payment->payment_method === 'cash') {
+        if ($payment->payment_method === 'Efectivo') {
             if (!AccountingSetting::getValue($tenantId, 'cash')) {
                 $errors[] = 'Cuenta de Caja';
             }
-        } elseif (in_array($payment->payment_method, ['card', 'transfer'])) {
+        } elseif (in_array($payment->payment_method, ['Tarjeta', 'Transferencia'])) {
             if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
                 $errors[] = 'Cuenta de Banco por Defecto';
             }
@@ -653,9 +653,9 @@ class AccountingIntegrationService
      */
     private function getDebitAccountForPayment(int $tenantId, string $paymentMethod): int
     {
-        if ($paymentMethod === 'cash') {
+        if ($paymentMethod === 'Efectivo') {
             return AccountingSetting::getValue($tenantId, 'cash');
-        } elseif (in_array($paymentMethod, ['card', 'transfer'])) {
+        } elseif (in_array($paymentMethod, ['Tarjeta', 'Transferencia'])) {
             return AccountingSetting::getValue($tenantId, 'bank_default');
         }
 
@@ -668,9 +668,9 @@ class AccountingIntegrationService
      */
     private function getCreditAccountForPayment(int $tenantId, string $paymentMethod): int
     {
-        if ($paymentMethod === 'cash') {
+        if ($paymentMethod === 'Efectivo') {
             return AccountingSetting::getValue($tenantId, 'cash');
-        } elseif (in_array($paymentMethod, ['card', 'transfer'])) {
+        } elseif (in_array($paymentMethod, ['Tarjeta', 'Transferencia'])) {
             return AccountingSetting::getValue($tenantId, 'bank_default');
         }
 
@@ -853,11 +853,11 @@ class AccountingIntegrationService
         }
 
         // Validar cuenta según método de pago
-        if ($expense->payment_method === 'cash') {
+        if ($expense->payment_method === 'Efectivo') {
             if (!AccountingSetting::getValue($tenantId, 'cash')) {
                 $errors[] = 'Cuenta de Caja';
             }
-        } elseif (in_array($expense->payment_method, ['card', 'transfer', 'debit'])) {
+        } elseif (in_array($expense->payment_method, ['Tarjeta', 'Transferencia'])) {
             if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
                 $errors[] = 'Cuenta de Banco por Defecto';
             }
@@ -1016,11 +1016,11 @@ class AccountingIntegrationService
             }
         } else {
             // Venta al contado
-            if ($sale->payment_method === 'cash') {
+            if ($sale->payment_method === 'Efectivo') {
                 if (!AccountingSetting::getValue($tenantId, 'cash')) {
                     $errors[] = 'Cuenta de Caja';
                 }
-            } elseif (in_array($sale->payment_method, ['card', 'transfer'])) {
+            } elseif (in_array($sale->payment_method, ['Tarjeta', 'Transferencia'])) {
                 if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
                     $errors[] = 'Cuenta de Banco por Defecto';
                 }
