@@ -219,7 +219,7 @@ class SaleController extends Controller
             DB::beginTransaction();
 
             // Si es venta al contado en efectivo, verificar que haya caja abierta
-            if ($sale->payment_type === 'cash' && $sale->payment_method === 'cash') {
+            if ($sale->payment_type === 'cash' && $sale->payment_method === 'Efectivo') {
                 $cashRegister = CashRegister::getOpenRegister(Auth::user()->tenant_id, Auth::id());
 
                 if (!$cashRegister) {
@@ -268,7 +268,7 @@ class SaleController extends Controller
             }
 
             // Si es venta al contado en efectivo, registrar en caja
-            if ($sale->payment_type === 'cash' && $sale->payment_method === 'cash') {
+            if ($sale->payment_type === 'cash' && $sale->payment_method === 'Efectivo') {
                 $cashRegister = CashRegister::getOpenRegister(Auth::user()->tenant_id, Auth::id());
 
                 // Registrar movimiento en caja
@@ -288,7 +288,7 @@ class SaleController extends Controller
             }
 
             // Si es venta al contado por transferencia, registrar en cuenta bancaria predeterminada
-            if ($sale->payment_type === 'cash' && $sale->payment_method === 'transfer') {
+            if ($sale->payment_type === 'cash' && $sale->payment_method === 'Transferencia') {
                 $defaultAccount = BankAccount::getDefaultAccount(Auth::user()->tenant_id);
 
                 if (!$defaultAccount) {

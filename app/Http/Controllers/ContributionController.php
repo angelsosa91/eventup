@@ -84,7 +84,7 @@ class ContributionController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'contribution_date' => 'required|date',
             'amount' => 'required|numeric|min:1',
-            'payment_method' => 'required|in:cash,transfer',
+            'payment_method' => 'required|in:Efectivo,Transferencia',
             'reference' => 'nullable|string|max:50',
             'notes' => 'nullable|string',
         ]);
@@ -135,7 +135,7 @@ class ContributionController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'contribution_date' => 'required|date',
             'amount' => 'required|numeric|min:1',
-            'payment_method' => 'required|in:cash,transfer',
+            'payment_method' => 'required|in:Efectivo,Transferencia',
             'reference' => 'nullable|string|max:50',
             'notes' => 'nullable|string',
         ]);
@@ -182,7 +182,7 @@ class ContributionController extends Controller
             DB::beginTransaction();
 
             // 1. Validar y registrar en Caja (si es Efectivo)
-            if ($contribution->payment_method === 'cash') {
+            if ($contribution->payment_method === 'Efectivo') {
                 $cashRegister = CashRegister::getOpenRegister(Auth::user()->tenant_id, Auth::id());
 
                 if (!$cashRegister) {
@@ -206,7 +206,7 @@ class ContributionController extends Controller
             }
 
             // 2. Registrar en Banco (si es Transferencia)
-            if ($contribution->payment_method === 'transfer') {
+            if ($contribution->payment_method === 'Transferencia') {
                 $defaultAccount = BankAccount::getDefaultAccount(Auth::user()->tenant_id);
 
                 if (!$defaultAccount) {
@@ -271,7 +271,7 @@ class ContributionController extends Controller
 
             if ($contribution->status === 'confirmed') {
                 // 1. Reversar en Caja (si fue Efectivo)
-                if ($contribution->payment_method === 'cash') {
+                if ($contribution->payment_method === 'Efectivo') {
                     $cashRegister = CashRegister::getUserRegisterForDate(
                         Auth::user()->tenant_id,
                         Auth::id(),
@@ -295,7 +295,7 @@ class ContributionController extends Controller
                 }
 
                 // 2. Reversar en Banco (si fue Transferencia)
-                if ($contribution->payment_method === 'transfer') {
+                if ($contribution->payment_method === 'Transferencia') {
                     $bankTransaction = BankTransaction::where('tenant_id', Auth::user()->tenant_id)
                         ->where('reference', $contribution->contribution_number)
                         ->where('type', 'deposit')
@@ -385,7 +385,7 @@ class ContributionController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'payment_method' => 'required|in:cash,transfer',
+            'payment_method' => 'required|in:Efectivo,Transferencia',
             'notes' => 'nullable|string',
         ]);
 
@@ -412,7 +412,7 @@ class ContributionController extends Controller
             ]);
 
             // 1. Registrar salida en Caja (si es por Efectivo)
-            if ($request->payment_method === 'cash') {
+            if ($request->payment_method === 'Efectivo') {
                 $cashRegister = CashRegister::getOpenRegister(Auth::user()->tenant_id, Auth::id());
 
                 if (!$cashRegister) {
@@ -436,7 +436,7 @@ class ContributionController extends Controller
             }
 
             // 2. Registrar salida en Banco (si es por Transferencia)
-            if ($request->payment_method === 'transfer') {
+            if ($request->payment_method === 'Transferencia') {
                 $defaultAccount = BankAccount::getDefaultAccount(Auth::user()->tenant_id);
 
                 if (!$defaultAccount) {

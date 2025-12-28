@@ -214,14 +214,14 @@ class AccountingIntegrationService
         }
 
         // Si es venta al contado, determinar según método de pago
-        if ($sale->payment_method === 'cash') {
-            return AccountingSetting::getValue($tenantId, 'cash');
-        } elseif (in_array($sale->payment_method, ['card', 'transfer'])) {
+        if ($sale->payment_method === 'Efectivo') {
+            return AccountingSetting::getValue($tenantId, 'Efectivo');
+        } elseif (in_array($sale->payment_method, ['Tarjeta', 'Transferencia'])) {
             return AccountingSetting::getValue($tenantId, 'bank_default');
         }
 
         // Por defecto, usar caja
-        return AccountingSetting::getValue($tenantId, 'cash');
+        return AccountingSetting::getValue($tenantId, 'Efectivo');
     }
 
     /**
@@ -1188,11 +1188,11 @@ class AccountingIntegrationService
             $errors[] = 'Cuenta de Aportes';
         }
 
-        if ($contribution->payment_method === 'cash') {
+        if ($contribution->payment_method === 'Efectivo') {
             if (!AccountingSetting::getValue($tenantId, 'cash')) {
                 $errors[] = 'Cuenta de Caja';
             }
-        } elseif ($contribution->payment_method === 'transfer') {
+        } elseif ($contribution->payment_method === 'Transferencia') {
             if (!AccountingSetting::getValue($tenantId, 'bank_default')) {
                 $errors[] = 'Cuenta de Banco por Defecto';
             }
@@ -1212,9 +1212,9 @@ class AccountingIntegrationService
      */
     private function getDebitAccountForContribution(int $tenantId, Contribution $contribution): int
     {
-        if ($contribution->payment_method === 'cash') {
+        if ($contribution->payment_method === 'Efectivo') {
             return AccountingSetting::getValue($tenantId, 'cash');
-        } elseif ($contribution->payment_method === 'transfer') {
+        } elseif ($contribution->payment_method === 'Transferencia') {
             return AccountingSetting::getValue($tenantId, 'bank_default');
         }
 
@@ -1244,7 +1244,7 @@ class AccountingIntegrationService
         $debitAccount = AccountingSetting::getValue($tenantId, 'contributions_liability');
 
         // Determinar cuenta de crédito según método de pago
-        if ($refund->payment_method === 'cash') {
+        if ($refund->payment_method === 'Efectivo') {
             $creditAccount = AccountingSetting::getValue($tenantId, 'cash');
         } else {
             $creditAccount = AccountingSetting::getValue($tenantId, 'bank_default');
@@ -1305,7 +1305,7 @@ class AccountingIntegrationService
         }
 
         // Validar cuenta según método de pago
-        if ($refund->payment_method === 'cash') {
+        if ($refund->payment_method === 'Efectivo') {
             if (!AccountingSetting::getValue($tenantId, 'cash')) {
                 $errors[] = 'Cuenta de Caja';
             }
