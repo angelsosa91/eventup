@@ -34,18 +34,18 @@
 
                 <!-- DataGrid -->
                 <table id="dg" class="easyui-datagrid" style="width:100%;height:600px;" data-options="
-                                                                                                       url: '{{ route('contributions.data') }}',
-                                                                                                       method: 'get',
-                                                                                                       toolbar: '#toolbar',
-                                                                                                       pagination: true,
-                                                                                                       rownumbers: true,
-                                                                                                       singleSelect: true,
-                                                                                                       pageSize: 20,
-                                                                                                       pageList: [10, 20, 50, 100],
-                                                                                                       sortName: 'id',
-                                                                                                       sortOrder: 'desc',
-                                                                                                       remoteSort: true
-                                                                                                   ">
+                                                                                                                       url: '{{ route('contributions.data') }}',
+                                                                                                                       method: 'get',
+                                                                                                                       toolbar: '#toolbar',
+                                                                                                                       pagination: true,
+                                                                                                                       rownumbers: true,
+                                                                                                                       singleSelect: true,
+                                                                                                                       pageSize: 20,
+                                                                                                                       pageList: [10, 20, 50, 100],
+                                                                                                                       sortName: 'id',
+                                                                                                                       sortOrder: 'desc',
+                                                                                                                       remoteSort: true
+                                                                                                                   ">
                     <thead>
                         <tr>
                             <th data-options="field:'contribution_number',width:120,sortable:true">Número</th>
@@ -76,14 +76,14 @@
             <div class="mb-3">
                 <label class="form-label">Alumno:</label>
                 <input class="easyui-combobox" name="customer_id" id="customer_id" style="width:100%" data-options="
-                                                                                                       url:'{{ route('customers.list') }}',
-                                                                                                       method:'get',
-                                                                                                       valueField:'id',
-                                                                                                       textField:'name',
-                                                                                                       required:true,
-                                                                                                       mode:'remote',
-                                                                                                       prompt:'Buscar alumno...'
-                                                                                                   ">
+                                                                                                                       url:'{{ route('customers.list') }}',
+                                                                                                                       method:'get',
+                                                                                                                       valueField:'id',
+                                                                                                                       textField:'name',
+                                                                                                                       required:true,
+                                                                                                                       mode:'remote',
+                                                                                                                       prompt:'Buscar alumno...'
+                                                                                                                   ">
             </div>
 
             <div class="row">
@@ -104,8 +104,8 @@
                     <label class="form-label">Medio de Pago:</label>
                     <select class="easyui-combobox" name="payment_method" id="payment_method" style="width:100%"
                         data-options="required:true,editable:false">
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia">Transferencia</option>
+                        <option value="cash">Efectivo</option>
+                        <option value="transfer">Transferencia</option>
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -138,8 +138,8 @@
                 <label class="form-label">Método de Devolución:</label>
                 <select id="refund-payment-method" class="easyui-combobox" style="width:100%"
                     data-options="required:true,panelHeight:'auto',editable:false">
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Transferencia">Transferencia Bancaria</option>
+                    <option value="cash">Efectivo</option>
+                    <option value="transfer">Transferencia Bancaria</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -207,7 +207,7 @@
                 url = '{{ route('contributions.store') }}';
 
                 $('#contribution_date').datebox('setValue', '{{ date('d-m-Y') }}');
-                $('#payment_method').combobox('setValue', 'Efectivo');
+                $('#payment_method').combobox('setValue', 'cash');
             }
 
             function editContribution() {
@@ -229,7 +229,7 @@
 
                 // Cargar datos en el formulario
                 $('#fm').form('load', row);
-                
+
                 // Asegurar que el monto se cargue con el valor numérico puro
                 if (row.raw_amount) {
                     $('#amount').numberbox('setValue', row.raw_amount);
