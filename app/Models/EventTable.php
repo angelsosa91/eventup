@@ -43,12 +43,14 @@ class EventTable extends Model
         $totalGuests = $this->capacity; // Usa el accessor de capacidad
 
         return match (true) {
-            $totalGuests >= 1 && $totalGuests <= 4 => '#ade8f4', // Azul claro
-            $totalGuests >= 5 && $totalGuests <= 7 => '#ffff00', // Amarillo
-            $totalGuests >= 8 && $totalGuests <= 10 => '#d8bfd8', // Lila
-            $totalGuests >= 11 && $totalGuests <= 14 => '#b7e4c7', // Verde claro
-            $totalGuests >= 15 => '#ff9e00', // Naranja
-            default => '#e0e0e0', // Gris por defecto
+            $totalGuests >= 1 && $totalGuests <= 7 => '#ffff00',   // Amarillo
+            $totalGuests >= 8 && $totalGuests <= 10 => '#d8bfd8',  // Lila
+            $totalGuests >= 11 && $totalGuests <= 12 => '#90ee90', // Verde
+            $totalGuests >= 13 && $totalGuests <= 14 => '#ffc0cb', // Rosado
+            $totalGuests >= 15 && $totalGuests <= 16 => '#8b4513', // Marron
+            $totalGuests >= 17 && $totalGuests <= 20 => '#87ceeb', // Celeste
+            $totalGuests >= 21 => '#ff0000',                       // Rojo
+            default => '#e0e0e0',                                 // Gris por defecto
         };
     }
 }
