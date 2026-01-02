@@ -464,6 +464,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/events/{event}/assign-budget', [EventController::class, 'assignBudgetToTable'])->name('events.tables.assign-budget');
     Route::get('/events/{event}/tables/data', [EventController::class, 'tablesData'])->name('events.tables.data');
     Route::get('/events/{event}/tables/report', [EventController::class, 'downloadTableReport'])->name('events.tables.report');
+    Route::get('/events/{event}/budget-table-report', [EventController::class, 'exportBudgetTableReport'])->name('events.report.budget-table');
 
     // CRUD Mesas
     Route::post('/events/{event}/tables', [EventController::class, 'addTable'])->name('events.tables.store');

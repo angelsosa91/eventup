@@ -443,4 +443,46 @@ class EventController extends Controller
         $table->delete();
         return response()->json(['success' => true]);
     }
+
+    /**
+     * Exportar reporte Excel de Presupuestos x Mesas
+     */
+    public function exportBudgetTableReport(Event $event)
+    {
+        $budgets = $event->budgets()
+            ->where('status', 'accepted')
+            ->with(['table', 'items'])
+            ->get();
+
+        // Obtener todos los nombres de items únicos para las columnas
+        $itemDescriptions = \App\Models\EventBudgetItem::whereIn('event_budget_id', $budgets->pluck('id'))
+            ->distinct()
+            ->pluck('description')
+            ->toArray();
+
+        $data = $budgets->map(function ($b) use ($itemDescriptions) {
+            $row = [
+                'family_name' => $b->family_name,
+                'table_name' => $b->table ? $b->table->name : 'SIN ASIGNAR',
+                'items' => []
+            ];
+
+            foreach ($itemDescriptions as $desc) {
+                $row['items'][$desc] = $b->items->where('description', $desc)->sum('quantity');
+            }
+
+            return $row;
+        });
+
+        $filename = "reporte_presupuestos_mesas_" . $event->id . ".xls";
+
+        return response()->view('reports.budget-table-excel', [
+            'data' => $data,
+            'itemDescriptions' => $itemDescriptions
+        ])->withHeaders([
+                    'Content-Type' => 'application/vnd.ms-excel',
+                    'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+                    'Cache-Control' => 'max-age=0'
+                ]);
+    }
 }

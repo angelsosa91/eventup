@@ -116,16 +116,18 @@
                                 <strong>Distribución de Mesas</strong>
                             </div>
                             <div class="card-body p-0">
-                                <div id="tb-tables" class="p-2 border-bottom mb-2">
-                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add"
-                                        onclick="addTable()">Agregar Mesa</a>
-                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"
-                                        onclick="editTable()">Editar</a>
-                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
-                                        onclick="removeTable()">Eliminar</a>
-                                    <a href="{{ route('events.tables.report', $event->id) }}" class="easyui-linkbutton"
-                                        iconCls="icon-print" target="_blank">Imprimir Distribución</a>
-                                </div>
+                                <div id="tb-tables" class="p-2 border-bottom">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+                            onclick="newTable()">Nueva Mesa</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+                            onclick="editTable()">Editar</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
+                            onclick="removeTable()">Eliminar</a>
+                        <a href="{{ route('events.tables.report', $event->id) }}" target="_blank"
+                            class="easyui-linkbutton" iconCls="icon-print" plain="true">PDF Distribución</a>
+                        <a href="{{ route('events.report.budget-table', $event->id) }}" target="_blank"
+                            class="easyui-linkbutton" iconCls="icon-save" plain="true">Exportar Excel (Items x Mesa)</a>
+                    </div>            </div>
                                 <table id="dg-tables" class="easyui-datagrid" style="width:100%;height:530px" data-options="
                                                                                            url: '{{ route('events.tables.grid.data', $event->id) }}',
                                                                                            method: 'get',
