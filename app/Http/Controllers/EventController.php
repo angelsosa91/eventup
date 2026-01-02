@@ -344,16 +344,23 @@ class EventController extends Controller
     public function updateBudgetItem(Request $request, EventItem $item)
     {
         $validator = Validator::make($request->all(), [
-            'quantity' => 'required|numeric|min:0.01',
+            'description' => 'required|string|max:255',
+            'quantity' => 'nullable|numeric|min:0.01',
             'estimated_unit_price' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
+            'count_guests' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $item->update($request->all());
+        $data = $request->all();
+        if ($request->has('count_guests')) {
+            $data['count_guests'] = $request->boolean('count_guests');
+        }
+
+        $item->update($data);
 
         return response()->json([
             'success' => true,

@@ -53,13 +53,13 @@
                 </div>
 
                 <table id="dg-items" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                                                                       url: '{{ route('events.items.data', $event->id) }}',
-                                                                       method: 'get',
-                                                                       singleSelect:true,
-                                                                       fitColumns:true,
-                                                                       rownumbers:true,
-                                                                       toolbar:'#tb-items'
-                                                                   ">
+                                                                           url: '{{ route('events.items.data', $event->id) }}',
+                                                                           method: 'get',
+                                                                           singleSelect:true,
+                                                                           fitColumns:true,
+                                                                           rownumbers:true,
+                                                                           toolbar:'#tb-items'
+                                                                       ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -87,13 +87,13 @@
                             <div class="card-body p-0">
                                 <table id="dg-unassigned" class="easyui-datagrid" style="width:100%;height:530px"
                                     data-options="
-                                                                                url: '{{ route('events.budget.unassigned', $event->id) }}',
-                                                                                method: 'get',
-                                                                                singleSelect:true,
-                                                                                fitColumns:true,
-                                                                                rownumbers:true,
-                                                                                toolbar: '#tb-unassigned'
-                                                                            ">
+                                                                                    url: '{{ route('events.budget.unassigned', $event->id) }}',
+                                                                                    method: 'get',
+                                                                                    singleSelect:true,
+                                                                                    fitColumns:true,
+                                                                                    rownumbers:true,
+                                                                                    toolbar: '#tb-unassigned'
+                                                                                ">
                                     <thead>
                                         <tr>
                                             <th data-options="field:'family_name',width:180">Familia</th>
@@ -127,15 +127,15 @@
                                         iconCls="icon-print" target="_blank">Imprimir Distribución</a>
                                 </div>
                                 <table id="dg-tables" class="easyui-datagrid" style="width:100%;height:530px" data-options="
-                                                                                       url: '{{ route('events.tables.grid.data', $event->id) }}',
-                                                                                       method: 'get',
-                                                                                       singleSelect:true,
-                                                                                       fitColumns:true,
-                                                                                       rownumbers:true,
-                                                                                       toolbar:'#tb-tables',
-                                                                                       view: detailview,
-                                                                                       detailFormatter: detailFormatter
-                                                                                   ">
+                                                                                           url: '{{ route('events.tables.grid.data', $event->id) }}',
+                                                                                           method: 'get',
+                                                                                           singleSelect:true,
+                                                                                           fitColumns:true,
+                                                                                           rownumbers:true,
+                                                                                           toolbar:'#tb-tables',
+                                                                                           view: detailview,
+                                                                                           detailFormatter: detailFormatter
+                                                                                       ">
                                     <thead>
                                         <tr>
                                             <th data-options="field:'id',hidden:true">ID</th>
@@ -177,8 +177,7 @@
                 <input class="easyui-textbox" name="notes" style="width:100%;height:60px" data-options="multiline:true">
             </div>
             <div class="mb-3">
-                <input class="easyui-checkbox" name="count_guests" style="width:100%;height:60px" id="manual-count-guests"
-                    value="1" label="Cuenta Invitados">
+                <input class="easyui-checkbox" name="count_guests" id="manual-count-guests" value="1" label="Cta Invitado">
             </div>
         </form>
     </div>
@@ -221,13 +220,13 @@
             <div class="mb-3">
                 <label class="form-label">Seleccione Mesa:</label>
                 <input class="easyui-combobox" name="table_id" style="width:100%" data-options="
-                                                                url:'{{ route('events.tables.data', $event->id) }}',
-                                                                method:'get',
-                                                                valueField:'id',
-                                                                textField:'text',
-                                                                required:true,
-                                                                prompt:'Elija una mesa...'
-                                                            ">
+                                                                    url:'{{ route('events.tables.data', $event->id) }}',
+                                                                    method:'get',
+                                                                    valueField:'id',
+                                                                    textField:'text',
+                                                                    required:true,
+                                                                    prompt:'Elija una mesa...'
+                                                                ">
             </div>
         </form>
     </div>
