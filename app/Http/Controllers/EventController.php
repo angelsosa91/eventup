@@ -84,7 +84,7 @@ class EventController extends Controller
                 return [
                     'id' => $b->id,
                     'family_name' => $b->family_name,
-                    'guests_count' => $b->guests()->count(),
+                    'guests_count' => $b->item_guests_count,
                     'guests' => $b->guests->map(function ($g) {
                         return ['name' => $g->name, 'cedula' => $g->cedula];
                     })
@@ -122,7 +122,7 @@ class EventController extends Controller
                 return [
                     'id' => $b->id,
                     'family_name' => $b->family_name,
-                    'guests_count' => $b->guests_count
+                    'guests_count' => $b->item_guests_count
                 ];
             });
 

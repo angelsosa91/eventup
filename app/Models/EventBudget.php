@@ -69,4 +69,12 @@ class EventBudget extends Model
         $this->total_amount = $this->items()->sum('total');
         $this->save();
     }
+
+    /**
+     * Obtener el conteo de invitados basado en los items del presupuesto
+     */
+    public function getItemGuestsCountAttribute(): int
+    {
+        return (int) $this->items()->where('count_guests', true)->sum('quantity');
+    }
 }

@@ -32,19 +32,10 @@ class EventTable extends Model
 
     public function getCapacityAttribute()
     {
-        // La capacidad se basa en los invitados de los presupuestos (familias) asignados
-        $familyGuests = $this->budgets->sum(function ($b) {
-            return $b->guests()->count();
+        // La capacidad se basa en los invitados de los items marcados en los presupuestos (familias) asignados
+        return $this->budgets->sum(function ($b) {
+            return $b->item_guests_count;
         });
-
-        // Sumamos los invitados globales del presupuesto (items marcados como cuenta invitados)
-        // Nota: Estos invitados se consideran "base" para el evento. 
-        // Si el usuario quiere que afecten a CADA mesa, se suman aquí.
-        // Si son "extra" para el total del evento, la lógica podría variar.
-        // Según el requerimiento: "debemos tomar en cuenta la suma de los valores de la cantidad de los items... que tengan la relacion como 'Cuenta Invitado'"
-        $itemGuests = $this->event->item_guests_count;
-
-        return $familyGuests + $itemGuests;
     }
 
     public function getColorAttribute(): string
