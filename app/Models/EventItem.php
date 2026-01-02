@@ -17,12 +17,14 @@ class EventItem extends Model
         'estimated_unit_price',
         'total',
         'notes',
+        'count_guests',
     ];
 
     protected $casts = [
         'quantity' => 'decimal:2',
         'estimated_unit_price' => 'decimal:2',
         'total' => 'decimal:2',
+        'count_guests' => 'boolean',
     ];
 
     public function event(): BelongsTo

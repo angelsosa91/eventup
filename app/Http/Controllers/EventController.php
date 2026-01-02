@@ -70,6 +70,7 @@ class EventController extends Controller
                 'amount' => number_format($item->estimated_unit_price, 0, ',', '.'),
                 'raw_amount' => $item->estimated_unit_price,
                 'notes' => $item->notes,
+                'count_guests' => $item->count_guests,
             ];
         });
         return response()->json($items);
@@ -259,6 +260,7 @@ class EventController extends Controller
             'description' => 'required|string|max:255',
             'estimated_unit_price' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
+            'count_guests' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -272,6 +274,7 @@ class EventController extends Controller
                 'quantity' => 1,
                 'estimated_unit_price' => $request->estimated_unit_price,
                 'notes' => $request->notes,
+                'count_guests' => $request->boolean('count_guests'),
                 'total' => $request->estimated_unit_price // Ya que qty es 1
             ]);
 
