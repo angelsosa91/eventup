@@ -45,6 +45,15 @@ class Event extends Model
     }
 
     /**
+     * Obtener el conteo total de invitados provenientes de items del presupuesto
+     * que tienen marcado 'count_guests'
+     */
+    public function getItemGuestsCountAttribute(): int
+    {
+        return (int) $this->items()->where('count_guests', true)->sum('quantity');
+    }
+
+    /**
      * Obtener etiqueta de estado
      */
     public function getStatusLabelAttribute(): string
