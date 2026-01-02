@@ -44,7 +44,7 @@ class EventTable extends Model
 
         return match (true) {
             $totalGuests >= 1 && $totalGuests <= 7 => '#ffff00',   // Amarillo
-            $totalGuests >= 8 && $totalGuests <= 10 => '#d8bfd8',  // Lila
+            $totalGuests >= 8 && $totalGuests <= 10 => '#c8a2c8',  // Lila (Lilac)
             $totalGuests >= 11 && $totalGuests <= 12 => '#90ee90', // Verde
             $totalGuests >= 13 && $totalGuests <= 14 => '#ffc0cb', // Rosado
             $totalGuests >= 15 && $totalGuests <= 16 => '#8b4513', // Marron
