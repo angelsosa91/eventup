@@ -481,17 +481,24 @@ class EventController extends Controller
             return $row;
         });
 
-        $filename = "reporte_presupuestos_mesas_" . $event->id . ".xls";
-
-        return response()->view('reports.budget-table-excel', [
+        $html = view('reports.budget-table-excel', [
             'event' => $event,
             'data' => $data,
             'itemDescriptions' => $itemDescriptions,
             'unitPrices' => $uniqueItems
-        ])->withHeaders([
-                    'Content-Type' => 'application/vnd.ms-excel',
-                    'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-                    'Cache-Control' => 'max-age=0'
-                ]);
+        ])->render();
+
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+        $spreadsheet = $reader->loadFromString($html);
+
+        $filename = "reporte_presupuestos_mesas_" . $event->id . ".xlsx";
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
 }
