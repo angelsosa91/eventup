@@ -454,21 +454,28 @@ class EventController extends Controller
             ->with(['table', 'items'])
             ->get();
 
-        // Obtener todos los nombres de items únicos para las columnas
-        $itemDescriptions = \App\Models\EventBudgetItem::whereIn('event_budget_id', $budgets->pluck('id'))
-            ->distinct()
-            ->pluck('description')
-            ->toArray();
+        // Obtener todos los items únicos y su primer precio unitario encontrado
+        $uniqueItems = \App\Models\EventBudgetItem::whereIn('event_budget_id', $budgets->pluck('id'))
+            ->select('description', 'unit_price')
+            ->get()
+            ->groupBy('description')
+            ->map(function ($group) {
+                return $group->first()->unit_price;
+            });
+
+        $itemDescriptions = $uniqueItems->keys()->toArray();
 
         $data = $budgets->map(function ($b) use ($itemDescriptions) {
             $row = [
                 'family_name' => $b->family_name,
                 'table_name' => $b->table ? $b->table->name : 'SIN ASIGNAR',
-                'items' => []
+                'table_color' => $b->table ? $b->table->color : '#ffffff',
+                'items' => [],
+                'total_amount' => $b->total_amount
             ];
 
             foreach ($itemDescriptions as $desc) {
-                $row['items'][$desc] = $b->items->where('description', $desc)->sum('quantity');
+                $row['items'][$desc] = (float) $b->items->where('description', $desc)->sum('quantity');
             }
 
             return $row;
@@ -477,8 +484,10 @@ class EventController extends Controller
         $filename = "reporte_presupuestos_mesas_" . $event->id . ".xls";
 
         return response()->view('reports.budget-table-excel', [
+            'event' => $event,
             'data' => $data,
-            'itemDescriptions' => $itemDescriptions
+            'itemDescriptions' => $itemDescriptions,
+            'unitPrices' => $uniqueItems
         ])->withHeaders([
                     'Content-Type' => 'application/vnd.ms-excel',
                     'Content-Disposition' => "attachment; filename=\"{$filename}\"",

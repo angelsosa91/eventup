@@ -127,7 +127,7 @@
                             class="easyui-linkbutton" iconCls="icon-print" plain="true">PDF Distribución</a>
                         <a href="{{ route('events.report.budget-table', $event->id) }}" target="_blank"
                             class="easyui-linkbutton" iconCls="icon-save" plain="true">Exportar Excel (Items x Mesa)</a>
-                    </div>            </div>
+                                </div>        
                                 <table id="dg-tables" class="easyui-datagrid" style="width:100%;height:530px" data-options="
                                                                                            url: '{{ route('events.tables.grid.data', $event->id) }}',
                                                                                            method: 'get',
