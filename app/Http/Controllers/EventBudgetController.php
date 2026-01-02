@@ -78,6 +78,7 @@ class EventBudgetController extends Controller
                 'unit_price' => number_format($item->unit_price, 0, ',', '.'),
                 'total' => number_format($item->total, 0, ',', '.'),
                 'notes' => $item->notes,
+                'count_guests' => $item->count_guests,
                 'raw_quantity' => $item->quantity,
                 'raw_unit_price' => $item->unit_price,
             ];
@@ -210,6 +211,7 @@ class EventBudgetController extends Controller
             'quantity' => $request->quantity,
             'unit_price' => $request->unit_price,
             'notes' => $request->notes,
+            'count_guests' => $request->boolean('count_guests'),
         ]);
 
         return response()->json(['success' => true, 'item' => $item, 'total_budget' => $eventBudget->total_amount]);
@@ -217,7 +219,11 @@ class EventBudgetController extends Controller
 
     public function updateItem(Request $request, EventBudgetItem $item)
     {
-        $item->update($request->all());
+        $data = $request->all();
+        if ($request->has('count_guests')) {
+            $data['count_guests'] = $request->boolean('count_guests');
+        }
+        $item->update($data);
         return response()->json(['success' => true, 'item' => $item, 'total_budget' => $item->budget->total_amount]);
     }
 
@@ -247,6 +253,7 @@ class EventBudgetController extends Controller
                 'quantity' => $eItem->quantity,
                 'unit_price' => $eItem->estimated_unit_price,
                 'notes' => $eItem->notes,
+                'count_guests' => $eItem->count_guests,
             ]);
             $importedCount++;
         }

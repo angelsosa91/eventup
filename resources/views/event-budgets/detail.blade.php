@@ -41,14 +41,14 @@
                                 <label class="form-label">Estado:</label>
                                 <input class="easyui-combobox" name="status" value="{{ $eventBudget->status }}"
                                     style="width:100%" data-options="
-                                                                        panelHeight:'auto',
-                                                                        data: [
-                                                                            {value:'draft',text:'Borrador'},
-                                                                            {value:'sent',text:'Enviado'},
-                                                                            {value:'accepted',text:'Aceptado'},
-                                                                            {value:'rejected',text:'Rechazado'}
-                                                                        ]
-                                                                    ">
+                                                                                panelHeight:'auto',
+                                                                                data: [
+                                                                                    {value:'draft',text:'Borrador'},
+                                                                                    {value:'sent',text:'Enviado'},
+                                                                                    {value:'accepted',text:'Aceptado'},
+                                                                                    {value:'rejected',text:'Rechazado'}
+                                                                                ]
+                                                                            ">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Notas:</label>
@@ -82,13 +82,13 @@
                 </div>
 
                 <table id="dg-items" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                                            url:'{{ route('event-budgets.items.data', $eventBudget->id) }}',
-                                            method:'get',
-                                            singleSelect:true,
-                                            fitColumns:true,
-                                            rownumbers:true,
-                                            toolbar:'#tb-items'
-                                        ">
+                                                    url:'{{ route('event-budgets.items.data', $eventBudget->id) }}',
+                                                    method:'get',
+                                                    singleSelect:true,
+                                                    fitColumns:true,
+                                                    rownumbers:true,
+                                                    toolbar:'#tb-items'
+                                                ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -98,6 +98,8 @@
                             <th
                                 data-options="field:'total',width:150,align:'right',styler:function(){return 'font-weight:bold;'}">
                                 Total</th>
+                            <th data-options="field:'count_guests',width:100,align:'center',formatter:countGuestsFormatter">
+                                Cuenta Inv.</th>
                             <th data-options="field:'notes',width:200">Notas</th>
                         </tr>
                     </thead>
@@ -116,13 +118,13 @@
                     <span class="ms-3 text-muted">Total Invitados: {{ $eventBudget->guests->count() }}</span>
                 </div>
                 <table id="dg-guests" class="easyui-datagrid" style="width:100%;height:580px" data-options="
-                                            url:'{{ route('event-budgets.guests.data', $eventBudget->id) }}',
-                                            method:'get',
-                                            singleSelect:true,
-                                            fitColumns:true,
-                                            rownumbers:true,
-                                            toolbar:'#tb-guests'
-                                        ">
+                                                    url:'{{ route('event-budgets.guests.data', $eventBudget->id) }}',
+                                                    method:'get',
+                                                    singleSelect:true,
+                                                    fitColumns:true,
+                                                    rownumbers:true,
+                                                    toolbar:'#tb-guests'
+                                                ">
                     <thead>
                         <tr>
                             <th data-options="field:'id',hidden:true">ID</th>
@@ -161,6 +163,10 @@
                 <label class="form-label">Notas:</label>
                 <input class="easyui-textbox" name="notes" style="width:100%;height:60px" data-options="multiline:true">
             </div>
+            <div class="mb-3">
+                <input class="easyui-checkbox" name="count_guests" id="item-count-guests" value="1"
+                    label="Cuenta Invitados:">
+            </div>
         </form>
     </div>
     <div id="item-buttons">
@@ -197,6 +203,13 @@
                 return new Intl.NumberFormat('es-PY').format(amount);
             }
 
+            function countGuestsFormatter(value, row) {
+                if (value == 1 || value == true) {
+                    return '<span class="badge bg-info text-dark"><i class="bi bi-person-check-fill"></i> SÍ</span>';
+                }
+                return '<span class="text-muted"><i class="bi bi-person-x"></i> NO</span>';
+            }
+
             function updateBudgetTotal(total) {
                 var formatted = formatMoney(total);
                 $('#budget-total-display').text(formatted);
@@ -219,6 +232,7 @@
                 current_item_id = null;
                 $('#dlg-item').dialog('open').dialog('setTitle', 'Nuevo Item de Presupuesto');
                 $('#fm-item').form('clear');
+                $('#item-count-guests').checkbox('uncheck');
             }
 
             function editItem() {
@@ -232,6 +246,12 @@
                     unit_price: row.raw_unit_price,
                     notes: row.notes
                 });
+
+                if (row.count_guests == 1 || row.count_guests == true) {
+                    $('#item-count-guests').checkbox('check');
+                } else {
+                    $('#item-count-guests').checkbox('uncheck');
+                }
             }
 
             function saveItem() {
