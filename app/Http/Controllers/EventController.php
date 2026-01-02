@@ -78,11 +78,7 @@ class EventController extends Controller
     public function tablesGridData(Event $event)
     {
         $tables = $event->tables()->with(['budgets.guests'])->get()->map(function ($table) {
-
-            // Calcular ocupación basada en los invitados de los presupuestos asignados
-            $occupied = $table->guests()->count(); // Invitados individuales directos (si los hubiera)
-
-            // Sumar invitados de los presupuestos asignados (Familias)
+            // Sumar invitados de los presupuestos asignados (Familias) para el detalle
             $budgets = $table->budgets->map(function ($b) {
                 return [
                     'id' => $b->id,
@@ -94,16 +90,11 @@ class EventController extends Controller
                 ];
             });
 
-            $occupiedFromBudgets = $table->budgets->sum(function ($b) {
-                return $b->guests()->count();
-            });
-
             return [
                 'id' => $table->id,
                 'name' => $table->name,
-                'capacity' => $table->capacity,
-                'color' => $table->color,
-                'occupied' => $occupied + $occupiedFromBudgets,
+                'capacity' => $table->capacity, // Usa el accessor del modelo
+                'color' => $table->color,       // Usa el accessor del modelo
                 'assigned_budgets' => $budgets
             ];
         });
@@ -414,13 +405,13 @@ class EventController extends Controller
      */
     public function addTable(Request $request, Event $event)
     {
-        $request->validate(['name' => 'required|string', 'capacity' => 'required|integer']);
+        $request->validate(['name' => 'required|string']);
 
         $table = EventTable::create([
             'event_id' => $event->id,
             'name' => $request->name,
-            'capacity' => $request->capacity,
-            'color' => $request->color ?? '#e0e0e0'
+            'capacity' => 0, // Se calcula dinámicamente en tablesGridData
+            'color' => '#e0e0e0' // Se calcula dinámicamente en tablesGridData
         ]);
 
         return response()->json(['success' => true, 'table' => $table]);
@@ -428,12 +419,10 @@ class EventController extends Controller
 
     public function updateTable(Request $request, EventTable $table)
     {
-        $request->validate(['name' => 'required|string', 'capacity' => 'required|integer']);
+        $request->validate(['name' => 'required|string']);
 
         $table->update([
-            'name' => $request->name,
-            'capacity' => $request->capacity,
-            'color' => $request->color ?? $table->color
+            'name' => $request->name
         ]);
 
         return response()->json(['success' => true]);
