@@ -32,7 +32,6 @@
                 <td style="border: 1px solid #000; text-align: center;">{{ $index + 1 }}</td>
                 <td style="border: 1px solid #000;">{{ $row['table_name'] }}</td>
                 <td style="border: 1px solid #000; text-align: center; background-color: {{ $row['table_color'] }};">
-                    {{ $row['table_color'] }}
                 </td>
                 <td style="border: 1px solid #000;">{{ $row['family_name'] }}</td>
                 @foreach($itemDescriptions as $desc)
